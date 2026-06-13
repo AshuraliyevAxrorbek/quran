@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="uz" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quran Player</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-dark: #0a0c0e;
+    --glass: rgba(255,255,255,0.08);
+    --glass-border: rgba(255,255,255,0.18);
+    --glass-bg: rgba(30,30,40,0.55);
+    --glass-strong: rgba(20,20,30,0.72);
+    --gold: #f5c842;
+    --gold-dim: rgba(245,200,66,0.15);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255,255,255,0.55);
+    --accent: #4a7c6f;
+    --radius: 28px;
+    --radius-sm: 18px;
+    --slider-h: 4px;
+    --blur: blur(32px) saturate(1.8);
+    --blur-light: blur(20px) saturate(1.4);
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: #050810;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── VIDEO BACKGROUND ─── */
+  #bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.65;
+    filter: saturate(0.8) brightness(0.55);
+  }
+
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(5,8,16,0.3) 0%,
+      rgba(5,8,16,0.0) 25%,
+      rgba(5,8,16,0.0) 50%,
+      rgba(5,8,16,0.85) 100%
+    );
+    z-index: 1;
+  }
+
+  /* ─── LAYOUT ─── */
+  #app {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 0 env(safe-area-inset-bottom, 16px);
+  }
+
+  /* Desktop layout */
+  @media (min-width: 768px) {
+    #app {
+      justify-content: flex-end;
+    }
+    #player-card {
+      max-width: 520px;
+      padding: 0 0 48px;
+    }
+    .np-surah { font-size: 24px; }
+    .play-btn { width: 70px; height: 70px; background: none; color: #fff; box-shadow: none; }
+    .play-btn svg { width: 40px; height: 40px; }
+    .play-btn svg { width: 32px; height: 32px; }
+  }
+
+  /* ─── SURAH LIST PANEL ─── */
+  #surah-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: rgba(8,10,20,0.88);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  #surah-panel.open { transform: translateX(0); }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 56px 24px 16px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .panel-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .panel-close {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: background 0.2s;
+  }
+  .panel-close:hover { background: rgba(255,255,255,0.15); }
+
+  #surah-search {
+    margin: 16px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #surah-search:focus { border-color: var(--gold); }
+  #surah-search::placeholder { color: var(--text-secondary); }
+
+  #surah-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0 32px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+  }
+
+  .surah-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .surah-item:hover { background: rgba(255,255,255,0.05); }
+  .surah-item.active { background: var(--gold-dim); }
+
+  .surah-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: var(--gold);
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .surah-item.active .surah-num {
+    background: var(--gold);
+    color: #000;
+  }
+
+  .surah-names { flex: 1; }
+  .surah-en { font-size: 14px; font-weight: 500; }
+  .surah-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .surah-ar { font-family: 'Amiri', serif; font-size: 18px; color: var(--gold); }
+
+  /* ─── QORI SELECTION PANEL ─── */
+  #qori-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background: rgba(8,10,20,0.88);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  #qori-panel.open { transform: translateX(0); }
+
+  #qori-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0 32px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.1) transparent;
+  }
+
+  .qori-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .qori-item:hover { background: rgba(255,255,255,0.05); }
+  .qori-item.active { background: var(--gold-dim); }
+
+  .qori-avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.1);
+    background: linear-gradient(135deg, #1a2a3a, #2a3a2a);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .qori-item.active .qori-avatar-wrap img,
+  .qori-item.active .qori-avatar { border-color: var(--gold); }
+  .qori-info { flex: 1; }
+  .qori-name { font-size: 14px; font-weight: 500; }
+  .qori-origin { font-size: 12px; color: var(--text-secondary); }
+  .qori-check { color: var(--gold); font-size: 16px; opacity: 0; }
+  .qori-item.active .qori-check { opacity: 1; }
+
+  /* ─── PLAYER CARD ─── */
+  #player-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 0 0 32px;
+    transition: all 0.4s ease;
+  }
+
+  /* Now playing info */
+  .np-row {
+    display: flex;
+    align-items: center;
+    padding: 0 20px 18px;
+    gap: 14px;
+  }
+
+  .np-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: linear-gradient(135deg, #1a2a3a, #2a3a2a);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    overflow: hidden;
+  }
+  .np-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .np-info { flex: 1; min-width: 0; }
+  .np-surah {
+    font-size: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.3px;
+  }
+  .np-qori {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .fav-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .fav-btn.active { color: var(--gold); background: var(--gold-dim); }
+  .fav-btn svg { width: 18px; height: 18px; }
+
+  /* Controls row */
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin-bottom: 4px;
+  }
+
+  .ctrl-side {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .speed-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    padding: 6px 2px;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .speed-btn:hover { color: var(--text-primary); }
+
+  .ctrl-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .ctrl-btn:hover { opacity: 0.75; }
+  .ctrl-btn:active { transform: scale(0.92); }
+  .ctrl-btn svg { width: 30px; height: 30px; }
+
+  .play-btn {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, opacity 0.2s;
+    box-shadow: none;
+  }
+  .play-btn:hover { opacity: 0.75; transform: scale(1.08); }
+  .play-btn:active { transform: scale(0.88); }
+  .play-btn svg { width: 36px; height: 36px; }
+
+  .sleep-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.2s;
+  }
+  .sleep-btn:hover { color: var(--text-primary); }
+  .sleep-btn.active { color: var(--gold); }
+  .sleep-btn svg { width: 22px; height: 22px; }
+
+  /* Progress */
+  .progress-wrap {
+    padding: 8px 20px 0;
+    position: relative;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: var(--slider-h);
+    background: rgba(255,255,255,0.18);
+    border-radius: 99px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--text-primary);
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.3s linear;
+    pointer-events: none;
+  }
+  input[type=range].progress-range {
+    position: absolute;
+    inset: -8px 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    height: 20px;
+    margin: 0;
+  }
+
+  .time-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 20px 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── VIDEO PANEL ─── */
+#video-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 env(safe-area-inset-bottom, 20px);
+  background: transparent;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+#video-panel.open {
+  transform: translateY(0);
+  pointer-events: all;
+}
+.video-glass-card {
+  margin: 0 12px 12px;
+  background: rgba(18,22,40,0.50);
+  backdrop-filter: var(--lg-blur);
+  -webkit-backdrop-filter: var(--lg-blur);
+  border: 1px solid var(--lg-border);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--lg-shadow), var(--lg-inset);
+  padding: 20px 16px 24px;
+  position: relative;
+}
+.video-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 20%, rgba(255,255,255,0.28) 80%, transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+.video-panel-title {
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 18px;
+  color: var(--text-primary);
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.video-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 10px 6px;
+  border-radius: 16px;
+  border: 1.5px solid transparent;
+  background: rgba(255,255,255,0.05);
+  transition: all 0.2s;
+}
+.video-item:hover { background: rgba(255,255,255,0.1); }
+.video-item.active {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+.video-item-icon { 
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.75);
+}
+.video-item.active .video-item-icon { color: var(--gold); }
+.video-item-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.3;
+}
+.video-item.active .video-item-label { color: var(--gold); }
+.video-panel-close {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+.video-close-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: var(--text-secondary);
+  border-radius: 20px;
+  padding: 8px 28px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+}
+.video-close-btn:hover { background: rgba(255,255,255,0.18); }
+
+  /* ─── iOS 18 LIQUID GLASS SYSTEM ─── */
+  :root {
+    --lg-bg: rgba(255,255,255,0.07);
+    --lg-border: rgba(255,255,255,0.20);
+    --lg-shine: rgba(255,255,255,0.28);
+    --lg-blur: blur(48px) saturate(2.2) brightness(1.1);
+    --lg-shadow: 0 8px 40px rgba(0,0,0,0.38), 0 2px 8px rgba(0,0,0,0.22);
+    --lg-inset: inset 0 1.5px 0 rgba(255,255,255,0.32), inset 0 -1px 0 rgba(0,0,0,0.18);
+  }
+
+  /* Bottom toolbar — iOS 18 Liquid Glass */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 14px 14px 6px;
+    padding: 8px 6px;
+    background: var(--lg-bg);
+    backdrop-filter: var(--lg-blur);
+    -webkit-backdrop-filter: var(--lg-blur);
+    border: 1px solid var(--lg-border);
+    border-radius: 28px;
+    box-shadow: var(--lg-shadow), var(--lg-inset);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Shine layer */
+  .toolbar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lg-shine) 30%, var(--lg-shine) 70%, transparent);
+    border-radius: 28px 28px 0 0;
+    pointer-events: none;
+  }
+  /* Subtle inner glow */
+  .toolbar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .tb-btn {
+    flex: 1;
+    height: 46px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 22px;
+    transition: color 0.18s, background 0.18s, transform 0.12s;
+    position: relative;
+    z-index: 1;
+  }
+  .tb-btn:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.09); }
+  .tb-btn:active { transform: scale(0.88); background: rgba(255,255,255,0.14); }
+  .tb-btn.active { color: var(--gold); }
+  .tb-btn svg { width: 22px; height: 22px; }
+
+
+  /* ─── LIQUID GLASS SHARED ─── */
+  .lg-card {
+    background: rgba(22,24,38,0.55);
+    backdrop-filter: var(--lg-blur);
+    -webkit-backdrop-filter: var(--lg-blur);
+    border: 1px solid var(--lg-border);
+    border-radius: 28px;
+    box-shadow: var(--lg-shadow), var(--lg-inset);
+    position: relative;
+    overflow: hidden;
+  }
+  .lg-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lg-shine) 20%, var(--lg-shine) 80%, transparent);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ─── POPUPS ─── */
+  .popup-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+  }
+  .popup-backdrop.show { display: block; }
+
+  .popup {
+    position: absolute;
+    background: rgba(18,22,40,0.52);
+    backdrop-filter: var(--lg-blur);
+    -webkit-backdrop-filter: var(--lg-blur);
+    border: 1px solid var(--lg-border);
+    border-radius: 28px;
+    overflow: hidden;
+    min-width: 260px;
+    box-shadow: var(--lg-shadow), var(--lg-inset);
+  }
+  .popup::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lg-shine) 20%, var(--lg-shine) 80%, transparent);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Speed popup */
+  #speed-popup {
+    bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
+    left: 16px;
+    padding: 0 0 16px;
+  }
+
+  .popup-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 12px;
+  }
+
+  .speed-track {
+    padding: 0 18px;
+    position: relative;
+  }
+  .speed-track-line {
+    height: 3px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .speed-track-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--text-primary);
+    border-radius: 99px;
+    width: 33.3%;
+    transition: width 0.2s;
+  }
+  .speed-dots {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .speed-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .speed-dot.active {
+    background: var(--text-primary);
+    color: #000;
+    transform: scale(1.1);
+  }
+  .speed-label {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* Volume popup */
+  #volume-popup {
+    bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
+    left: 16px;
+    right: 16px;
+    padding: 0 0 20px;
+  }
+
+  .vol-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+  }
+  .vol-label { font-size: 13px; font-weight: 500; width: 110px; }
+  .vol-icon { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; color: var(--text-secondary); }
+  .vol-slider-wrap { flex: 1; position: relative; height: 36px; display: flex; align-items: center; padding: 4px 0; }
+  .vol-track {
+    width: 100%; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    position: relative;
+    overflow: visible;
+    isolation: isolate;
+  }
+  .vol-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--text-primary);
+    border-radius: 99px;
+    pointer-events: none;
+  }
+  .vol-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    pointer-events: none;
+    transition: transform 0.1s;
+  }
+  input[type=range].vol-range {
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    height: 44px;
+    z-index: 10;
+    touch-action: pan-x;
+  }
+  input[type=range].vol-range:active + .vol-thumb { transform: translate(-50%, -50%) scale(1.2); }
+
+  /* Sleep timer popup */
+  #sleep-popup {
+    bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
+    right: 16px;
+    min-width: 220px;
+    padding: 0;
+  }
+  .sleep-popup-title {
+    padding: 14px 18px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--glass-border);
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .sleep-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  .sleep-option:last-child { border-bottom: none; }
+  .sleep-option:hover { background: rgba(255,255,255,0.05); }
+  .sleep-option.active { color: var(--gold); }
+  .sleep-check { font-size: 16px; opacity: 0; }
+  .sleep-option.active .sleep-check { opacity: 1; }
+
+  /* Background sound panel - inside volume popup */
+  .vol-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 6px 0;
+  }
+  .vol-section-title {
+    padding: 8px 18px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+  }
+
+  /* Sound selector */
+  .sound-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 16px 12px;
+  }
+  .sound-tab {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: none;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .sound-tab.active {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.25);
+    color: var(--text-primary);
+  }
+
+  /* Arabic text display */
+  #ayah-display {
+    text-align: center;
+    padding: 0 24px 16px;
+    font-family: 'Amiri', serif;
+    font-size: 20px;
+    line-height: 2;
+    color: rgba(255,255,255,0.85);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    direction: rtl;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  #ayah-display.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #ayah-display.hiding {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  /* Surah badge */
+  .surah-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 0;
+  }
+  .surah-badge span {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.06);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(20,22,35,0.80);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    opacity: 0;
+    transition: all 0.3s;
+    border: 1px solid var(--glass-border);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Responsive */
+  @media (min-width: 480px) {
+    #player-card { padding: 0 0 40px; }
+    .np-surah { font-size: 22px; }
+  }
+
+  @media (min-width: 768px) {
+    /* Popuplar endi JS orqali dynamic joylashadi */
+  }
+
+  /* Loading spinner */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .spinner.show { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Hamburger icon for list */
+  .lines-icon svg { width: 20px; height: 20px; }
+
+  /* Qori panel search */
+  #qori-search {
+    margin: 16px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #qori-search:focus { border-color: var(--gold); }
+  #qori-search::placeholder { color: var(--text-secondary); }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: fixed;
+    top: 0;
+    left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, rgba(8,12,16,0.9), transparent);
+    z-index: 99;
+    pointer-events: none;
+  }
+
+  /* Sleep timer badge */
+  .sleep-badge {
+    position: fixed;
+    top: 52px;
+    right: 20px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    z-index: 20;
+    display: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .sleep-badge.show { display: block; }
+
+  /* ─── SURAH PANEL LIQUID GLASS ─── */
+  #surah-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 0 env(safe-area-inset-bottom, 20px);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+  }
+  #surah-panel.open {
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  .panel-glass-card {
+    margin: 0 12px 12px;
+    background: rgba(18,22,40,0.50);
+    backdrop-filter: var(--lg-blur);
+    -webkit-backdrop-filter: var(--lg-blur);
+    border: 1px solid var(--lg-border);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: var(--lg-shadow), var(--lg-inset);
+    max-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .panel-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--lg-shine) 20%, var(--lg-shine) 80%, transparent);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .panel-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 12px;
+  }
+
+  .panel-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .panel-card-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .panel-icon-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .panel-icon-btn:hover { background: rgba(255,255,255,0.18); color: var(--text-primary); }
+  .panel-icon-btn.active { background: rgba(255,255,255,0.2); color: var(--text-primary); }
+
+  .panel-search-wrap {
+    position: relative;
+    margin: 0 16px 12px;
+  }
+  .panel-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+  }
+  #surah-search {
+    width: 100%;
+    margin: 0;
+    padding: 11px 16px 11px 40px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #surah-search:focus { border-color: rgba(255,255,255,0.3); }
+  #surah-search::placeholder { color: var(--text-secondary); }
+
+  #surah-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0 8px;
+    scrollbar-width: none;
+  }
+  #surah-list::-webkit-scrollbar { display: none; }
+
+  .surah-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 14px;
+    border-bottom: none;
+  }
+  .surah-item:hover { background: rgba(255,255,255,0.06); }
+  .surah-item.active { background: rgba(255,255,255,0.08); }
+
+  .surah-num {
+    width: 28px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border: none;
+    background: none;
+    border-radius: 0;
+    height: auto;
+    display: block;
+    flex-shrink: 0;
+  }
+  .surah-item.active .surah-num { color: var(--text-primary); }
+
+  .surah-en { font-size: 15px; font-weight: 500; }
+  .surah-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+  .surah-ar { font-family: 'Amiri', serif; font-size: 16px; color: var(--text-secondary); }
+  .surah-item.active .surah-ar { color: var(--text-primary); }
+
+  /* Surah drag handle icon */
+  .surah-handle {
+    margin-left: auto;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- VIDEO BACKGROUND -->
+<!-- 
+  VIDEO FONI UCHUN KO'RSATMA:
+  1. Video faylingizni "background.mp4" deb nomlang
+  2. Uni index.html bilan bir papkaga qo'ying
+  3. Quyidagi src="background.mp4" ni o'zgartirishga hojat yo'q
+  
+  Agar boshqa nom bermoqchi bo'lsangiz:
+  <video src="YANGI_NOM.mp4" ...> qilib o'zgartiring
+-->
+<video id="bg-video" src="video/1.mp4" autoplay loop muted playsinline></video>
+<div class="bg-overlay"></div>
+
+<!-- SLEEP BADGE -->
+<div id="sleep-badge" class="sleep-badge"></div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- VIDEO PANEL -->
+<div id="video-panel">
+  <div class="video-glass-card">
+    <div class="video-panel-title">Fon Videosi</div>
+    <div class="video-grid" id="video-grid"></div>
+    <div class="video-panel-close">
+      <button class="video-close-btn" onclick="closePanel('video')">Yopish</button>
+    </div>
+  </div>
+</div>
+
+<!-- SURAH PANEL -->
+<div id="surah-panel">
+  <div class="panel-glass-card">
+    <div class="panel-card-header">
+      <button class="panel-icon-btn" onclick="closePanel('surah')" title="Yopish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <span class="panel-card-title">Continue Playing</span>
+      <div class="panel-card-actions">
+        <button class="panel-icon-btn" onclick="toggleShuffle()" id="shuffle-btn" title="Aralash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        </button>
+        <button class="panel-icon-btn" onclick="toggleRepeat()" id="repeat-btn" title="Takrorlash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="panel-search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" class="panel-search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="surah-search" placeholder="Search" oninput="filterSurahs(this.value)">
+    </div>
+    <div id="surah-list"></div>
+  </div>
+</div>
+
+<!-- QORI PANEL -->
+<div id="qori-panel">
+  <div class="scroll-hint"></div>
+  <div class="panel-header">
+    <h2>Qorilar</h2>
+    <button class="panel-close" onclick="closePanel('qori')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <input type="text" id="qori-search" placeholder="Qorini qidiring..." oninput="filterQoris(this.value)">
+  <div id="qori-list"></div>
+</div>
+
+<!-- BACKDROP for popups -->
+<div class="popup-backdrop" id="popup-backdrop" onclick="closeAllPopups()">
+
+  <!-- SPEED POPUP -->
+  <div class="popup" id="speed-popup" onclick="event.stopPropagation()">
+    <div class="popup-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      Surah Tezligi
+    </div>
+    <div class="speed-track">
+      <div class="speed-track-line"><div class="speed-track-fill" id="speed-track-fill"></div></div>
+      <div class="speed-dots" id="speed-dots"></div>
+      <div class="speed-label">Ijro tezligini sozlang</div>
+    </div>
+  </div>
+
+  <!-- VOLUME POPUP -->
+  <div class="popup" id="volume-popup" onclick="event.stopPropagation()">
+    <div class="vol-section-title" style="padding-top:14px">Quron</div>
+    <div class="vol-row">
+      <div class="vol-icon" id="quran-vol-icon">🔇</div>
+      <div class="vol-slider-wrap">
+        <div class="vol-track">
+          <div class="vol-fill" id="quran-vol-fill" style="width:70%"></div>
+          <div class="vol-thumb" id="quran-vol-thumb" style="left:70%"></div>
+          <input type="range" class="vol-range" id="quran-vol" min="0" max="100" value="70" oninput="setQuranVol(this.value)">
+        </div>
+      </div>
+      <div class="vol-icon">🔊</div>
+    </div>
+
+    <div class="vol-divider"></div>
+    <div class="vol-section-title">Fon Tovushi</div>
+
+    <!-- Sound tabs -->
+    <div class="sound-tabs" id="sound-tabs"></div>
+
+    <div class="vol-row">
+      <div class="vol-icon" id="bg-vol-icon">🔇</div>
+      <div class="vol-slider-wrap">
+        <div class="vol-track">
+          <div class="vol-fill" id="bg-vol-fill" style="width:80%"></div>
+          <div class="vol-thumb" id="bg-vol-thumb" style="left:80%"></div>
+          <input type="range" class="vol-range" id="bg-vol" min="0" max="100" value="80" oninput="setBgVol(this.value)">
+        </div>
+      </div>
+      <div class="vol-icon">🔊</div>
+    </div>
+  </div>
+
+  <!-- SLEEP POPUP -->
+  <div class="popup" id="sleep-popup" onclick="event.stopPropagation()">
+    <div class="sleep-popup-title">Uyqu Taymer</div>
+    <div id="sleep-options"></div>
+  </div>
+
+</div>
+
+<!-- PLAYER -->
+<div id="app">
+  <div id="player-card">
+
+    <!-- Current ayah display -->
+    <div id="ayah-display"></div>
+
+    <!-- Now Playing -->
+    <div class="np-row">
+      <div class="np-avatar" id="np-avatar">
+        <svg id="np-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" width="26" height="26">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </div>
+      <div class="np-info">
+        <div class="np-surah" id="np-surah">Al-Fatiha</div>
+        <div class="np-qori" id="np-qori">Yasser Al-Dosari</div>
+      </div>
+      <button class="fav-btn" id="fav-btn" onclick="toggleFav()" title="Sevimlilar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon id="star-icon" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Controls -->
+    <div class="ctrl-row">
+      <!-- Left: speed -->
+      <div class="ctrl-side">
+        <button class="speed-btn" id="speed-btn" onclick="toggleSpeedPopup(event)" title="Tezlik">1×</button>
+      </div>
+
+      <!-- Center: prev / play / next -->
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="ctrl-btn" onclick="prevSurah()" title="Oldingi">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+            <polygon points="19 20 9 12 19 4"/>
+            <polygon points="9 20 0 12 9 4"/>
+          </svg>
+        </button>
+        <button class="play-btn" id="play-btn" onclick="togglePlay()">
+          <div class="spinner" id="play-spinner"></div>
+          <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </button>
+        <button class="ctrl-btn" onclick="nextSurah()" title="Keyingi">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+            <polygon points="5 4 14 12 5 20"/>
+            <polygon points="15 4 24 12 15 20"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Right: sleep -->
+      <div class="ctrl-side">
+        <button class="sleep-btn" id="sleep-btn" onclick="toggleSleepPopup(event)" title="Uyqu taymer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            <line x1="14" y1="8" x2="16" y2="8" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="11" x2="16" y2="11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="14" x2="16" y2="14" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+        <input type="range" class="progress-range" id="progress-range" min="0" max="100" value="0" oninput="seek(this.value)">
+      </div>
+    </div>
+    <div class="time-row">
+      <span id="time-current">0:00</span>
+      <span id="time-remain">-0:00</span>
+    </div>
+
+    <!-- Bottom toolbar — iOS 18 Liquid Glass, 5 clean SVG icons -->
+    <div class="toolbar">
+      <!-- Volume -->
+      <button class="tb-btn" id="vol-btn" onclick="toggleVolumePopup(event)" title="Ovoz">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5 6 9H2v6h4l5 4V5z"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+      </button>
+
+      <!-- Arabic subtitle (ق clean) -->
+      <button class="tb-btn" id="subtitle-btn" onclick="toggleSubtitle()" title="Arabcha matn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="3"/>
+          <path d="M7 10h4M7 14h2"/>
+          <path d="M15 10v4M17 12h-4"/>
+        </svg>
+      </button>
+
+      <!-- Video / Scene -->
+      <button class="tb-btn" id="video-bg-btn" onclick="openPanel('video')" title="Fon Videosi">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="15" height="14" rx="3"/>
+          <path d="M17 9l5-2v10l-5-2V9z"/>
+        </svg>
+      </button>
+
+      <!-- Microphone / Qori -->
+      <button class="tb-btn" onclick="openPanel('qori')" title="Qorilar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="2" width="6" height="11" rx="3"/>
+          <path d="M5 10a7 7 0 0 0 14 0"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="9" y1="22" x2="15" y2="22"/>
+        </svg>
+      </button>
+
+      <!-- Playlist / Surah list -->
+      <button class="tb-btn" onclick="openPanel('surah')" title="Suralar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="14" y2="18"/>
+          <circle cx="20" cy="18" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+
+const SURAHS = [
+  {n:1,ar:"الفاتحة",en:"Al-Fatiha",tr:"Ochuvchi",ayahs:7},
+  {n:2,ar:"البقرة",en:"Al-Baqara",tr:"Sigir",ayahs:286},
+  {n:3,ar:"آل عمران",en:"Al-Imran",tr:"Imron oilasi",ayahs:200},
+  {n:4,ar:"النساء",en:"An-Nisa",tr:"Ayollar",ayahs:176},
+  {n:5,ar:"المائدة",en:"Al-Maida",tr:"Dasturxon",ayahs:120},
+  {n:6,ar:"الأنعام",en:"Al-Anam",tr:"Chorva",ayahs:165},
+  {n:7,ar:"الأعراف",en:"Al-Araf",tr:"A'rof",ayahs:206},
+  {n:8,ar:"الأنفال",en:"Al-Anfal",tr:"O'ljalar",ayahs:75},
+  {n:9,ar:"التوبة",en:"At-Tawba",tr:"Tavba",ayahs:129},
+  {n:10,ar:"يونس",en:"Yunus",tr:"Yunus",ayahs:109},
+  {n:11,ar:"هود",en:"Hud",tr:"Hud",ayahs:123},
+  {n:12,ar:"يوسف",en:"Yusuf",tr:"Yusuf",ayahs:111},
+  {n:13,ar:"الرعد",en:"Ar-Rad",tr:"Momaqaldiroq",ayahs:43},
+  {n:14,ar:"إبراهيم",en:"Ibrahim",tr:"Ibrohim",ayahs:52},
+  {n:15,ar:"الحجر",en:"Al-Hijr",tr:"Hijr",ayahs:99},
+  {n:16,ar:"النحل",en:"An-Nahl",tr:"Asalari",ayahs:128},
+  {n:17,ar:"الإسراء",en:"Al-Isra",tr:"Tungi sayohat",ayahs:111},
+  {n:18,ar:"الكهف",en:"Al-Kahf",tr:"G'or",ayahs:110},
+  {n:19,ar:"مريم",en:"Maryam",tr:"Maryam",ayahs:98},
+  {n:20,ar:"طه",en:"Taha",tr:"Toha",ayahs:135},
+  {n:21,ar:"الأنبياء",en:"Al-Anbiya",tr:"Payg'ambarlar",ayahs:112},
+  {n:22,ar:"الحج",en:"Al-Hajj",tr:"Haj",ayahs:78},
+  {n:23,ar:"المؤمنون",en:"Al-Muminun",tr:"Mo'minlar",ayahs:118},
+  {n:24,ar:"النور",en:"An-Nur",tr:"Nur",ayahs:64},
+  {n:25,ar:"الفرقان",en:"Al-Furqan",tr:"Furqon",ayahs:77},
+  {n:26,ar:"الشعراء",en:"Ash-Shuara",tr:"Shoirlar",ayahs:227},
+  {n:27,ar:"النمل",en:"An-Naml",tr:"Chumolilar",ayahs:93},
+  {n:28,ar:"القصص",en:"Al-Qasas",tr:"Qissalar",ayahs:88},
+  {n:29,ar:"العنكبوت",en:"Al-Ankabut",tr:"O'rgimchak",ayahs:69},
+  {n:30,ar:"الروم",en:"Ar-Rum",tr:"Rum",ayahs:60},
+  {n:31,ar:"لقمان",en:"Luqman",tr:"Luqmon",ayahs:34},
+  {n:32,ar:"السجدة",en:"As-Sajda",tr:"Sajda",ayahs:30},
+  {n:33,ar:"الأحزاب",en:"Al-Ahzab",tr:"Toifalar",ayahs:73},
+  {n:34,ar:"سبأ",en:"Saba",tr:"Saba",ayahs:54},
+  {n:35,ar:"فاطر",en:"Fatir",tr:"Yaratuvchi",ayahs:45},
+  {n:36,ar:"يس",en:"Ya-Sin",tr:"Yo-Sin",ayahs:83},
+  {n:37,ar:"الصافات",en:"As-Saffat",tr:"Saflanganlar",ayahs:182},
+  {n:38,ar:"ص",en:"Sad",tr:"Sod",ayahs:88},
+  {n:39,ar:"الزمر",en:"Az-Zumar",tr:"Guruhlar",ayahs:75},
+  {n:40,ar:"غافر",en:"Ghafir",tr:"Mag'firuvchi",ayahs:85},
+  {n:41,ar:"فصلت",en:"Fussilat",tr:"Batafsil bayon",ayahs:54},
+  {n:42,ar:"الشورى",en:"Ash-Shura",tr:"Maslahat",ayahs:53},
+  {n:43,ar:"الزخرف",en:"Az-Zukhruf",tr:"Bezaklar",ayahs:89},
+  {n:44,ar:"الدخان",en:"Ad-Dukhan",tr:"Tutun",ayahs:59},
+  {n:45,ar:"الجاثية",en:"Al-Jathiya",tr:"Tiz cho'kkan",ayahs:37},
+  {n:46,ar:"الأحقاف",en:"Al-Ahqaf",tr:"Qum tepaliklari",ayahs:35},
+  {n:47,ar:"محمد",en:"Muhammad",tr:"Muhammad",ayahs:38},
+  {n:48,ar:"الفتح",en:"Al-Fath",tr:"G'alaba",ayahs:29},
+  {n:49,ar:"الحجرات",en:"Al-Hujurat",tr:"Uylar",ayahs:18},
+  {n:50,ar:"ق",en:"Qaf",tr:"Qof",ayahs:45},
+  {n:51,ar:"الذاريات",en:"Adh-Dhariyat",tr:"Tarqatuvchilar",ayahs:60},
+  {n:52,ar:"الطور",en:"At-Tur",tr:"Tur tog'i",ayahs:49},
+  {n:53,ar:"النجم",en:"An-Najm",tr:"Yulduz",ayahs:62},
+  {n:54,ar:"القمر",en:"Al-Qamar",tr:"Oy",ayahs:55},
+  {n:55,ar:"الرحمن",en:"Ar-Rahman",tr:"Mehribon",ayahs:78},
+  {n:56,ar:"الواقعة",en:"Al-Waqia",tr:"Voqea",ayahs:96},
+  {n:57,ar:"الحديد",en:"Al-Hadid",tr:"Temir",ayahs:29},
+  {n:58,ar:"المجادلة",en:"Al-Mujadila",tr:"Munozara",ayahs:22},
+  {n:59,ar:"الحشر",en:"Al-Hashr",tr:"Surgun",ayahs:24},
+  {n:60,ar:"الممتحنة",en:"Al-Mumtahana",tr:"Sinovdan o'tkazilgan",ayahs:13},
+  {n:61,ar:"الصف",en:"As-Saf",tr:"Saf",ayahs:14},
+  {n:62,ar:"الجمعة",en:"Al-Jumua",tr:"Juma",ayahs:11},
+  {n:63,ar:"المنافقون",en:"Al-Munafiqun",tr:"Munofiqlar",ayahs:11},
+  {n:64,ar:"التغابن",en:"At-Taghabun",tr:"Aldanish",ayahs:18},
+  {n:65,ar:"الطلاق",en:"At-Talaq",tr:"Talaq",ayahs:12},
+  {n:66,ar:"التحريم",en:"At-Tahrim",tr:"Harom qilish",ayahs:12},
+  {n:67,ar:"الملك",en:"Al-Mulk",tr:"Mulk",ayahs:30},
+  {n:68,ar:"القلم",en:"Al-Qalam",tr:"Qalam",ayahs:52},
+  {n:69,ar:"الحاقة",en:"Al-Haqqa",tr:"Haqiqat",ayahs:52},
+  {n:70,ar:"المعارج",en:"Al-Maarij",tr:"Ko'tarilish yo'llari",ayahs:44},
+  {n:71,ar:"نوح",en:"Nuh",tr:"Nuh",ayahs:28},
+  {n:72,ar:"الجن",en:"Al-Jinn",tr:"Jinlar",ayahs:28},
+  {n:73,ar:"المزمل",en:"Al-Muzzammil",tr:"Yopingan",ayahs:20},
+  {n:74,ar:"المدثر",en:"Al-Muddaththir",tr:"O'ranib olgan",ayahs:56},
+  {n:75,ar:"القيامة",en:"Al-Qiyama",tr:"Qiyomat",ayahs:40},
+  {n:76,ar:"الإنسان",en:"Al-Insan",tr:"Inson",ayahs:31},
+  {n:77,ar:"المرسلات",en:"Al-Mursalat",tr:"Yuborilganlar",ayahs:50},
+  {n:78,ar:"النبإ",en:"An-Naba",tr:"Xabar",ayahs:40},
+  {n:79,ar:"النازعات",en:"An-Naziat",tr:"Tortib oluvchilar",ayahs:46},
+  {n:80,ar:"عبس",en:"Abasa",tr:"Qovog'ini soldi",ayahs:42},
+  {n:81,ar:"التكوير",en:"At-Takwir",tr:"G'alayonlanish",ayahs:29},
+  {n:82,ar:"الانفطار",en:"Al-Infitar",tr:"Yorilish",ayahs:19},
+  {n:83,ar:"المطففين",en:"Al-Mutaffifin",tr:"Qisuvchilar",ayahs:36},
+  {n:84,ar:"الانشقاق",en:"Al-Inshiqaq",tr:"Yorilish",ayahs:25},
+  {n:85,ar:"البروج",en:"Al-Buruj",tr:"Burjlar",ayahs:22},
+  {n:86,ar:"الطارق",en:"At-Tariq",tr:"Tungi keluvchi",ayahs:17},
+  {n:87,ar:"الأعلى",en:"Al-Ala",tr:"Yuqori",ayahs:19},
+  {n:88,ar:"الغاشية",en:"Al-Ghashiya",tr:"Qoplaydigon",ayahs:26},
+  {n:89,ar:"الفجر",en:"Al-Fajr",tr:"Tong",ayahs:30},
+  {n:90,ar:"البلد",en:"Al-Balad",tr:"Shahar",ayahs:20},
+  {n:91,ar:"الشمس",en:"Ash-Shams",tr:"Quyosh",ayahs:15},
+  {n:92,ar:"الليل",en:"Al-Layl",tr:"Tun",ayahs:21},
+  {n:93,ar:"الضحى",en:"Ad-Duha",tr:"Kun choshgoh",ayahs:11},
+  {n:94,ar:"الشرح",en:"Ash-Sharh",tr:"Kengayish",ayahs:8},
+  {n:95,ar:"التين",en:"At-Tin",tr:"Anjir",ayahs:8},
+  {n:96,ar:"العلق",en:"Al-Alaq",tr:"Laxta qon",ayahs:19},
+  {n:97,ar:"القدر",en:"Al-Qadr",tr:"Qadr",ayahs:5},
+  {n:98,ar:"البينة",en:"Al-Bayyina",tr:"Dalil",ayahs:8},
+  {n:99,ar:"الزلزلة",en:"Az-Zalzala",tr:"Zilzila",ayahs:8},
+  {n:100,ar:"العاديات",en:"Al-Adiyat",tr:"Yuguruvchilar",ayahs:11},
+  {n:101,ar:"القارعة",en:"Al-Qaria",tr:"Qaroatchi",ayahs:11},
+  {n:102,ar:"التكاثر",en:"At-Takathur",tr:"Ko'payish",ayahs:8},
+  {n:103,ar:"العصر",en:"Al-Asr",tr:"Asr",ayahs:3},
+  {n:104,ar:"الهمزة",en:"Al-Humaza",tr:"Masxaraboz",ayahs:9},
+  {n:105,ar:"الفيل",en:"Al-Fil",tr:"Fil",ayahs:5},
+  {n:106,ar:"قريش",en:"Quraysh",tr:"Quraysh",ayahs:4},
+  {n:107,ar:"الماعون",en:"Al-Maun",tr:"Yordamchi narsa",ayahs:7},
+  {n:108,ar:"الكوثر",en:"Al-Kawthar",tr:"Ko'vsar",ayahs:3},
+  {n:109,ar:"الكافرون",en:"Al-Kafirun",tr:"Kofirlars",ayahs:6},
+  {n:110,ar:"النصر",en:"An-Nasr",tr:"Yordam",ayahs:3},
+  {n:111,ar:"المسد",en:"Al-Masad",tr:"Lif",ayahs:5},
+  {n:112,ar:"الإخلاص",en:"Al-Ikhlas",tr:"Ikhlos",ayahs:4},
+  {n:113,ar:"الفلق",en:"Al-Falaq",tr:"Tong",ayahs:5},
+  {n:114,ar:"الناس",en:"An-Nas",tr:"Insonlar",ayahs:6}
+];
+
+const QORIS = [
+  // Mp3Quran.net serverlariga to'g'rilangan aniq manzillar (prefix) bilan
+  { id: 'ar.alafasy', name: 'Mishary Rashid Al-Afasy', origin: 'Quvayt', img: 'mishari.jpg', prefix: 'https://server8.mp3quran.net/afs/' },
+  { id: 'ar.yasseraldossari', name: 'Yasser Al-Dosari', origin: 'SA', img: 'dosari.jpg', prefix: 'https://server11.mp3quran.net/yasser/' },
+  { id: 'ar.luhaidan', name: 'Muhammad Al-Luhaidan', origin: 'SA', img: 'luhaidan.jpg', prefix: 'https://server8.mp3quran.net/lhdan/' },
+  { id: 'ar.mahermuaiqly', name: 'Maher Al-Muaiqly', origin: 'Makka, SA', img: 'muaiqly.jpg', prefix: 'https://server12.mp3quran.net/maher/' },
+  { id: 'ar.abdurrahmaansudais', name: 'Abdurrahman As-Sudais', origin: 'Makka, SA', img: 'sudais.jpg', prefix: 'https://server11.mp3quran.net/sds/' },
+  { id: 'ar.saoodshuraym', name: 'Saood Ash-Shuraym', origin: 'SA', img: 'shuraym.jpg', prefix: 'https://server7.mp3quran.net/shur/' },
+  { id: 'ar.shaatree', name: 'Abu Bakr Ash-Shaatree', origin: 'SA', img: 'shaatree.jpg', prefix: 'https://server11.mp3quran.net/shatri/' },
+  { id: 'ar.ahmedajamy', name: 'Ahmed Al-Ajmi', origin: 'SA', img: 'ajmi.jpg', prefix: 'https://server10.mp3quran.net/ajm/' },
+  { id: 'ar.abdullahbasfar', name: 'Abdullah Basfar', origin: 'SA', img: 'basfar.jpg', prefix: 'https://server6.mp3quran.net/bsfr/' },
+  { id: 'ar.hanirifai', name: 'Hani Ar-Rifai', origin: 'SA', img: 'hani.jpg', prefix: 'https://server8.mp3quran.net/hani/' },
+  { id: 'ar.hudhaify', name: 'Ali Al-Hudhaify', origin: 'SA', img: 'hudhaify.jpg', prefix: 'https://server9.mp3quran.net/hthfi/' },
+  { id: 'ar.muhammadayyoub', name: 'Muhammad Ayyoub', origin: 'SA', img: 'ayyoub.jpg', prefix: 'https://server8.mp3quran.net/ayyub/' },
+  { id: 'ar.muhammadjibreel', name: 'Muhammad Jibreel', origin: 'Misr', img: 'jibreel.jpg', prefix: 'https://server8.mp3quran.net/jbrl/' },
+  { id: 'ar.abdulsamad', name: 'Abdul Basit (Murattal)', origin: 'Misr', img: 'abdulsamad.jpg', prefix: 'https://server7.mp3quran.net/basit/' },
+  { id: 'ar.minshawi', name: 'Mohammad Al-Minshawi', origin: 'Misr', img: 'minshawi.jpg', prefix: 'https://server10.mp3quran.net/minsh/' },
+  { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', origin: 'Misr', img: 'husary.jpg', prefix: 'https://server13.mp3quran.net/husr/' }
+];
+
+// MP3Quran tarmog'idan to'liq surani olish (uzilishlarsiz barqaror manba)
+function getSurahAudioUrl(qoriId, surahNum) {
+  const qori = QORIS.find(q => q.id === qoriId);
+  if (qori && qori.prefix) {
+    // Sura raqamini 3 xonali formatga o'tkazish (masalan: 1 -> 001, 9 -> 009, 114 -> 114)
+    const paddedSurah = String(surahNum).padStart(3, '0');
+    return `${qori.prefix}${paddedSurah}.mp3`;
+  }
+  // Agar qori topilmasa, xavfsizlik uchun Alafasy qaytariladi
+  return `https://server8.mp3quran.net/afs/${String(surahNum).padStart(3, '0')}.mp3`;
+}
+
+// Background sounds
+const BG_SOUNDS = [
+  { id: 'none',   label: 'Off',      emoji: '🔇', url: null },
+  { id: 'rain',   label: 'Yomg\'ir', emoji: '🌧️', url: 'sounds/rain.mp3' },
+  { id: 'ocean',  label: 'Okean',    emoji: '🌊', url: 'sounds/ocean.mp3' },
+  { id: 'fire',   label: 'Olov',     emoji: '🔥', url: 'sounds/fire.mp3' },
+  { id: 'nature', label: 'Tabiat',   emoji: '🌿', url: 'sounds/nature.mp3' },
+];
+
+const VIDEOS = [
+  { id: 0, file: 'video/1.mp4', label: 'Asosiy', emoji: '🌄' },
+  { id: 1, file: 'video/2.mp4', label: 'Tabiat', emoji: '🌿' },
+  { id: 2, file: 'video/3.mp4', label: 'Okean', emoji: '🌊' },
+  { id: 3, file: 'video/4.mp4', label: 'Tog\'lar', emoji: '⛰️' },
+  { id: 4, file: 'video/5.mp4', label: 'Cho\'l', emoji: '🏜️' },
+  { id: 5, file: 'video/6.mp4', label: 'Yulduzlar', emoji: '✨' },
+  { id: 6, file: 'video/7.mp4', label: 'Daryo', emoji: '🏞️' },
+  { id: 7, file: 'video/8.mp4', label: 'Qor', emoji: '❄️' },
+  { id: 8, file: 'video/9.mp4', label: 'Shabnam', emoji: '🌧️' },
+  { id: 9, file: 'video/10.mp4', label: 'Sahro', emoji: '🌅' },
+];
+
+const SPEEDS = [0.5, 0.8, 1, 1.5, 1.8, 2];
+const SLEEP_OPTIONS = [
+  {label:'O\'chiq', value:0},
+  {label:'5 daqiqa', value:5},
+  {label:'10 daqiqa', value:10},
+  {label:'15 daqiqa', value:15},
+  {label:'30 daqiqa', value:30},
+  {label:'45 daqiqa', value:45},
+  {label:'1 soat', value:60},
+  {label:'Surah tugaganda', value:-1},
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let state = {
+  surahIdx: 0, 
+  qoriIdx: 0,  
+  isPlaying: false,
+  speed: 1,
+  quranVol: 0.7,
+  bgVol: 0.8,
+  bgSoundIdx: 0,
+  sleepOption: 0, 
+  sleepTimer: null,
+  sleepRemain: 0,
+  favs: new Set(),
+  videoIdx: 0,
+};
+
+const quranAudio = new Audio();
+quranAudio.preload = 'metadata';
+let bgAudio = null;
+let sleepInterval = null;
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+function init() {
+  buildSurahList();
+  buildQoriList();
+  buildSpeedDots();
+  buildSoundTabs();
+  buildSleepOptions();
+  buildVideoGrid();
+  updateNowPlaying();
+  setupAudioEvents();
+}
+
+// ═══════════════════════════════════════════
+//  VIDEO BACKGROUND
+// ═══════════════════════════════════════════
+const VIDEO_ICONS = [
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M4.93 4.93l1.41 1.41M2 12h2M20 12h2M17.66 6.34l1.41-1.41M3 19h18M8 19a4 4 0 0 1 8 0"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 3-10 8-11 5 1 8 6 8 11a7 7 0 0 1-7 7z"/><path d="M12 2c0 6-4 10-4 10"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c1.5-2 3-2 4.5 0S9.5 14 11 12s3-2 4.5 0S18.5 14 20 12s2.5-2 2.5 0"/><path d="M2 17c1.5-2 3-2 4.5 0S9.5 19 11 17s3-2 4.5 0S18.5 19 20 17s2.5-2 2.5 0"/><path d="M2 7c1.5-2 3-2 4.5 0S9.5 9 11 7s3-2 4.5 0S18.5 9 20 7s2.5-2 2.5 0"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l6-10 4 6 3-4 5 8H3z"/><path d="M14 6l2-2 2 2"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M2 20c2-4 10-4 20 0"/><path d="M12 2v1M12 13v1M4.22 4.22l.7.7M18.36 4.22l.7-.7M2 8h1M21 8h1"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/><path d="M15 9l1.5 1.5M12 7v1M17 12h1"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6c2 0 4 2 8 2s6-2 8-2"/><path d="M4 12c2 0 4 2 8 2s6-2 8-2"/><path d="M4 18c2 0 4 2 8 2s6-2 8-2"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M5 6l7 3 7-3M5 18l7-3 7 3"/><path d="M3 9l3 3-3 3M21 9l-3 3 3 3"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/><line x1="8" y1="19" x2="8" y2="21"/><line x1="12" y1="18" x2="12" y2="20"/><line x1="16" y1="19" x2="16" y2="21"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><path d="M8 18a4 4 0 0 1 8 0"/></svg>`,
+];
+
+function buildVideoGrid() {
+  const container = document.getElementById('video-grid');
+  container.innerHTML = VIDEOS.map(v => `
+    <div class="video-item ${v.id === state.videoIdx ? 'active' : ''}"
+         onclick="selectVideo(${v.id})">
+      <div class="video-item-icon">${VIDEO_ICONS[v.id]}</div>
+      <div class="video-item-label">${v.label}</div>
+    </div>
+  `).join('');
+}
+
+function selectVideo(id) {
+  state.videoIdx = id;
+  buildVideoGrid();
+  const vid = document.getElementById('bg-video');
+  vid.style.transition = 'opacity 0.5s ease';
+  vid.style.opacity = '0';
+  setTimeout(() => {
+    vid.src = VIDEOS[id].file;
+    vid.load();
+    vid.play().catch(()=>{});
+    setTimeout(() => {
+      vid.style.opacity = '0.65';
+    }, 100);
+  }, 500);
+  showToast(VIDEOS[id].emoji + ' ' + VIDEOS[id].label + ' videosi');
+  closePanel('video');
+}
+
+let surahAyahs = [];
+let currentAyahIdx = 0;
+
+function setupAudioEvents() {
+  quranAudio.addEventListener('timeupdate', onTimeUpdate);
+  quranAudio.addEventListener('ended', onEnded);
+  quranAudio.addEventListener('loadstart', () => showSpinner(true));
+  quranAudio.addEventListener('canplay', () => showSpinner(false));
+  
+  quranAudio.addEventListener('error', () => {
+    showSpinner(false);
+    
+    // Tanlangan qorida surah topilmasa, Alafasy audio manziliga o'tadi (Zaxira tizimi)
+    if (QORIS[state.qoriIdx].id !== 'ar.alafasy') {
+      const s = SURAHS[state.surahIdx];
+      quranAudio.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${s.n}.mp3`;
+      if (state.isPlaying) {
+        quranAudio.play().catch(()=>{});
+      }
+    } else {
+      showToast('Audio fayl topilmadi, keyingisiga o\'tilmoqda...');
+      setTimeout(nextSurah, 1000);
+    }
+  });
+  
+  quranAudio.volume = state.quranVol;
+  quranAudio.playbackRate = state.speed;
+}
+
+function loadSurahAyahs(surahNum) {
+  surahAyahs = [];
+  currentAyahIdx = 0;
+  fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.code === 200 && data.data.ayahs) {
+        surahAyahs = data.data.ayahs;
+        
+        if (surahNum === 9) {
+          showAyah(0);
+          return;
+        }
+        
+        if (surahNum !== 1 && surahAyahs[0].text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
+          surahAyahs[0].text = surahAyahs[0].text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "").trim();
+        }
+        showAyah(0);
+      }
+    }).catch(()=>{});
+}
+
+function showAyah(idx) {
+  if (!surahAyahs.length || idx >= surahAyahs.length) return;
+  currentAyahIdx = idx;
+  const ayahEl = document.getElementById('ayah-display');
+  if (!isSubtitleOn) return;
+
+  ayahEl.classList.remove('visible');
+  ayahEl.classList.add('hiding');
+  setTimeout(() => {
+    ayahEl.classList.remove('hiding');
+    ayahEl.textContent = surahAyahs[idx].text || "...";
+    requestAnimationFrame(() => requestAnimationFrame(() => ayahEl.classList.add('visible')));
+  }, 350);
+}
+
+// ═══════════════════════════════════════════
+//  BUILD UI
+// ═══════════════════════════════════════════
+function buildSurahList(filter='') {
+  const container = document.getElementById('surah-list');
+  const filtered = filter
+    ? SURAHS.filter(s =>
+        s.en.toLowerCase().includes(filter.toLowerCase()) ||
+        s.ar.includes(filter) ||
+        s.tr.toLowerCase().includes(filter.toLowerCase()) ||
+        String(s.n).includes(filter)
+      )
+    : SURAHS;
+
+  container.innerHTML = filtered.map(s => `
+    <div class="surah-item ${s.n-1 === state.surahIdx ? 'active' : ''}"
+         onclick="selectSurah(${s.n-1})">
+      <div class="surah-num">${s.n}</div>
+      <div class="surah-names">
+        <div class="surah-en">${s.en} <span style="font-family:'Amiri',serif;font-size:14px;color:rgba(255,255,255,0.5);margin-left:6px">${s.ar}</span></div>
+        <div class="surah-sub">${s.tr}</div>
+      </div>
+      <div class="surah-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="16" x2="19" y2="16"/></svg></div>
+    </div>
+  `).join('');
+}
+
+function buildQoriList(filter='') {
+  const container = document.getElementById('qori-list');
+  const filtered = filter
+    ? QORIS.filter(q => q.name.toLowerCase().includes(filter.toLowerCase()) || q.origin.toLowerCase().includes(filter.toLowerCase()))
+    : QORIS;
+
+  container.innerHTML = filtered.map((q,i) => `
+    <div class="qori-item ${i === state.qoriIdx ? 'active' : ''}"
+         onclick="selectQori(${i})">
+      <div class="qori-avatar" style="overflow:hidden;padding:0;border:2px solid ${i === state.qoriIdx ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}" >
+        <img src="reciter/${q.img}" alt="${q.name}"
+             style="width:100%;height:100%;object-fit:cover;"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <svg style="display:none;width:100%;height:100%;align-items:center;justify-content:center" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" width="22" height="22">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </div>
+      <div class="qori-info">
+        <div class="qori-name">${q.name}</div>
+        <div class="qori-origin">${q.origin}</div>
+      </div>
+      <div class="qori-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildSpeedDots() {
+  const container = document.getElementById('speed-dots');
+  container.innerHTML = SPEEDS.map((s,i) => `
+    <button class="speed-dot ${s === state.speed ? 'active' : ''}"
+            onclick="setSpeed(${s})">${s === 1 ? '1×' : s+'×'}</button>
+  `).join('');
+  updateSpeedTrack();
+}
+
+function buildSoundTabs() {
+  const container = document.getElementById('sound-tabs');
+  container.innerHTML = BG_SOUNDS.map((s,i) => `
+    <button class="sound-tab ${i === state.bgSoundIdx ? 'active' : ''}"
+            onclick="selectBgSound(${i})">${s.emoji} ${s.label}</button>
+  `).join('');
+}
+
+function buildSleepOptions() {
+  const container = document.getElementById('sleep-options');
+  container.innerHTML = SLEEP_OPTIONS.map((o,i) => `
+    <div class="sleep-option ${state.sleepOption === o.value ? 'active' : ''}"
+         onclick="setSleep(${o.value})">
+      <span>${o.label}</span>
+      <span class="sleep-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg></span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════
+//  NOW PLAYING UPDATE
+// ═══════════════════════════════════════════
+function updateNowPlaying() {
+  const s = SURAHS[state.surahIdx];
+  const q = QORIS[state.qoriIdx];
+  document.getElementById('np-surah').textContent = s.en;
+  document.getElementById('np-qori').textContent = q.name;
+  
+  // Qori avatarini yangilash
+  const avatarEl = document.getElementById('np-avatar');
+  avatarEl.innerHTML = `
+    <img src="reciter/${q.img}" alt="${q.name}"
+         style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+         onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1a2a3a,#2a3a2a)'">`;
+
+  // Fav
+  const favBtn = document.getElementById('fav-btn');
+  if (state.favs.has(state.surahIdx)) {
+    favBtn.classList.add('active');
+    document.getElementById('star-icon').style.fill = 'currentColor';
+  } else {
+    favBtn.classList.remove('active');
+    document.getElementById('star-icon').style.fill = 'none';
+  }
+
+  // Load audio
+  const url = getSurahAudioUrl(q.id, s.n);
+  quranAudio.src = url;
+  quranAudio.playbackRate = state.speed;
+  quranAudio.volume = state.quranVol;
+
+  if (state.isPlaying) {
+    quranAudio.play().catch(()=>{});
+  }
+
+  // Update surah list active
+  buildSurahList(document.getElementById('surah-search').value);
+  buildQoriList(document.getElementById('qori-search').value);
+
+  // Update speed btn label
+  document.getElementById('speed-btn').textContent = state.speed === 1 ? '1×' : state.speed+'×';
+
+  // Load all ayahs for sync with audio
+  loadSurahAyahs(s.n);
+}
+
+// ═══════════════════════════════════════════
+//  PLAYBACK
+// ═══════════════════════════════════════════
+function togglePlay() {
+  if (quranAudio.paused) {
+    quranAudio.play().then(() => {
+      state.isPlaying = true;
+      setPlayIcon(false);
+    }).catch(()=>{});
+  } else {
+    quranAudio.pause();
+    state.isPlaying = false;
+    setPlayIcon(true);
+  }
+}
+
+function setPlayIcon(showPlay) {
+  document.getElementById('play-icon').innerHTML = showPlay
+    ? '<polygon points="5 3 19 12 5 21 5 3"/>'
+    : '<rect x="5" y="3" width="5" height="18" rx="2"/><rect x="14" y="3" width="5" height="18" rx="2"/>';
+}
+
+function showSpinner(show) {
+  document.getElementById('play-spinner').classList.toggle('show', show);
+  document.getElementById('play-icon').style.display = show ? 'none' : '';
+}
+
+function onTimeUpdate() {
+  const d = quranAudio.duration || 0;
+  const c = quranAudio.currentTime;
+  const pct = d ? (c/d)*100 : 0;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-range').value = pct;
+  document.getElementById('time-current').textContent = fmt(c);
+  document.getElementById('time-remain').textContent = '-' + fmt(d - c);
+
+  // Ayah sync: audio progress bo'yicha oyat almashtirish
+  if (surahAyahs.length > 0 && d > 0 && isSubtitleOn) {
+    const ayahCount = surahAyahs.length;
+    const ayahDuration = d / ayahCount;
+    const newIdx = Math.min(Math.floor(c / ayahDuration), ayahCount - 1);
+    if (newIdx !== currentAyahIdx) {
+      showAyah(newIdx);
+    }
+  }
+}
+
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s/60), ss = Math.floor(s%60);
+  return m+':'+(ss<10?'0':'')+ss;
+}
+
+function seek(val) {
+  const d = quranAudio.duration;
+  if (d) quranAudio.currentTime = (val/100)*d;
+}
+
+function onEnded() {
+  if (state.sleepOption === -1) {
+    state.isPlaying = false;
+    setPlayIcon(true);
+    clearSleepTimer();
+    showToast('Surah tugadi. Uyqu taymer o\'chdi.');
+    return;
+  }
+  nextSurah();
+}
+
+function nextSurah() {
+  state.surahIdx = (state.surahIdx + 1) % SURAHS.length;
+  updateNowPlaying();
+  if (state.isPlaying) {
+    quranAudio.play().catch(()=>{});
+  }
+}
+
+function prevSurah() {
+  if (quranAudio.currentTime > 3) {
+    quranAudio.currentTime = 0;
+    return;
+  }
+  state.surahIdx = (state.surahIdx - 1 + SURAHS.length) % SURAHS.length;
+  updateNowPlaying();
+  if (state.isPlaying) {
+    quranAudio.play().catch(()=>{});
+  }
+}
+
+function selectSurah(idx) {
+  state.surahIdx = idx;
+  state.isPlaying = true;
+  setPlayIcon(false);
+  updateNowPlaying();
+  quranAudio.play().catch(()=>{});
+  closePanel('surah');
+}
+
+function selectQori(idx) {
+  state.qoriIdx = idx;
+  updateNowPlaying();
+  if (state.isPlaying) quranAudio.play().catch(()=>{});
+  closePanel('qori');
+  showToast('Qori: ' + QORIS[idx].name);
+}
+
+// ═══════════════════════════════════════════
+//  SPEED
+// ═══════════════════════════════════════════
+function setSpeed(s) {
+  state.speed = s;
+  quranAudio.playbackRate = s;
+  document.getElementById('speed-btn').textContent = s === 1 ? '1×' : s+'×';
+  buildSpeedDots();
+  showToast('Tezlik: ' + (s === 1 ? '1×' : s+'×'));
+}
+
+function updateSpeedTrack() {
+  const idx = SPEEDS.indexOf(state.speed);
+  const pct = idx / (SPEEDS.length - 1) * 100;
+  document.getElementById('speed-track-fill').style.width = pct+'%';
+}
+
+// ═══════════════════════════════════════════
+//  VOLUME
+// ═══════════════════════════════════════════
+function setQuranVol(val) {
+  state.quranVol = val/100;
+  quranAudio.volume = state.quranVol;
+  document.getElementById('quran-vol-fill').style.width = val+'%';
+  document.getElementById('quran-vol-thumb').style.left = val+'%';
+  document.getElementById('quran-vol-icon').textContent =
+    val == 0 ? '🔇' : val < 40 ? '🔉' : '🔊';
+}
+
+function setBgVol(val) {
+  state.bgVol = val/100;
+  if (bgAudio) bgAudio.volume = state.bgVol;
+  document.getElementById('bg-vol-fill').style.width = val+'%';
+  document.getElementById('bg-vol-thumb').style.left = val+'%';
+  document.getElementById('bg-vol-icon').textContent =
+    val == 0 ? '🔇' : val < 40 ? '🔉' : '🔊';
+}
+
+// ═══════════════════════════════════════════
+//  BACKGROUND SOUND
+// ═══════════════════════════════════════════
+function selectBgSound(idx) {
+  state.bgSoundIdx = idx;
+  buildSoundTabs();
+
+  // Eski audioni smooth fade-out qilib o'chir
+  if (bgAudio) {
+    const old = bgAudio;
+    const fadeOut = setInterval(() => {
+      if (old.volume > 0.05) {
+        old.volume = Math.max(0, old.volume - 0.05);
+      } else {
+        old.pause();
+        old.src = '';
+        clearInterval(fadeOut);
+      }
+    }, 40);
+    bgAudio = null;
+  }
+
+  const sound = BG_SOUNDS[idx];
+  if (!sound.url) {
+    showToast('Fon tovushi o\'chirildi');
+    // Slider-ni ham yangilab qo'y
+    document.getElementById('bg-vol').value = state.bgVol * 100;
+    document.getElementById('bg-vol-fill').style.width = (state.bgVol * 100) + '%';
+    document.getElementById('bg-vol-thumb').style.left = (state.bgVol * 100) + '%';
+    return;
+  }
+
+  // Yangi audio: 20% dan boshlaydi, keyin state.bgVol ga chiqadi
+  bgAudio = new Audio(sound.url);
+  bgAudio.loop = true;
+  bgAudio.volume = 0.20;
+  bgAudio.play().catch(() => {
+    showToast('Fayl topilmadi: ' + sound.url);
+  });
+
+  // bgVol state ni ham 20% ga set qil (slider uchun)
+  state.bgVol = 0.20;
+  document.getElementById('bg-vol').value = 20;
+  document.getElementById('bg-vol-fill').style.width = '20%';
+  document.getElementById('bg-vol-thumb').style.left = '20%';
+  document.getElementById('bg-vol-icon').textContent = '🔉';
+
+  showToast(sound.emoji + ' ' + sound.label + ' — 🔉 20%');
+}
+
+// ═══════════════════════════════════════════
+//  SLEEP TIMER
+// ═══════════════════════════════════════════
+function setSleep(val) {
+  state.sleepOption = val;
+  clearSleepTimer();
+  buildSleepOptions();
+  closeAllPopups();
+
+  const sleepBtn = document.getElementById('sleep-btn');
+  const badge = document.getElementById('sleep-badge');
+
+  if (val === 0) {
+    sleepBtn.classList.remove('active');
+    badge.classList.remove('show');
+    showToast('Uyqu taymer o\'chirildi');
+    return;
+  }
+
+  sleepBtn.classList.add('active');
+
+  if (val === -1) {
+    badge.textContent = 'Surah tugaganda';
+    badge.classList.add('show');
+    showToast('Surah tugaganda to\'xtaydi');
+    return;
+  }
+
+  state.sleepRemain = val * 60;
+  badge.classList.add('show');
+  showToast('Uyqu taymer: ' + val + ' daqiqa');
+
+  sleepInterval = setInterval(() => {
+    state.sleepRemain--;
+    const m = Math.floor(state.sleepRemain/60);
+    const s = state.sleepRemain % 60;
+    badge.textContent = m+':'+(s<10?'0':'')+s;
+
+    if (state.sleepRemain <= 0) {
+      quranAudio.pause();
+      state.isPlaying = false;
+      setPlayIcon(true);
+      if (bgAudio) bgAudio.pause();
+      clearSleepTimer();
+      badge.classList.remove('show');
+      sleepBtn.classList.remove('active');
+      showToast('Uyqu taymer tugadi ✨');
+    }
+  }, 1000);
+}
+
+function clearSleepTimer() {
+  if (sleepInterval) { clearInterval(sleepInterval); sleepInterval = null; }
+  state.sleepOption = 0;
+  document.getElementById('sleep-btn').classList.remove('active');
+  document.getElementById('sleep-badge').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════
+//  FAVOURITES
+// ═══════════════════════════════════════════
+function toggleFav() {
+  if (state.favs.has(state.surahIdx)) {
+    state.favs.delete(state.surahIdx);
+    document.getElementById('fav-btn').classList.remove('active');
+    document.getElementById('star-icon').style.fill = 'none';
+    showToast('Sevimlilardan olib tashlandi');
+  } else {
+    state.favs.add(state.surahIdx);
+    document.getElementById('fav-btn').classList.add('active');
+    document.getElementById('star-icon').style.fill = 'currentColor';
+    showToast('★ Sevimlilarga qo\'shildi');
+  }
+}
+
+// ═══════════════════════════════════════════
+//  PANELS
+// ═══════════════════════════════════════════
+function openPanel(which) {
+  document.getElementById(which+'-panel').classList.add('open');
+}
+function closePanel(which) {
+  document.getElementById(which+'-panel').classList.remove('open');
+}
+
+function filterSurahs(v) { buildSurahList(v); }
+function filterQoris(v) { buildQoriList(v); }
+
+// ═══════════════════════════════════════════
+//  POPUPS
+// ═══════════════════════════════════════════
+let activePopup = null;
+
+function closeAllPopups() {
+  document.getElementById('popup-backdrop').classList.remove('show');
+  activePopup = null;
+}
+
+function showPopup(id, event) {
+  event && event.stopPropagation();
+  if (activePopup === id) { closeAllPopups(); return; }
+  document.getElementById('popup-backdrop').classList.add('show');
+  ['speed-popup','volume-popup','sleep-popup'].forEach(p => {
+    document.getElementById(p).style.display = 'none';
+  });
+  const popup = document.getElementById(id);
+  popup.style.display = '';
+
+  // Tugma pozitsiyasini topib, popupni ustiga joylashtirish
+  if (event && event.currentTarget) {
+    const btn = event.currentTarget;
+    const btnRect = btn.getBoundingClientRect();
+    const popupW = popup.offsetWidth || 280;
+    const margin = 12;
+
+    // Vertikal: tugmaning ustida
+    const bottomFromViewport = window.innerHeight - btnRect.top + 16;
+    popup.style.bottom = bottomFromViewport + 'px';
+    popup.style.top = 'auto';
+
+    // Horizontal: tugma markaziga align, lekin ekrandan chiqmasin
+    let left = btnRect.left + btnRect.width / 2 - popupW / 2;
+    left = Math.max(margin, Math.min(left, window.innerWidth - popupW - margin));
+    popup.style.left = left + 'px';
+    popup.style.right = 'auto';
+  }
+
+  activePopup = id;
+}
+
+function toggleSpeedPopup(e) { showPopup('speed-popup', e); }
+function toggleVolumePopup(e) { showPopup('volume-popup', e); }
+function toggleSleepPopup(e) { showPopup('sleep-popup', e); }
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════
+//  VIDEO BACKGROUND
+// ═══════════════════════════════════════════
+const vid = document.getElementById('bg-video');
+vid.addEventListener('error', () => {
+  document.body.style.background = 'linear-gradient(160deg, #050d18 0%, #0a0520 40%, #180510 80%, #050810 100%)';
+  vid.style.display = 'none';
+});
+
+// Video autoplay + loop CSS da belgilangan, qo'shimcha JS shart emas
+
+// ═══════════════════════════════════════════
+//  SHUFFLE & REPEAT
+// ═══════════════════════════════════════════
+let isSubtitleOn = true;
+let isShuffle = false;
+let isRepeat = false;
+
+function toggleSubtitle() {
+  isSubtitleOn = !isSubtitleOn;
+  const ayahEl = document.getElementById('ayah-display');
+  const btn = document.getElementById('subtitle-btn');
+  if (isSubtitleOn) {
+    ayahEl.style.display = 'flex';
+    btn.classList.add('active');
+  } else {
+    ayahEl.style.display = 'none';
+    btn.classList.remove('active');
+  }
+}
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('shuffle-btn').classList.toggle('active', isShuffle);
+  showToast(isShuffle ? 'Aralash yoqildi' : 'Aralash o\'chirildi');
+}
+
+function toggleRepeat() {
+  isRepeat = !isRepeat;
+  document.getElementById('repeat-btn').classList.toggle('active', isRepeat);
+  showToast(isRepeat ? 'Takrorlash yoqildi' : 'Takrorlash o\'chirildi');
+}
+
+// ═══════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
