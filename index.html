@@ -517,40 +517,60 @@
     --lg-inset: inset 0 1.5px 0 rgba(255,255,255,0.32), inset 0 -1px 0 rgba(0,0,0,0.18);
   }
 
-  /* Bottom toolbar — iOS 18 Liquid Glass */
   .toolbar {
     display: flex;
     align-items: center;
     justify-content: space-around;
     margin: 14px 14px 6px;
     padding: 8px 6px;
-    background: var(--lg-bg);
-    backdrop-filter: var(--lg-blur);
-    -webkit-backdrop-filter: var(--lg-blur);
-    border: 1px solid var(--lg-border);
-    border-radius: 28px;
-    box-shadow: var(--lg-shadow), var(--lg-inset);
+    border-radius: 32px;
     position: relative;
-    overflow: hidden;
+    isolation: isolate;
+
+    /* 🔑 ASOSIY: qoramtir shaffof baza — oq emas! */
+    background: rgba(30, 30, 35, 0.45);
+
+    /* 🔑 brightness(0.9) — fon rangini biroz qoraitadi */
+    backdrop-filter: blur(40px) saturate(2.5) brightness(0.9);
+    -webkit-backdrop-filter: blur(40px) saturate(2.5) brightness(0.9);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+      inset 1px 0 0 rgba(255, 255, 255, 0.10),
+      inset -1px 0 0 rgba(255, 255, 255, 0.06),
+      0 2px 1px rgba(0, 0, 0, 0.5),
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 20px 60px rgba(0, 0, 0, 0.25);
   }
-  /* Shine layer */
   .toolbar::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
+    top: 0; left: 15%; right: 15%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--lg-shine) 30%, var(--lg-shine) 70%, transparent);
-    border-radius: 28px 28px 0 0;
+    background: linear-gradient(90deg,
+      transparent,
+      rgba(255,255,255,0.70) 30%,
+      rgba(255,255,255,0.70) 70%,
+      transparent);
+    border-radius: 99px;
     pointer-events: none;
+    z-index: 3;
   }
-  /* Subtle inner glow */
   .toolbar::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: 28px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    top: 1px; left: 2px; right: 2px;
+    height: 48%;
+    border-radius: 30px 30px 40% 40% / 30px 30px 14px 14px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.04) 60%,
+      transparent 100%);
     pointer-events: none;
+    z-index: 2;
   }
 
   .tb-btn {
@@ -820,24 +840,18 @@
     color: var(--text-primary);
   }
 
-  /* Arabic text display */
   #ayah-display {
     text-align: center;
-    padding: 0 24px 16px;
-    font-family: 'Amiri', serif;
-    font-size: 20px;
-    line-height: 2;
-    color: rgba(255,255,255,0.85);
+    padding: 0 20px 12px;
     opacity: 0;
     transform: translateY(6px);
     transition: opacity 0.6s ease, transform 0.6s ease;
-    min-height: 60px;
+    min-height: 64px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    direction: rtl;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    gap: 6px;
   }
   #ayah-display.visible {
     opacity: 1;
@@ -847,6 +861,32 @@
     opacity: 0;
     transform: translateY(-6px);
     transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  #ayah-arabic {
+    font-family: 'Amiri', serif;
+    font-size: 18px;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.88);
+    direction: rtl;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+  #ayah-uzbek {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    line-height: 1.45;
+    color: rgba(255,255,255,0.42);
+    direction: ltr;
+    text-align: center;
+    max-width: 340px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Surah badge */
@@ -1247,7 +1287,10 @@
   <div id="player-card">
 
     <!-- Current ayah display -->
-    <div id="ayah-display"></div>
+    <div id="ayah-display">
+      <div id="ayah-arabic"></div>
+      <div id="ayah-uzbek"></div>
+    </div>
 
     <!-- Now Playing -->
     <div class="np-row">
@@ -1498,6 +1541,11 @@ const SURAHS = [
   {n:114,ar:"الناس",en:"An-Nas",tr:"Insonlar",ayahs:6}
 ];
 
+
+
+
+
+
 const QORIS = [
   // Mp3Quran.net serverlariga to'g'rilangan aniq manzillar (prefix) bilan
   { id: 'ar.alafasy', name: 'Mishary Rashid Al-Afasy', origin: 'Quvayt', img: 'mishari.jpg', prefix: 'https://server8.mp3quran.net/afs/' },
@@ -1647,7 +1695,10 @@ function selectVideo(id) {
 }
 
 let surahAyahs = [];
+let uzbekAyahs = [];
 let currentAyahIdx = 0;
+let ayahTimestamps = [];
+let ayahSyncReady = false;
 
 function setupAudioEvents() {
   quranAudio.addEventListener('timeupdate', onTimeUpdate);
@@ -1675,27 +1726,211 @@ function setupAudioEvents() {
   quranAudio.playbackRate = state.speed;
 }
 
-function loadSurahAyahs(surahNum) {
+// ═══════════════════════════════════════════
+//  OYAT SINXRONIZATSIYA — EVERYAYAH TIMESTAMPS
+// ═══════════════════════════════════════════
+
+// Qori ID → everyayah.com identifier mapping
+const QORI_CDN_MAP = {
+  'ar.alafasy':            'ar.alafasy',
+  'ar.yasseraldossari':    'ar.yasseraldossari',
+  'ar.luhaidan':           'ar.luhaidan',
+  'ar.mahermuaiqly':       'ar.mahermuaiqly',
+  'ar.abdurrahmaansudais': 'ar.abdurrahmaansudais',
+  'ar.saoodshuraym':       'ar.saoodshuraym',
+  'ar.shaatree':           'ar.shaatree',
+  'ar.ahmedajamy':         'ar.ahmedajamy',
+  'ar.abdullahbasfar':     'ar.abdullahbasfar',
+  'ar.hanirifai':          'ar.hanirifai',
+  'ar.hudhaify':           'ar.hudhaify',
+  'ar.muhammadayyoub':     'ar.muhammadayyoub',
+  'ar.muhammadjibreel':    'ar.muhammadjibreel',
+  'ar.abdulsamad':         'ar.abdulsamad',
+  'ar.minshawi':           'ar.minshawi',
+  'ar.husary':             'ar.husary',
+};
+
+async function loadSurahAyahs(surahNum) {
   surahAyahs = [];
+  uzbekAyahs = [];
   currentAyahIdx = 0;
-  fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
-    .then(r => r.json())
-    .then(data => {
-      if (data.code === 200 && data.data.ayahs) {
-        surahAyahs = data.data.ayahs;
-        
-        if (surahNum === 9) {
-          showAyah(0);
-          return;
-        }
-        
-        if (surahNum !== 1 && surahAyahs[0].text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
-          surahAyahs[0].text = surahAyahs[0].text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "").trim();
-        }
-        showAyah(0);
+  ayahTimestamps = [];
+  ayahSyncReady = false;
+
+  const thisSurah = surahNum;
+
+  try {
+    const ayahCount = SURAHS[surahNum - 1].ayahs;
+
+    // Arabic + O'zbek tarjimasi bir so'rovda (editions param bilan)
+    const [comboData, timestamps] = await Promise.all([
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,uz.sodik`)
+        .then(r => r.json())
+        .catch(() => ({ code: 0 })),
+      buildAyahTimestamps(surahNum, ayahCount, QORIS[state.qoriIdx]?.id || 'ar.alafasy')
+    ]);
+
+    if (SURAHS[state.surahIdx].n !== thisSurah) return;
+
+    // Combo muvaffaqiyatli bo'lsa
+    if (comboData.code === 200 && Array.isArray(comboData.data) && comboData.data.length >= 2) {
+      surahAyahs = comboData.data[0].ayahs;
+      uzbekAyahs = comboData.data[1].ayahs;
+    } else {
+      // Fallback: faqat arabic
+      const arabicData = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
+        .then(r => r.json()).catch(() => ({ code: 0 }));
+      if (arabicData.code === 200 && arabicData.data?.ayahs) {
+        surahAyahs = arabicData.data.ayahs;
       }
-    }).catch(()=>{});
+      // O'zbek tarjimasini alohida sinab ko'rish
+      const uzIdentifiers = ['uz.sodik', 'uz.mansour', 'uz.abdulaziz'];
+      for (const uzId of uzIdentifiers) {
+        try {
+          const uzData = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${uzId}`)
+            .then(r => r.json());
+          if (uzData.code === 200 && uzData.data?.ayahs) {
+            uzbekAyahs = uzData.data.ayahs;
+            break;
+          }
+        } catch(e) {}
+      }
+    }
+
+    if (!surahAyahs.length) return;
+
+    // Bismillah tozalash — arabcha
+    if (surahNum !== 1 && surahNum !== 9 &&
+        surahAyahs[0]?.text?.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')) {
+      surahAyahs[0].text = surahAyahs[0].text
+        .replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
+    }
+    // Bismillah tozalash — o'zbek
+    if (surahNum !== 1 && surahNum !== 9 && uzbekAyahs[0]?.text) {
+      uzbekAyahs[0].text = uzbekAyahs[0].text
+        .replace(/^(Mehribon va rahmli Allohning nomi bilan\.?\s*)/i, '').trim();
+    }
+
+    ayahTimestamps = timestamps;
+    ayahSyncReady = (ayahTimestamps.length === surahAyahs.length);
+
+    if (isSubtitleOn) showAyah(0);
+
+  } catch (e) {
+    ayahSyncReady = false;
+    if (isSubtitleOn && surahAyahs.length) showAyah(0);
+  }
 }
+
+// Har oyat audio faylining uzunligini parallel o'lchash
+async function measureAyahDurations(surahNum, ayahCount, qoriId) {
+  // Faqat birinchi 10 ta oyatni parallel o'lchab, qolganlarini o'rtacha bilan to'ldirish
+  // (Chunki 286 ta oyatli suralar uchun barchani yuklash sekin)
+  const MAX_MEASURE = Math.min(ayahCount, 15);
+  const BASE_URL = `https://cdn.islamic.network/quran/audio/128/${qoriId}`;
+
+  // Global ayah raqamlarini hisoblash (surah 1 dan boshlanganda)
+  const globalStartAyah = getGlobalAyahStart(surahNum);
+
+  const measurePromises = [];
+  for (let i = 0; i < MAX_MEASURE; i++) {
+    const globalAyah = globalStartAyah + i;
+    measurePromises.push(getAudioDuration(`${BASE_URL}/${globalAyah}.mp3`));
+  }
+
+  const measuredDurations = await Promise.all(measurePromises);
+
+  // O'rtacha hisoblash
+  const validDurations = measuredDurations.filter(d => d > 0);
+  const avgDuration = validDurations.length > 0
+    ? validDurations.reduce((a,b) => a+b, 0) / validDurations.length
+    : 4; // Fallback: 4 soniya
+
+  // Qolgan oyatlar uchun o'rtacha qo'llash
+  const allDurations = [];
+  for (let i = 0; i < ayahCount; i++) {
+    if (i < measuredDurations.length && measuredDurations[i] > 0) {
+      allDurations.push(measuredDurations[i]);
+    } else {
+      allDurations.push(avgDuration);
+    }
+  }
+
+  return allDurations;
+}
+
+// Surahning global birinchi oyat raqamini hisoblash
+function getGlobalAyahStart(surahNum) {
+  let count = 1;
+  for (let i = 0; i < surahNum - 1; i++) count += SURAHS[i].ayahs;
+  return count;
+}
+
+// Bitta audio URL ning davomiyligini olish
+function getAudioDuration(url) {
+  return new Promise(resolve => {
+    const a = new Audio();
+    const t = setTimeout(() => { a.src = ''; resolve(0); }, 6000);
+    a.addEventListener('loadedmetadata', () => {
+      clearTimeout(t);
+      const d = a.duration;
+      a.src = '';
+      resolve(isFinite(d) && d > 0 ? d : 0);
+    }, { once: true });
+    a.addEventListener('error', () => {
+      clearTimeout(t);
+      a.src = '';
+      resolve(0);
+    }, { once: true });
+    a.preload = 'metadata';
+    a.src = url;
+  });
+}
+
+
+// Barcha oyatlar uchun timestamp massivini qurish
+async function buildAyahTimestamps(surahNum, ayahCount, qoriId) {
+  const cdnId = QORI_CDN_MAP[qoriId] || 'ar.alafasy';
+  const BASE = `https://cdn.islamic.network/quran/audio/128/${cdnId}`;
+  const globalStart = getGlobalAyahStart(surahNum);
+
+  // Barcha oyatlarni parallel yuklash (max 30 ta bir vaqtda)
+  // Ko'p oyatli suralarda batchlab qilinadi
+  const BATCH = 30;
+  const allDurations = new Array(ayahCount).fill(0);
+
+  for (let batchStart = 0; batchStart < ayahCount; batchStart += BATCH) {
+    const batchEnd = Math.min(batchStart + BATCH, ayahCount);
+    const promises = [];
+    for (let i = batchStart; i < batchEnd; i++) {
+      promises.push(getAudioDuration(`${BASE}/${globalStart + i}.mp3`));
+    }
+    const results = await Promise.all(promises);
+    for (let i = 0; i < results.length; i++) {
+      allDurations[batchStart + i] = results[i];
+    }
+  }
+
+  // Bo'sh (0) qiymatlarni o'rtacha bilan to'ldirish
+  const valid = allDurations.filter(d => d > 0);
+  const avg = valid.length > 0
+    ? valid.reduce((a, b) => a + b, 0) / valid.length
+    : 5;
+
+  for (let i = 0; i < allDurations.length; i++) {
+    if (allDurations[i] <= 0) allDurations[i] = avg;
+  }
+
+  // Kumulyativ timestamp
+  const timestamps = [];
+  let cum = 0;
+  for (const dur of allDurations) {
+    timestamps.push(cum);
+    cum += dur;
+  }
+  return timestamps;
+}
+
 
 function showAyah(idx) {
   if (!surahAyahs.length || idx >= surahAyahs.length) return;
@@ -1707,7 +1942,17 @@ function showAyah(idx) {
   ayahEl.classList.add('hiding');
   setTimeout(() => {
     ayahEl.classList.remove('hiding');
-    ayahEl.textContent = surahAyahs[idx].text || "...";
+    const arEl = document.getElementById('ayah-arabic');
+    const uzEl = document.getElementById('ayah-uzbek');
+    if (arEl) arEl.textContent = surahAyahs[idx]?.text || '';
+    if (uzEl) {
+      const fullText = (uzbekAyahs && uzbekAyahs[idx]?.text) ? uzbekAyahs[idx].text : '';
+      // Birinchi jumlani olish (nuqta yoki qavs tugashida)
+      const firstSentence = fullText.split(/(?<=\.)\s+(?=[A-ZA-Ya-z])/)[0] || fullText;
+      uzEl.textContent = firstSentence.length > 120
+        ? firstSentence.slice(0, 117) + '…'
+        : firstSentence;
+    }
     requestAnimationFrame(() => requestAnimationFrame(() => ayahEl.classList.add('visible')));
   }, 350);
 }
@@ -1878,20 +2123,43 @@ function onTimeUpdate() {
   const d = quranAudio.duration || 0;
   const c = quranAudio.currentTime;
   const pct = d ? (c/d)*100 : 0;
+
   document.getElementById('progress-fill').style.width = pct+'%';
   document.getElementById('progress-range').value = pct;
   document.getElementById('time-current').textContent = fmt(c);
   document.getElementById('time-remain').textContent = '-' + fmt(d - c);
 
-  // Ayah sync: audio progress bo'yicha oyat almashtirish
-  if (surahAyahs.length > 0 && d > 0 && isSubtitleOn) {
-    const ayahCount = surahAyahs.length;
-    const ayahDuration = d / ayahCount;
-    const newIdx = Math.min(Math.floor(c / ayahDuration), ayahCount - 1);
-    if (newIdx !== currentAyahIdx) {
-      showAyah(newIdx);
+  if (!isSubtitleOn || surahAyahs.length === 0 || d === 0) return;
+
+  let newIdx;
+
+  if (ayahSyncReady && ayahTimestamps.length === surahAyahs.length) {
+    // Kuchli algoritm: o'lchangan timestamp bo'yicha
+    // Ikkilik qidiruv (binary search) — eng yaqin oyatni topadi
+    newIdx = findAyahByTimestamp(c);
+  } else {
+    // Fallback: teng taqsimlash
+    const ayahDuration = d / surahAyahs.length;
+    newIdx = Math.min(Math.floor(c / ayahDuration), surahAyahs.length - 1);
+  }
+
+  if (newIdx !== currentAyahIdx) {
+    showAyah(newIdx);
+  }
+}
+
+// Timestamp bo'yicha oyat indeksini topish (binary search)
+function findAyahByTimestamp(currentTime) {
+  let lo = 0, hi = ayahTimestamps.length - 1;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (ayahTimestamps[mid] <= currentTime) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
     }
   }
+  return lo;
 }
 
 function fmt(s) {
@@ -1998,47 +2266,58 @@ function selectBgSound(idx) {
   state.bgSoundIdx = idx;
   buildSoundTabs();
 
-  // Eski audioni smooth fade-out qilib o'chir
+  // Avval barcha eski audio resurslarni to'liq tozala
   if (bgAudio) {
-    const old = bgAudio;
-    const fadeOut = setInterval(() => {
-      if (old.volume > 0.05) {
-        old.volume = Math.max(0, old.volume - 0.05);
-      } else {
-        old.pause();
-        old.src = '';
-        clearInterval(fadeOut);
-      }
-    }, 40);
+    bgAudio.pause();
+    bgAudio.src = '';
+    bgAudio.load();
     bgAudio = null;
   }
 
   const sound = BG_SOUNDS[idx];
+
   if (!sound.url) {
     showToast('Fon tovushi o\'chirildi');
-    // Slider-ni ham yangilab qo'y
-    document.getElementById('bg-vol').value = state.bgVol * 100;
-    document.getElementById('bg-vol-fill').style.width = (state.bgVol * 100) + '%';
-    document.getElementById('bg-vol-thumb').style.left = (state.bgVol * 100) + '%';
     return;
   }
 
-  // Yangi audio: 20% dan boshlaydi, keyin state.bgVol ga chiqadi
-  bgAudio = new Audio(sound.url);
-  bgAudio.loop = true;
-  bgAudio.volume = 0.20;
-  bgAudio.play().catch(() => {
-    showToast('Fayl topilmadi: ' + sound.url);
-  });
+  // Yangi audio ob'ektini yaratish
+  const newAudio = new Audio();
+  newAudio.loop = true;
+  newAudio.volume = 0;
+  newAudio.preload = 'auto';
 
-  // bgVol state ni ham 20% ga set qil (slider uchun)
-  state.bgVol = 0.20;
-  document.getElementById('bg-vol').value = 20;
-  document.getElementById('bg-vol-fill').style.width = '20%';
-  document.getElementById('bg-vol-thumb').style.left = '20%';
-  document.getElementById('bg-vol-icon').textContent = '🔉';
+  newAudio.addEventListener('canplaythrough', () => {
+    bgAudio = newAudio;
+    bgAudio.play().then(() => {
+      // Smooth fade-in: 0 → 0.20
+      let v = 0;
+      const fadeIn = setInterval(() => {
+        v = Math.min(v + 0.02, 0.20);
+        bgAudio.volume = v;
+        if (v >= 0.20) clearInterval(fadeIn);
+      }, 40);
 
-  showToast(sound.emoji + ' ' + sound.label + ' — 🔉 20%');
+      state.bgVol = 0.20;
+      document.getElementById('bg-vol').value = 20;
+      document.getElementById('bg-vol-fill').style.width = '20%';
+      document.getElementById('bg-vol-thumb').style.left = '20%';
+      document.getElementById('bg-vol-icon').textContent = '🔉';
+    }).catch(() => {
+      showToast('Fayl topilmadi: ' + sound.url);
+      bgAudio = null;
+    });
+  }, { once: true });
+
+  newAudio.addEventListener('error', () => {
+    showToast('Audio xatosi: ' + sound.label);
+    bgAudio = null;
+  }, { once: true });
+
+  newAudio.src = sound.url;
+  newAudio.load();
+
+  showToast(sound.emoji + ' ' + sound.label + ' yuklanmoqda...');
 }
 
 // ═══════════════════════════════════════════
