@@ -1638,10 +1638,138 @@
     margin-bottom: 32px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   }
-  .dv-label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 16px; }
+  .dv-label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 16px; }
   .dv-arabic { font-family: 'Amiri', serif; font-size: 22px; line-height: 1.9; color: #fff; direction: rtl; text-align: center; margin-bottom: 16px; padding: 0 4px; }
   .dv-uz { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.78); margin-bottom: 12px; }
   .dv-ref { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; }
+
+  /* ═══ MUSHAF (QUR'ON O'QISH) SCREEN ═══ */
+  #mushaf-screen {
+    position: fixed; inset: 0; z-index: 12;
+    overflow-y: auto; scrollbar-width: none;
+    background: #000;
+  }
+  #mushaf-screen::-webkit-scrollbar { display: none; }
+  #mushaf-screen.hidden { opacity: 0; pointer-events: none; }
+
+  .mushaf-header {
+    position: sticky; top: 0; z-index: 5;
+    background: rgba(5,5,8,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 100px 16px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .mushaf-header-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .mushaf-back {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: none; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; transition: background 0.2s;
+  }
+  .mushaf-back:active { background: rgba(255,255,255,0.15); }
+  .mushaf-title { font-size: 24px; font-weight: 800; letter-spacing: -0.4px; }
+
+  .mushaf-list-wrap { padding: 0 16px calc(env(safe-area-inset-bottom, 0px) + 200px); max-width: 700px; margin: 0 auto; }
+
+  .mushaf-surah-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 4px; cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.15s;
+  }
+  .mushaf-surah-item:hover { background: rgba(255,255,255,0.04); }
+  .mushaf-surah-num {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7);
+    flex-shrink: 0;
+  }
+  .mushaf-surah-names { flex: 1; min-width: 0; }
+  .mushaf-surah-en { font-size: 15px; font-weight: 600; color: #fff; }
+  .mushaf-surah-tr { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .mushaf-surah-ar { font-family: 'Amiri', serif; font-size: 19px; color: rgba(255,255,255,0.65); }
+
+  /* Mushaf Reader (sura ichidagi o'qish ekrani) */
+  #mushaf-reader-screen {
+    position: fixed; inset: 0; z-index: 13;
+    overflow-y: auto; scrollbar-width: none;
+    background: #000;
+  }
+  #mushaf-reader-screen::-webkit-scrollbar { display: none; }
+  #mushaf-reader-screen.hidden { opacity: 0; pointer-events: none; }
+
+  .mr-header {
+    position: sticky; top: 0; z-index: 5;
+    background: rgba(5,5,8,0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 100px 16px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .mr-title-wrap { flex: 1; min-width: 0; }
+  .mr-title { font-size: 18px; font-weight: 700; color: #fff; }
+  .mr-sub { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+
+  .mr-content { padding: 20px 16px calc(env(safe-area-inset-bottom, 0px) + 200px); max-width: 700px; margin: 0 auto; }
+
+  .mr-bismillah {
+    font-family: 'Amiri', serif; font-size: 24px; text-align: center;
+    color: var(--gold); margin-bottom: 28px; padding: 0 10px;
+  }
+
+  .mr-ayah-block {
+    margin-bottom: 26px; padding-bottom: 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .mr-ayah-block:last-child { border-bottom: none; }
+
+  .mr-ayah-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 10px; margin-bottom: 10px;
+  }
+  .mr-ayah-num-badge {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6);
+    flex-shrink: 0;
+  }
+  .mr-bookmark-btn {
+    width: 30px; height: 30px; border-radius: 50%; border: none;
+    background: transparent; color: rgba(255,255,255,0.35);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  }
+  .mr-bookmark-btn.active { color: var(--gold); }
+  .mr-bookmark-btn:active { transform: scale(0.85); }
+
+  .mr-ayah-arabic {
+    font-family: 'Amiri', serif; font-size: 26px; line-height: 2.05;
+    color: #fff; direction: rtl; text-align: right;
+    letter-spacing: 0.3px; margin-bottom: 12px;
+  }
+  .mr-ayah-uzbek {
+    font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.7;
+    color: rgba(255,255,255,0.62); direction: ltr; text-align: left;
+  }
+
+  .mr-loading {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 20px; gap: 16px; color: rgba(255,255,255,0.4);
+  }
+
+  @media (min-width: 768px) {
+    .mushaf-header { padding-top: 100px; }
+    .mushaf-list-wrap { max-width: 800px; }
+    .mr-header { padding-top: 100px; }
+    .mr-content { max-width: 760px; }
+    .mr-ayah-arabic { font-size: 30px; }
+  }
 
   /* ═══ QORI PROFILE SCREEN ═══ */
   #qori-profile-screen {
@@ -1954,6 +2082,18 @@
     </div>
     <div id="home-new-list"></div>
 
+    <div style="height:28px"></div>
+
+    <div class="notification-card" onclick="openMushaf()" style="margin-bottom: 32px;">
+      <div class="notif-icon" style="background: #ffffff;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" width="20" height="20"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H9a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H15a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h8z"/></svg>
+      </div>
+      <div>
+        <div class="notif-text">Qur'on o'qish</div>
+        <div class="notif-sub">Suralarni arabcha va o'zbekcha o'qing</div>
+      </div>
+    </div>
+
     <div class="daily-verse-card" id="daily-verse-card"></div>
 
     <div class="insights-card">
@@ -2045,6 +2185,42 @@
     <div class="r-see-all" onclick="openPanel('qori')">Barchasi</div>
   </div>
  <div class="r-scroll" id="rs-new-list"></div>
+</div>
+
+<!-- MUSHAF — SURALAR RO'YXATI -->
+<div id="mushaf-screen" class="hidden">
+  <div class="mushaf-header">
+    <div class="mushaf-header-row">
+      <button class="mushaf-back" onclick="closeMushaf()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <div class="mushaf-title">Qur'on o'qish</div>
+    </div>
+    <div class="search-container" style="margin-bottom: 0;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="mushaf-search" placeholder="Surani qidiring..." oninput="filterMushafSurahs(this.value)">
+    </div>
+  </div>
+  <div class="mushaf-list-wrap" id="mushaf-surah-list"></div>
+</div>
+
+<!-- MUSHAF — SURA O'QISH EKRANI -->
+<div id="mushaf-reader-screen" class="hidden">
+  <div class="mr-header">
+    <button class="mushaf-back" onclick="closeMushafReader()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="mr-title-wrap">
+      <div class="mr-title" id="mr-title">Surah</div>
+      <div class="mr-sub" id="mr-sub"></div>
+    </div>
+  </div>
+  <div class="mr-content" id="mr-content">
+    <div class="mr-loading">
+      <div class="spinner show" style="width:28px;height:28px;"></div>
+      <div>Yuklanmoqda...</div>
+    </div>
+  </div>
 </div>
 
 <!-- QORI PROFILE SCREEN -->
@@ -4145,6 +4321,175 @@ function selectQoriFromHome(idx) {
 }
 
 // ═══════════════════════════════════════════
+//  MUSHAF (QUR'ON O'QISH)
+// ═══════════════════════════════════════════
+let bookmarkedAyahs = JSON.parse(localStorage.getItem('bookmarkedAyahs') || '[]');
+let mushafReaderCache = {}; // surahNum -> {ar: [...], uz: [...]}
+
+function openMushaf() {
+  buildMushafSurahList();
+  document.getElementById('mushaf-screen').classList.remove('hidden');
+  document.getElementById('mini-player').style.display = 'none';
+  document.getElementById('nav-bar').style.display = 'none';
+}
+
+function closeMushaf() {
+  document.getElementById('mushaf-screen').classList.add('hidden');
+  document.getElementById('mini-player').style.display = 'flex';
+  document.getElementById('nav-bar').style.display = 'flex';
+}
+
+function buildMushafSurahList(filter = '') {
+  const container = document.getElementById('mushaf-surah-list');
+  const filtered = filter
+    ? SURAHS.filter(s =>
+        s.en.toLowerCase().includes(filter.toLowerCase()) ||
+        s.ar.includes(filter) ||
+        s.tr.toLowerCase().includes(filter.toLowerCase()) ||
+        String(s.n).includes(filter)
+      )
+    : SURAHS;
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 0;">Topilmadi</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(s => `
+    <div class="mushaf-surah-item" onclick="openMushafReader(${s.n})">
+      <div class="mushaf-surah-num">${s.n}</div>
+      <div class="mushaf-surah-names">
+        <div class="mushaf-surah-en">${s.en}</div>
+        <div class="mushaf-surah-tr">${s.tr} • ${s.ayahs} oyat</div>
+      </div>
+      <div class="mushaf-surah-ar">${s.ar}</div>
+    </div>
+  `).join('');
+}
+
+function filterMushafSurahs(v) { buildMushafSurahList(v); }
+
+async function openMushafReader(surahNum) {
+  const s = SURAHS[surahNum - 1];
+  document.getElementById('mr-title').textContent = s.n + '. ' + s.en + ' — ' + s.ar;
+  document.getElementById('mr-sub').textContent = s.tr + ' • ' + s.ayahs + ' oyat';
+  document.getElementById('mr-content').innerHTML = `
+    <div class="mr-loading">
+      <div class="spinner show" style="width:28px;height:28px;"></div>
+      <div>Yuklanmoqda...</div>
+    </div>
+  `;
+
+  document.getElementById('mushaf-reader-screen').classList.remove('hidden');
+  document.getElementById('mini-player').style.display = 'none';
+  document.getElementById('nav-bar').style.display = 'none';
+
+  try {
+    let arAyahs, uzAyahs;
+
+    if (mushafReaderCache[surahNum]) {
+      arAyahs = mushafReaderCache[surahNum].ar;
+      uzAyahs = mushafReaderCache[surahNum].uz;
+    } else {
+      const data = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,${currentTranslation}`)
+        .then(r => r.json());
+
+      if (data.code !== 200 || !Array.isArray(data.data) || data.data.length < 2) {
+        throw new Error('Ma\'lumot topilmadi');
+      }
+
+      arAyahs = data.data[0].ayahs;
+      uzAyahs = data.data[1].ayahs;
+
+      // Bismillahni tozalash (Fotiha va Tavbadan tashqari)
+      if (surahNum !== 1 && surahNum !== 9 &&
+          arAyahs[0]?.text?.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')) {
+        arAyahs[0].text = arAyahs[0].text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
+      }
+      if (surahNum !== 1 && surahNum !== 9 && uzAyahs[0]?.text) {
+        uzAyahs[0].text = uzAyahs[0].text.replace(/^(Mehribon va rahmli Allohning nomi bilan\.?\s*)/i, '').trim();
+      }
+
+      mushafReaderCache[surahNum] = { ar: arAyahs, uz: uzAyahs };
+    }
+
+    renderMushafReader(surahNum, arAyahs, uzAyahs);
+
+  } catch (e) {
+    document.getElementById('mr-content').innerHTML = `
+      <div class="mr-loading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" width="32" height="32"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>Yuklab bo'lmadi. Internetni tekshiring.</div>
+      </div>
+    `;
+  }
+}
+
+function renderMushafReader(surahNum, arAyahs, uzAyahs) {
+  const container = document.getElementById('mr-content');
+  let html = '';
+
+  if (surahNum !== 1 && surahNum !== 9) {
+    html += `<div class="mr-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+  }
+
+  arAyahs.forEach((ayah, i) => {
+    const uzText = uzAyahs[i]?.text || '';
+    const isBookmarked = bookmarkedAyahs.some(b => b.surahNum === surahNum && b.ayahIdx === i);
+    html += `
+      <div class="mr-ayah-block">
+        <div class="mr-ayah-top">
+          <div class="mr-ayah-num-badge">${i + 1}</div>
+          <button class="mr-bookmark-btn ${isBookmarked ? 'active' : ''}" id="mr-bm-${i}" onclick="toggleAyahBookmark(${surahNum}, ${i})">
+            <svg viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="mr-ayah-arabic">${ayah.text}</div>
+        <div class="mr-ayah-uzbek">${uzText}</div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleAyahBookmark(surahNum, ayahIdx) {
+  const existingIdx = bookmarkedAyahs.findIndex(b => b.surahNum === surahNum && b.ayahIdx === ayahIdx);
+  const btn = document.getElementById('mr-bm-' + ayahIdx);
+
+  if (existingIdx >= 0) {
+    bookmarkedAyahs.splice(existingIdx, 1);
+    if (btn) {
+      btn.classList.remove('active');
+      btn.querySelector('svg').setAttribute('fill', 'none');
+    }
+    showToast('Saqlanganlardan olib tashlandi');
+  } else {
+    const s = SURAHS[surahNum - 1];
+    const arText = mushafReaderCache[surahNum]?.ar[ayahIdx]?.text || '';
+    const uzText = mushafReaderCache[surahNum]?.uz[ayahIdx]?.text || '';
+    bookmarkedAyahs.push({
+      surahNum, ayahIdx,
+      surahEn: s.en, surahAr: s.ar,
+      arText, uzText,
+      ts: Date.now()
+    });
+    if (btn) {
+      btn.classList.add('active');
+      btn.querySelector('svg').setAttribute('fill', 'currentColor');
+    }
+    showToast('★ Saqlandi');
+  }
+
+  localStorage.setItem('bookmarkedAyahs', JSON.stringify(bookmarkedAyahs));
+}
+
+function closeMushafReader() {
+  document.getElementById('mushaf-reader-screen').classList.add('hidden');
+  document.getElementById('mushaf-screen').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════
 //  QORI PROFILI
 // ═══════════════════════════════════════════
 let qpActiveIdx = 0;
@@ -4334,6 +4679,12 @@ const PLAYLIST_DATA = [
     getTracks: () => Array.from(state.favs).map(sIdx => ({ surahIdx: sIdx, qoriIdx: state.qoriIdx }))
   },
   {
+    id: 'bookmarks', title: 'Saqlangan oyatlar', sub: '', bgClass: 'bg-luhaidan',
+    icon: `<svg width="90" height="90" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+    desc: 'Siz alohida saqlab qo\'ygan oyatlar — arabcha matni va o\'zbekcha tarjimasi bilan.',
+    isBookmarkList: true
+  },
+  {
     id: 'focus', title: 'Diqqat va Ish', sub: '', bgClass: 'bg-focus',
     icon: `<svg width="200" height="200" viewBox="0 0 100 100"><circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>`,
     desc: 'O\'qish yoki ishlash jarayonida xotirjamlik va diqqatni jamlash uchun sokin qiroatlar to\'plami. Qalbingizni xotirjam tuting.',
@@ -4395,7 +4746,7 @@ function buildPlaylistsScreen() {
   container.innerHTML = PLAYLIST_DATA.map(p => `
     <div class="pl-card ${p.bgClass}" onclick="openPlaylistDetail('${p.id}')">
       ${p.qoriImg ? `<img src="reciter/${p.qoriImg}" class="pl-avatar" onerror="this.style.display='none'">` : ''}
-      <div class="pl-icon" style="${p.id === 'favs' ? 'top: 20px;' : 'top: -20px; left: 20px;'}">${p.icon}</div>
+      <div class="pl-icon" style="${p.id === 'favs' || p.id === 'bookmarks' ? 'top: 20px;' : 'top: -20px; left: 20px;'}">${p.icon}</div>
       ${p.sub ? `<div class="pl-sub">${p.sub}</div>` : ''}
       <div class="pl-title">${p.title}</div>
     </div>
@@ -4419,8 +4770,44 @@ function openPlaylistDetail(id) {
   document.getElementById('pld-title').textContent = p.title;
   document.getElementById('pld-desc').textContent = p.desc;
 
-  renderPldTracks();
+  if (p.isBookmarkList) {
+    renderBookmarkTracks();
+  } else {
+    renderPldTracks();
+  }
   showScreen('playlist-detail');
+}
+
+function renderBookmarkTracks() {
+  document.getElementById('pld-count').textContent = bookmarkedAyahs.length + ' oyat';
+  document.querySelector('.pld-filters').style.display = 'none';
+
+  const tracksContainer = document.getElementById('pld-tracks');
+  if (bookmarkedAyahs.length === 0) {
+    tracksContainer.innerHTML = '<div style="color:rgba(255,255,255,0.4); text-align:center; padding:20px;">Hozircha saqlangan oyat yo\'q</div>';
+    return;
+  }
+
+  // Eng yangi saqlanganlar tepada
+  const sorted = [...bookmarkedAyahs].sort((a, b) => b.ts - a.ts);
+
+  tracksContainer.innerHTML = sorted.map((b) => `
+    <div class="pld-track" style="flex-direction: column; align-items: stretch; gap: 10px; padding: 16px;" onclick="openMushafReader(${b.surahNum})">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div class="pld-track-qori" style="font-weight:600; color:#fff;">${b.surahEn} <span style="font-family:'Amiri',serif; color:rgba(255,255,255,0.5);">(${b.surahAr})</span> • ${b.ayahIdx + 1}-oyat</div>
+        <svg onclick="event.stopPropagation();removeBookmarkFromList(${b.surahNum}, ${b.ayahIdx})" viewBox="0 0 24 24" fill="var(--gold)" stroke="var(--gold)" stroke-width="2" width="18" height="18"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div style="font-family:'Amiri',serif; font-size:19px; color:#fff; direction:rtl; text-align:right; line-height:1.8;">${b.arText}</div>
+      <div style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5;">${b.uzText}</div>
+    </div>
+  `).join('');
+}
+
+function removeBookmarkFromList(surahNum, ayahIdx) {
+  bookmarkedAyahs = bookmarkedAyahs.filter(b => !(b.surahNum === surahNum && b.ayahIdx === ayahIdx));
+  localStorage.setItem('bookmarkedAyahs', JSON.stringify(bookmarkedAyahs));
+  renderBookmarkTracks();
+  showToast('Saqlanganlardan olib tashlandi');
 }
 
 function setPldFilter(mode) {
@@ -4437,6 +4824,7 @@ function setPldFilter(mode) {
 
 function renderPldTracks() {
   if (!currentActivePlaylist) return;
+  document.querySelector('.pld-filters').style.display = 'flex';
   const p = currentActivePlaylist;
   let tracks = p.id === 'favs' ? p.getTracks() : [...p.tracks];
 
