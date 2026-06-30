@@ -33,7 +33,7 @@
     width: 100%;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
-    background: #050810;
+    background: linear-gradient(180deg, #11053b 0%, #000000 25%, #000000 100%);
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
   }
@@ -45,7 +45,8 @@
     width: 100%; height: 100%;
     object-fit: cover;
     z-index: 0;
-    opacity: 0.85;
+    opacity: 0;
+    transition: opacity 0.5s ease;
     filter: saturate(1) brightness(0.9);
   }
 
@@ -60,10 +61,12 @@
       rgba(5,8,16,0.85) 100%
     );
     z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
 
   /* ─── LAYOUT ─── */
-  #app {
+  #player-screen {
     position: fixed;
     inset: 0;
     z-index: 10;
@@ -72,11 +75,16 @@
     align-items: center;
     justify-content: flex-end;
     padding: 0 0 env(safe-area-inset-bottom, 16px);
+    background: transparent;
+  }
+  #player-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* Desktop layout */
   @media (min-width: 768px) {
-    #app {
+    #player-screen {
       justify-content: flex-end;
     }
     #player-card {
@@ -214,34 +222,24 @@
   }
 
   .qori-item {
-    display: flex;
-    align-items: center;
-    padding: 14px 24px;
-    cursor: pointer;
-    transition: background 0.15s;
-    gap: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    display: flex; align-items: center;
+    padding: 12px 20px; cursor: pointer; transition: background 0.15s;
+    gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.03);
   }
-  .qori-item:hover { background: rgba(255,255,255,0.05); }
-  .qori-item.active { background: var(--gold-dim); }
+  .qori-item:hover { background: rgba(255,255,255,0.03); }
+  .qori-item.active { background: linear-gradient(90deg, rgba(245,200,66,0.12) 0%, transparent 100%); border-bottom-color: transparent;}
 
   .qori-avatar {
-    width: 46px; height: 46px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255,255,255,0.1);
-    background: linear-gradient(135deg, #1a2a3a, #2a3a2a);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
+    width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.1); background: linear-gradient(135deg, #1a2a3a, #2a3a2a);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px;
   }
-  .qori-item.active .qori-avatar-wrap img,
   .qori-item.active .qori-avatar { border-color: var(--gold); }
   .qori-info { flex: 1; }
-  .qori-name { font-size: 14px; font-weight: 500; }
-  .qori-origin { font-size: 12px; color: var(--text-secondary); }
-  .qori-check { color: var(--gold); font-size: 16px; opacity: 0; }
-  .qori-item.active .qori-check { opacity: 1; }
+  .qori-name { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .qori-origin { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .qori-check { color: var(--gold); margin-left: auto; display: none; }
+  .qori-item.active .qori-check { display: block; }
 
   /* ─── PLAYER CARD ─── */
   #player-card {
@@ -414,105 +412,57 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* ─── VIDEO PANEL ─── */
-#video-panel {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 0 env(safe-area-inset-bottom, 20px);
-  background: transparent;
-  transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
-  pointer-events: none;
-}
-#video-panel.open {
-  transform: translateY(0);
-  pointer-events: all;
-}
-.video-glass-card {
-  margin: 0 12px 12px;
-  background: rgba(18,22,40,0.50);
-  backdrop-filter: var(--lg-blur);
-  -webkit-backdrop-filter: var(--lg-blur);
-  border: 1px solid var(--lg-border);
-  border-radius: 28px;
-  overflow: hidden;
-  box-shadow: var(--lg-shadow), var(--lg-inset);
-  padding: 20px 16px 24px;
-  position: relative;
-}
-.video-glass-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 20%, rgba(255,255,255,0.28) 80%, transparent);
-  pointer-events: none;
-  z-index: 2;
-}
-.video-panel-title {
-  font-size: 17px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 18px;
-  color: var(--text-primary);
-}
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-}
-.video-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  padding: 10px 6px;
-  border-radius: 16px;
-  border: 1.5px solid transparent;
-  background: rgba(255,255,255,0.05);
-  transition: all 0.2s;
-}
-.video-item:hover { background: rgba(255,255,255,0.1); }
-.video-item.active {
-  border-color: var(--gold);
-  background: var(--gold-dim);
-}
-.video-item-icon { 
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.75);
-}
-.video-item.active .video-item-icon { color: var(--gold); }
-.video-item-label {
-  font-size: 10px;
-  color: var(--text-secondary);
-  text-align: center;
-  line-height: 1.3;
-}
-.video-item.active .video-item-label { color: var(--gold); }
-.video-panel-close {
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-}
-.video-close-btn {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: var(--text-secondary);
-  border-radius: 20px;
-  padding: 8px 28px;
-  font-size: 13px;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-}
-.video-close-btn:hover { background: rgba(255,255,255,0.18); }
-
+/* ─── VIDEO PANEL - DESIGN MATCH ─── */
+  #video-panel {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+    padding: 16px;
+  }
+  #video-panel.open { opacity: 1; pointer-events: all; }
+  
+  .video-glass-card {
+    background: #0f1014;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    margin: 0;
+  }
+  .video-glass-card::before { display: none; } /* Shine ni o'chirish */
+  
+  .video-panel-title { font-size: 19px; font-weight: 700; text-align: center; margin-bottom: 24px; color: #fff; letter-spacing: -0.3px; }
+  
+  .video-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  
+  .video-item {
+    background: #1a1b1f;
+    border: 1.5px solid transparent;
+    border-radius: 16px;
+    padding: 14px 4px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .video-item.active { background: rgba(245, 200, 66, 0.06); border-color: #f5c842; }
+  
+  .video-item-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); }
+  .video-item.active .video-item-icon { color: #f5c842; }
+  
+  .video-item-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5); text-align: center; letter-spacing: 0.2px; }
+  .video-item.active .video-item-label { color: #f5c842; }
+  
+  .video-panel-close { margin-top: 28px; display: flex; justify-content: center; }
+  .video-close-btn {
+    background: #2a2b2f; border: none; color: #fff; border-radius: 20px;
+    padding: 12px 36px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .video-close-btn:hover { background: #35363a; }
   /* ─── iOS 18 LIQUID GLASS SYSTEM ─── */
   :root {
     --lg-bg: rgba(255,255,255,0.07);
@@ -579,7 +529,7 @@
   .popup-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 50;
+    z-index: 200;
     display: none;
   }
   .popup-backdrop.show { display: block; }
@@ -672,135 +622,63 @@
     margin-top: 4px;
   }
 
-  /* Volume popup */
+  /* Volume popup - DESIGN MATCH */
   #volume-popup {
-    bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
-    left: 16px;
-    right: 16px;
-    padding: 0 0 20px;
+    bottom: calc(env(safe-area-inset-bottom, 16px) + 90px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 400px;
+    background: #0f1014;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 10px 0 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  }
+  #volume-popup::before { display: none; } /* Shine ni o'chirish */
+
+  .vol-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 10px 0; }
+  
+  .vol-section-title {
+    padding: 16px 20px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.4);
   }
 
-  .vol-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 18px;
-  }
-  .vol-label { font-size: 13px; font-weight: 500; width: 110px; }
-  .vol-icon { font-size: 16px; flex-shrink: 0; width: 20px; text-align: center; color: var(--text-secondary); }
-  .vol-slider-wrap { flex: 1; position: relative; height: 36px; display: flex; align-items: center; padding: 4px 0; }
-  .vol-track {
-    width: 100%; height: 4px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 99px;
-    position: relative;
-    overflow: visible;
-    isolation: isolate;
-  }
-  .vol-fill {
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    background: var(--text-primary);
-    border-radius: 99px;
-    pointer-events: none;
-  }
+  .vol-row { display: flex; align-items: center; gap: 16px; padding: 6px 20px 16px; }
+  .vol-icon { display: flex; align-items: center; justify-content: center; width: 20px; flex-shrink: 0; }
+  
+  .vol-slider-wrap { flex: 1; position: relative; height: 28px; display: flex; align-items: center; }
+  .vol-track { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 99px; position: relative; overflow: visible; }
+  .vol-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #fff; border-radius: 99px; pointer-events: none; }
   .vol-thumb {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    pointer-events: none;
-    transition: transform 0.1s;
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 20px; height: 20px; border-radius: 50%; background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); pointer-events: none; transition: transform 0.1s;
   }
   input[type=range].vol-range {
-    position: absolute;
-    left: 0; right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    opacity: 0;
-    cursor: pointer;
-    margin: 0;
-    height: 44px;
-    z-index: 10;
-    touch-action: none;
+    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+    width: 100%; opacity: 0; cursor: pointer; margin: 0; height: 40px; z-index: 10;
   }
-  input[type=range].vol-range:active + .vol-thumb { transform: translate(-50%, -50%) scale(1.2); }
+  input[type=range].vol-range:active + .vol-thumb { transform: translate(-50%, -50%) scale(1.15); }
 
-  /* Sleep timer popup */
-  #sleep-popup {
-    bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
-    right: 16px;
-    min-width: 220px;
-    padding: 0;
-  }
-  .sleep-popup-title {
-    padding: 14px 18px 12px;
-    font-size: 14px;
-    font-weight: 700;
-    border-bottom: 1px solid var(--glass-border);
-    text-align: center;
-    letter-spacing: 0.3px;
-  }
-  .sleep-option {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 13px 18px;
-    font-size: 14px;
-    cursor: pointer;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    transition: background 0.15s;
-  }
-  .sleep-option:last-child { border-bottom: none; }
-  .sleep-option:hover { background: rgba(255,255,255,0.05); }
-  .sleep-option.active { color: var(--gold); }
-  .sleep-check { font-size: 16px; opacity: 0; }
-  .sleep-option.active .sleep-check { opacity: 1; }
-
-  /* Background sound panel - inside volume popup */
-  .vol-divider {
-    height: 1px;
-    background: var(--glass-border);
-    margin: 6px 0;
-  }
-  .vol-section-title {
-    padding: 8px 18px 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-secondary);
-  }
-
-  /* Sound selector */
-  .sound-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 6px 16px 12px;
-  }
+  /* Sound selector - DESIGN MATCH */
+  .sound-tabs { display: flex; flex-wrap: wrap; gap: 10px; padding: 6px 20px 16px; }
   .sound-tab {
-    flex-shrink: 0;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 20px;
-    border: 1px solid var(--glass-border);
-    background: none;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: #1a1b1f;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
   }
-  .sound-tab.active {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.25);
-    color: var(--text-primary);
-  }
+  .sound-tab svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .sound-tab.active { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); color: #fff; }
 
   #ayah-display {
     text-align: center;
@@ -809,7 +687,7 @@
     transform: translateY(6px);
     transition: opacity 0.6s ease, transform 0.6s ease;
     min-height: 64px;
-    display: flex;
+    display: none; /* Boshlang'ich holatda yashirin */
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -915,25 +793,104 @@
   .spinner.show { display: block; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ─── GOAL PICKER ─── */
+  .goal-picker-card {
+    width: 100%;
+    background: #2c2c2e;
+    border-radius: 24px 24px 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 28px);
+  }
+  .goal-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .goal-picker-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .goal-picker-done {
+    background: none;
+    border: none;
+    color: #30d158;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .goal-picker-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 8px 0 16px;
+  }
+  .goal-picker-wrap {
+    position: relative;
+    height: 220px;
+    width: 110px;
+  }
+  .goal-picker-scroll {
+    height: 220px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .goal-picker-scroll::-webkit-scrollbar { display: none; }
+  .goal-picker-item {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.25);
+    scroll-snap-align: center;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.15s, font-size 0.15s, font-weight 0.15s;
+  }
+  .goal-picker-item.gp-selected {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+  }
+  .goal-picker-item.gp-near {
+    color: rgba(255,255,255,0.5);
+    font-size: 20px;
+  }
+  .goal-picker-selection {
+    position: absolute;
+    top: 50%;
+    left: 4px; right: 4px;
+    height: 44px;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.07);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  .goal-picker-unit {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 2px;
+  }
+
   /* Hamburger icon for list */
   .lines-icon svg { width: 20px; height: 20px; }
 
   /* Qori panel search */
   #qori-search {
-    width: 100%;
-    margin: 0;
-    padding: 11px 16px 11px 40px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.08);
-    color: var(--text-primary);
-    font-size: 15px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
+    width: 100%; margin: 0; padding: 12px 16px 12px 40px;
+    border-radius: 12px; border: 1px solid transparent;
+    background: #1a1b1f; color: #fff; font-size: 15px;
+    font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
   }
-  #qori-search:focus { border-color: rgba(255,255,255,0.3); }
-  #qori-search::placeholder { color: var(--text-secondary); }
+  #qori-search:focus { border-color: rgba(255,255,255,0.2); }
+  #qori-search::placeholder { color: rgba(255,255,255,0.4); }
 
   #qori-list {
     flex: 1;
@@ -995,87 +952,71 @@
 
   .panel-glass-card {
     margin: 0 12px 12px;
-    background: rgba(18,22,40,0.50);
-    backdrop-filter: var(--lg-blur);
-    -webkit-backdrop-filter: var(--lg-blur);
-    border: 1px solid var(--lg-border);
+    background: #0f1014;
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 28px;
     overflow: hidden;
-    box-shadow: var(--lg-shadow), var(--lg-inset);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     max-height: 75vh;
     display: flex;
     flex-direction: column;
     position: relative;
   }
-  .panel-glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--lg-shine) 20%, var(--lg-shine) 80%, transparent);
-    pointer-events: none;
-    z-index: 2;
-  }
+  .panel-glass-card::before { display: none; }
 
   .panel-card-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px 12px;
+    justify-content: center;
+    padding: 20px 20px 16px;
+    position: relative;
   }
 
   .panel-card-title {
     font-size: 18px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: #fff;
     letter-spacing: -0.3px;
   }
 
   .panel-card-actions {
-    display: flex;
-    gap: 8px;
+    position: absolute; right: 20px;
+    display: flex; gap: 8px;
   }
 
-  .panel-icon-btn {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,0.1);
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+  .panel-icon-btn.close-btn {
+    position: absolute; left: 20px;
+    width: 32px; height: 32px;
+    border-radius: 50%; border: none;
+    background: #2a2b2f; color: rgba(255,255,255,0.7);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .panel-icon-btn.close-btn:hover { background: #35363a; }
+
+  .panel-icon-btn.action-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: transparent; color: var(--text-secondary);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: all 0.2s;
   }
-  .panel-icon-btn:hover { background: rgba(255,255,255,0.18); color: var(--text-primary); }
-  .panel-icon-btn.active { background: rgba(255,255,255,0.2); color: var(--text-primary); }
+  .panel-icon-btn.action-btn.active { color: var(--gold); }
 
   .panel-search-wrap {
-    position: relative;
-    margin: 0 16px 12px;
+    position: relative; margin: 0 20px 16px;
   }
   .panel-search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-    pointer-events: none;
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: rgba(255,255,255,0.4); pointer-events: none;
   }
   #surah-search {
-    width: 100%;
-    margin: 0;
-    padding: 11px 16px 11px 40px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.08);
-    color: var(--text-primary);
-    font-size: 15px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
+    width: 100%; margin: 0; padding: 12px 16px 12px 40px;
+    border-radius: 12px; border: 1px solid transparent;
+    background: #1a1b1f; color: #fff; font-size: 15px;
+    font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
   }
-  #surah-search:focus { border-color: rgba(255,255,255,0.3); }
-  #surah-search::placeholder { color: var(--text-secondary); }
+  #surah-search:focus { border-color: rgba(255,255,255,0.2); }
+  #surah-search::placeholder { color: rgba(255,255,255,0.4); }
 
   #surah-list {
     flex: 1;
@@ -1123,6 +1064,491 @@
     color: var(--text-secondary);
     flex-shrink: 0;
   }
+
+
+/* ═══ HOME SCREEN ═══ */
+  #home-screen {
+    position: fixed; inset: 0; z-index: 10;
+    overflow-y: auto; scrollbar-width: none;
+  }
+  #home-screen::-webkit-scrollbar { display: none; }
+  #home-screen.hidden, #reciters-screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ═══ RECITERS SCREEN ═══ */
+  #reciters-screen {
+    position: fixed; inset: 0; z-index: 10;
+    overflow-y: auto; scrollbar-width: none;
+    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    max-width: 620px; margin: 0 auto;
+  }
+  #reciters-screen::-webkit-scrollbar { display: none; }
+  
+  .page-title { font-size: 34px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; }
+  
+  .search-container {
+    background: rgba(255,255,255,0.08); border-radius: 16px;
+    display: flex; align-items: center; padding: 12px 16px; margin-bottom: 24px;
+  }
+  .search-container svg { color: rgba(255,255,255,0.5); margin-right: 12px; flex-shrink: 0; }
+  .search-container input {
+    background: transparent; border: none; outline: none; color: #fff; font-size: 15px; width: 100%; font-family: 'Inter', sans-serif;
+  }
+  .search-container input::placeholder { color: rgba(255,255,255,0.4); }
+
+  .top-reciters-card {
+    background: #1c1c1e; border-radius: 24px; padding: 24px 20px 20px; margin-bottom: 32px;
+    display: flex; flex-direction: column; cursor: pointer; position: relative;
+  }
+  .tr-avatars { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; height: 110px; }
+  .tr-avatar { border-radius: 50%; object-fit: cover; border: 3px solid #1c1c1e; position: absolute; background: #2a2a2c; }
+  .tr-avatar.left { width: 70px; height: 70px; transform: translateX(-55px); z-index: 1; filter: brightness(0.6); }
+  .tr-avatar.right { width: 70px; height: 70px; transform: translateX(55px); z-index: 1; filter: brightness(0.6); }
+  .tr-avatar.center { width: 100px; height: 100px; z-index: 2; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+  .tr-info { display: flex; justify-content: space-between; align-items: flex-end; }
+  .tr-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .tr-sub { font-size: 13px; color: rgba(255,255,255,0.4); }
+  
+  .r-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .r-section-title { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .r-see-all { font-size: 14px; color: #5c8dff; font-weight: 500; cursor: pointer; }
+  
+  .r-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px 20px; }
+  .r-scroll::-webkit-scrollbar { display: none; }
+  
+  .r-card { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 94px; flex-shrink: 0; cursor: pointer; position: relative; transition: transform 0.15s; }
+  .r-card:active { transform: scale(0.92); }
+  .r-img-wrap { width: 94px; height: 94px; border-radius: 50%; position: relative; }
+  .r-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #2a2a2c; }
+  .r-name { font-size: 13px; font-weight: 500; text-align: center; line-height: 1.3; color: #fff; }
+  .r-badge { position: absolute; top: -2px; right: -2px; background: #22c55e; color: #fff; font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 10px; letter-spacing: 0.5px; border: 2px solid #0a0c0e; z-index: 2; }
+
+
+  /* ═══ TOP RECITERS SCREEN ═══ */
+  #top-reciters-screen {
+    position: fixed; inset: 0; z-index: 10;
+    overflow-y: auto; scrollbar-width: none;
+    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    max-width: 620px; margin: 0 auto;
+    background: #000;
+  }
+  #top-reciters-screen::-webkit-scrollbar { display: none; }
+  #top-reciters-screen.hidden { opacity: 0; pointer-events: none; }
+
+  .top-r-header { display: flex; align-items: center; margin-bottom: 20px; }
+  .top-r-back { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; border: none; color: #fff; cursor: pointer; transition: background 0.2s; }
+  .top-r-back:active { background: rgba(255,255,255,0.15); }
+  .top-r-title { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px;}
+
+  .top-r-subtitle { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 16px; margin-top: 20px; font-weight: 500; }
+
+  .top1-card { background: #1c1c1e; border-radius: 24px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; position: relative; cursor: pointer; transition: transform 0.15s; }
+  .top1-card:active { transform: scale(0.98); }
+  .top1-avatar-wrap { position: relative; width: 120px; height: 120px; margin-bottom: 20px; }
+  .top1-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .rank-badge-1 { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; font-size: 13px; font-weight: 800; padding: 3px 10px; border-radius: 12px; border: 3px solid #1c1c1e; }
+  .top1-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: #fff; text-align: center; }
+  .top1-listens { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  .top-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-bottom: 20px; }
+  .top-grid-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.15s; }
+  .top-grid-item:active { transform: scale(0.94); }
+  .tg-avatar-wrap { position: relative; width: 96px; height: 96px; margin-bottom: 12px; }
+  .tg-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #2a2a2c; }
+  .tg-rank { position: absolute; bottom: 0px; right: 0px; background: #333; color: #fff; font-size: 11px; font-weight: 700; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 3px solid #000; }
+  .tg-name { font-size: 13px; font-weight: 500; color: #fff; text-align: center; line-height: 1.3; margin-bottom: 4px; }
+  .tg-listens { font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; }
+
+
+  /* ═══ PLAYLISTS SCREEN ═══ */
+  #playlists-screen {
+    position: fixed; inset: 0; z-index: 10;
+    overflow-y: auto; scrollbar-width: none;
+    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    max-width: 620px; margin: 0 auto;
+    background: #000;
+  }
+  #playlists-screen::-webkit-scrollbar { display: none; }
+  #playlists-screen.hidden { opacity: 0; pointer-events: none; }
+
+  .pl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .pl-card { aspect-ratio: 1; border-radius: 20px; padding: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; transition: transform 0.15s; }
+  .pl-card:active { transform: scale(0.95); }
+  .pl-title { font-size: 16px; font-weight: 700; color: #fff; z-index: 2; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+  .pl-sub { font-size: 11px; color: rgba(255,255,255,0.6); z-index: 2; margin-bottom: 4px; }
+  .pl-icon { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; opacity: 0.9; z-index: 1; pointer-events: none; }
+  .pl-avatar { width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); position: absolute; top: 16px; left: 16px; z-index: 2; object-fit: cover;}
+
+  /* Playlist Backgrounds */
+  .bg-fav { background: #1c1c1e; }
+  .bg-focus { background: linear-gradient(135deg, #00d2ff 0%, #004e92 100%); }
+  .bg-beautiful { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
+  .bg-sleep { background: linear-gradient(135deg, #000428 0%, #004e92 100%); }
+  .bg-luhaidan { background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%); }
+  .bg-dosari { background: linear-gradient(135deg, #141e30 0%, #243b55 100%); }
+
+  #playlist-detail-screen {
+    position: fixed; inset: 0; z-index: 11;
+    overflow-y: auto; scrollbar-width: none;
+    background: #000; padding-bottom: 200px;
+  }
+  #playlist-detail-screen::-webkit-scrollbar { display: none; }
+  #playlist-detail-screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ═══ SETTINGS SCREEN ═══ */
+  #settings-screen {
+    position: fixed; inset: 0; z-index: 10;
+    overflow-y: auto; scrollbar-width: none;
+    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    max-width: 620px; margin: 0 auto;
+    background: #000;
+  }
+  #settings-screen::-webkit-scrollbar { display: none; }
+  #settings-screen.hidden { opacity: 0; pointer-events: none; }
+
+  .settings-group {
+    background: #1c1c1e; border-radius: 20px;
+    margin-bottom: 24px; overflow: hidden;
+  }
+  .settings-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer; transition: background 0.15s;
+  }
+  .settings-item:active { background: rgba(255,255,255,0.05); }
+  .settings-item:last-child { border-bottom: none; }
+  
+  .st-left { display: flex; align-items: center; gap: 14px; }
+  .st-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+  .st-title { font-size: 16px; font-weight: 500; color: #fff; }
+  .st-right { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.4); font-size: 15px;}
+  
+  /* Toggle Switch */
+  .st-toggle {
+    width: 50px; height: 30px; border-radius: 15px; background: rgba(255,255,255,0.1);
+    position: relative; transition: background 0.3s; cursor: pointer; pointer-events: none;
+  }
+  .st-toggle.on { background: #34c759; }
+  .st-thumb {
+    width: 26px; height: 26px; border-radius: 50%; background: #fff;
+    position: absolute; top: 2px; left: 2px; transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .st-toggle.on .st-thumb { transform: translateX(20px); }
+
+  .pld-header { height: 340px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 0 0 40px 40px; overflow: hidden; margin-bottom: 24px;}
+  .pld-header-bg { position: absolute; inset: 0; z-index: 0; }
+  .pld-back { position: absolute; top: 54px; left: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:#fff; border:none; backdrop-filter: blur(10px); cursor: pointer; z-index: 10; transition: background 0.2s; }
+  .pld-back:active { background: rgba(0,0,0,0.5); }
+  .pld-icon-large { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; opacity: 0.7; z-index: 1; pointer-events: none; }
+  
+  .pld-title { font-size: 32px; font-weight: 800; color: #fff; z-index: 2; margin-top: 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); text-align: center; padding: 0 20px;}
+  .pld-sub { font-size: 14px; color: rgba(255,255,255,0.8); z-index: 2; margin-top: 8px; font-weight: 500;}
+  
+  .pld-actions { display: flex; gap: 16px; margin-top: 24px; z-index: 2; align-items: center;}
+  .pld-btn-shuffle { width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,0.3); border: none; color: #fff; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); cursor:pointer;}
+  .pld-btn-play { background: #fff; color: #000; font-weight: 700; border-radius: 30px; padding: 14px 36px; border: none; display: flex; align-items: center; gap: 8px; font-size: 16px; cursor:pointer;}
+  .pld-btn-play:active { transform: scale(0.96); }
+
+  .pld-content { padding: 0 16px; max-width: 620px; margin: 0 auto;}
+  .pld-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 24px; }
+  
+  .pld-controls-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .pld-count { font-size: 18px; font-weight: 700; }
+  
+  .pld-filters { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; scrollbar-width:none;}
+  .pld-filters::-webkit-scrollbar { display: none; }
+  .pld-filter-btn { background: #1c1c1e; border: none; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor:pointer; transition: 0.2s;}
+  .pld-filter-btn.active { background: #fff; color: #000; }
+
+  .pld-track { background: #1c1c1e; border-radius: 20px; padding: 12px 16px; display: flex; align-items: center; gap: 16px; margin-bottom: 12px; cursor: pointer; transition: transform 0.15s; }
+  .pld-track:active { transform: scale(0.97); }
+  .pld-track-num { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.5); flex-shrink: 0;}
+  .pld-track-info { flex: 1; min-width:0; }
+  .pld-track-title { font-size: 16px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;}
+  .pld-track-qori { font-size: 12px; color: rgba(255,255,255,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pld-track-actions { display: flex; gap: 16px; color: rgba(255,255,255,0.4); align-items: center;}
+
+
+  /* ═══ NAV BAR ═══ */
+  #nav-bar {
+    position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    left: 16px; right: 16px; z-index: 90;
+    display: flex; align-items: center; justify-content: space-around;
+    padding: 8px 12px;
+    background: rgba(30, 30, 35, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; padding: 8px 4px; cursor: pointer; border-radius: 20px;
+    color: rgba(255,255,255,0.5); border: none; background: transparent;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s, transform 0.12s;
+  }
+  .nav-item:active { transform: scale(0.9); }
+  .nav-item.active { color: #ffffff; background: rgba(255,255,255,0.15); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item span { font-size: 10px; font-weight: 500; letter-spacing: 0.2px; }
+
+  /* ═══ MINI PLAYER ═══ */
+  #mini-player {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 90px);
+    left: 16px; right: 16px; z-index: 85;
+    background: #121212;
+    border: none;
+    border-radius: 24px;
+    padding: 8px 8px 8px 12px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.18s;
+  }
+  #mini-player:active { transform: scale(0.97); }
+  .mini-avatar {
+    width: 38px; height: 38px; border-radius: 10px; overflow: hidden;
+    flex-shrink: 0; background: linear-gradient(135deg, #1a2a3a, #2a3a2a);
+  }
+  .mini-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .mini-info { flex: 1; min-width: 0; }
+  .mini-surah { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mini-qori { font-size: 11px; color: rgba(255,255,255,0.42); margin-top: 1px; }
+  .mini-controls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .mini-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.09); color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .mini-btn:hover { background: rgba(255,255,255,0.16); }
+  .mini-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.06); }
+  .mini-progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.5s linear; }
+
+
+  /* ═══ INSIGHTS (STATISTIKA) ═══ */
+  .insights-card {
+    background: #111113; border-radius: 24px; padding: 20px 20px 0;
+    margin-bottom: 32px; display: flex; flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); overflow: hidden;
+  }
+  .insight-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .insight-header h3 { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .insight-header span { color: #5c8dff; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  .stats-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.07); padding-bottom: 16px; margin-bottom: 0; }
+  .stat-item { text-align: center; flex: 1; border-right: 1px solid rgba(255,255,255,0.07); padding: 4px 0; }
+  .stat-item:last-child { border-right: none; }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 6px; }
+  .stat-val { font-size: 17px; font-weight: 700; color: #fff; }
+
+  .arc-container { position: relative; width: 100%; max-width: 340px; margin: 16px auto 0; }
+  .arc-svg { width: 100%; height: auto; overflow: visible; display: block; }
+  .arc-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 4; stroke-linecap: round; }
+  .arc-progress { fill: none; stroke: rgba(255,255,255,0.9); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1s ease-out; }
+
+  .arc-text {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding-bottom: 12px;
+  }
+  .arc-title { font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+  .arc-time { font-size: 64px; font-weight: 700; letter-spacing: -2px; line-height: 1; font-variant-numeric: tabular-nums; color: #fff; margin-bottom: 6px; }
+  .arc-goal { font-size: 13px; color: rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 4px; background: none; padding: 0; border-radius: 0; font-weight: 500; }
+
+  .days-row { display: flex; justify-content: space-between; padding: 8px 4px 16px; }
+  .day-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .day-circle { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+  .day-circle.active { border-color: rgba(255,255,255,0.5); position: relative; background: transparent; }
+  .day-circle.active::after { content: ''; position: absolute; top: -5px; right: -5px; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+  .day-circle.filled { background: rgba(255,255,255,0.18); border-color: transparent; }
+  .day-label { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 500; }
+
+  .insights-continue-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: calc(100% + 40px); margin: 0 -20px;
+    background: rgba(255,255,255,0.1); border: none;
+    padding: 18px; cursor: pointer;
+    font-size: 15px; font-weight: 600; color: #fff;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+  }
+  .insights-continue-btn:hover { background: rgba(255,255,255,0.15); }
+  .insights-continue-btn:active { background: rgba(255,255,255,0.18); }
+
+  /* POPUP STATS DETAILED */
+  #stats-popup { top: 0; bottom: 0; left: 0; right: 0; height: 100%; border-radius: 0; padding: 24px; background: #000; border: none; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .stats-popup-close { position: absolute; top: 20px; right: 20px; width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; cursor: pointer; z-index: 10;}
+  .sp-arc-wrap { max-width: 300px; margin: 40px auto 30px; position: relative; }
+  .sp-time { font-size: 64px; font-weight: 700; text-align: center; letter-spacing: -2px; font-variant-numeric: tabular-nums; line-height: 1; }
+  .sp-goal { font-size: 15px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 8px; }
+  .sp-status-title { font-size: 18px; font-weight: 700; text-align: center; margin-top: 30px; }
+  .sp-status-remain { font-size: 16px; font-weight: 600; color: #4ade80; text-align: center; margin-top: 4px; }
+  .sp-status-desc { font-size: 14px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 12px; }
+  .sp-btn { width: 100%; background: rgba(255,255,255,0.08); padding: 16px; border-radius: 30px; border: none; color: #fff; font-size: 15px; font-weight: 600; margin-top: 30px; cursor: pointer; }
+  .sp-btn-outline { background: transparent; color: rgba(255,255,255,0.6); margin-top: 10px; font-size: 13px;}
+
+
+  /* ═══ HOME CONTENT ═══ */
+  .home-scroll {
+    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    max-width: 620px; margin: 0 auto;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-top: 10px;
+  }
+  .premium-btn {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; padding: 8px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .stats-btn {
+    width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer;
+  }
+  .home-title { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 24px; }
+
+  .notification-card {
+    background: #121212; border-radius: 20px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 32px; cursor: pointer;
+  }
+  .notif-icon {
+    width: 44px; height: 44px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
+  }
+  .notif-text { font-size: 15px; font-weight: 600; color: #fff; }
+  .notif-sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  .featured-card {
+    background: transparent; border: none; padding: 0; display: flex; align-items: center; gap: 20px; margin-bottom: 40px; cursor: pointer;
+  }
+  .featured-avatar {
+    width: 100px; height: 100px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: #1a2a3a;
+  }
+  .featured-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .featured-info { flex: 1; min-width: 0; }
+  .featured-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .featured-name { font-size: 24px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+  .featured-btn {
+    display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: none; border-radius: 30px; padding: 10px 20px; font-size: 14px; font-weight: 700; color: #000; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .section-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .section-see-all { font-size: 13px; color: rgba(80,150,255,0.85); cursor: pointer; font-weight: 500; }
+  .section-see-all:hover { color: rgba(110,170,255,1); }
+
+  .reciters-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 16px; }
+  .reciters-scroll::-webkit-scrollbar { display: none; }
+  .reciter-card { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; flex-shrink: 0; width: 94px; transition: transform 0.18s; }
+  .reciter-card:active { transform: scale(0.90); }
+  .reciter-img { width: 88px; height: 88px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.10); background: linear-gradient(135deg, #1a2a3a, #2a3a2a); }
+  .reciter-img.active-border { border-color: var(--gold) !important; }
+  .reciter-img img { width: 100%; height: 100%; object-fit: cover; }
+  .reciter-name { font-size: 12px; text-align: center; color: rgba(255,255,255,0.85); line-height: 1.3; font-weight: 600; }
+  .new-reciter-card {
+    background: rgba(16,20,38,0.42); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 13px 52px 13px 13px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px; cursor: pointer; position: relative; overflow: hidden;
+    transition: background 0.18s, transform 0.12s;
+  }
+  .new-reciter-card:hover { background: rgba(22,26,46,0.56); }
+  .new-reciter-card:active { transform: scale(0.98); }
+  .new-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: #22c55e; color: #fff; font-size: 9px; font-weight: 700;
+    padding: 2px 7px; border-radius: 20px; letter-spacing: 0.5px;
+  }
+  .new-reciter-img { width: 46px; height: 46px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.10); background: linear-gradient(135deg, #1a2a3a, #2a3a2a); }
+  .new-reciter-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .player-back-row { 
+    position: absolute; 
+    top: calc(env(safe-area-inset-top, 20px) + 20px); 
+    left: 0; right: 0; 
+    display: flex; justify-content: center; 
+    z-index: 50; 
+  }
+  .player-back-btn {
+    background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer;
+    padding: 10px 40px; display: flex; align-items: center; justify-content: center;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .player-back-btn:hover { color: #fff; transform: scale(1.1); }
+  .player-back-btn:active { transform: scale(0.9); }
+
+  @media (min-width: 768px) {
+    #reciters-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    .page-title { font-size: 46px; margin-bottom: 32px; }
+    .tr-avatars { height: 160px; margin-bottom: 30px; }
+    .tr-avatar.left { width: 100px; height: 100px; transform: translateX(-80px); }
+    .tr-avatar.right { width: 100px; height: 100px; transform: translateX(80px); }
+    .tr-avatar.center { width: 140px; height: 140px; }
+    .r-scroll { gap: 24px; padding-bottom: 30px; cursor: grab; }
+    .r-card { width: 120px; }
+    .r-img-wrap { width: 120px; height: 120px; }
+    .r-name { font-size: 15px; }
+    #top-reciters-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    .top-r-title { font-size: 46px; margin-bottom: 24px; }
+    .top-grid { grid-template-columns: repeat(5, 1fr); gap: 24px; }
+    .top1-avatar-wrap { width: 160px; height: 160px; }
+    .tg-avatar-wrap { width: 120px; height: 120px; }
+    .tg-name { font-size: 15px; }
+
+    #playlists-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    .pl-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    
+    #playlist-detail-screen { max-width: 900px; margin: 0 auto; }
+    .pld-header { height: 420px; border-radius: 40px; margin-top: 40px; }
+    .pld-title { font-size: 42px; }
+    .pld-content { max-width: 800px; }
+    #settings-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+
+    .home-scroll { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    .insights-card { margin-top: 60px !important; }
+    .home-title { font-size: 46px; margin-bottom: 32px; }
+    .featured-card { padding: 0; margin-bottom: 50px; }
+    .featured-avatar { width: 130px; height: 130px; }
+    .featured-name { font-size: 32px; margin-bottom: 16px; }
+    .featured-btn { padding: 12px 24px; font-size: 15px; }
+    
+    /* Gorizontal suriladigan (qo'lcha) holat - Sevimlilar */
+    .reciters-scroll { 
+      flex-wrap: nowrap; 
+      overflow-x: auto; 
+      gap: 24px; 
+      padding: 10px 16px 30px;
+      margin: 0 -16px;
+      cursor: grab;
+      scrollbar-width: none;
+    }
+    .reciters-scroll::-webkit-scrollbar { display: none; }
+    .reciters-scroll:active { cursor: grabbing; }
+    .reciter-card { width: 110px; flex-shrink: 0; }
+    .reciter-img { width: 110px; height: 110px; border-width: 3px; }
+    .reciter-name { font-size: 14px; margin-top: 8px; }
+    
+    /* Yangi qorilar bloki pastma-past turadi */
+    #home-new-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: default;
+      padding-bottom: 20px;
+    }
+    .new-reciter-card { flex-shrink: 1; min-width: auto; margin-bottom: 0; padding: 16px 24px; }
+    .new-reciter-img { width: 60px; height: 60px; }
+    
+    /* Pleyer va Toolbar 50% kenglikda, o'rtada */
+    #mini-player { width: 50%; max-width: none; left: 50%; right: auto; transform: translateX(-50%); padding: 12px 16px; border-radius: 20px; }
+    #mini-player:active { transform: translateX(-50%) scale(0.98); }
+    #nav-bar { width: 50%; max-width: none; left: 50%; right: auto; transform: translateX(-50%); border-radius: 20px; justify-content: center; gap: 40px; }
+    .nav-item { max-width: 150px; }
+  }
+
 </style>
 </head>
 <body>
@@ -1157,28 +1583,44 @@
   </div>
 </div>
 
-<!-- SURAH PANEL -->
 <div id="surah-panel">
   <div class="panel-glass-card">
     <div class="panel-card-header">
-      <button class="panel-icon-btn" onclick="closePanel('surah')" title="Yopish">
+      <button class="panel-icon-btn close-btn" onclick="closePanel('surah')" title="Yopish">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
-      <span class="panel-card-title">Continue Playing</span>
+      <span class="panel-card-title">Davom etish</span>
       <div class="panel-card-actions">
-        <button class="panel-icon-btn" onclick="toggleShuffle()" id="shuffle-btn" title="Aralash">
+        <button class="panel-icon-btn action-btn" onclick="toggleShuffle()" id="shuffle-btn" title="Aralash">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
         </button>
-        <button class="panel-icon-btn" onclick="toggleRepeat()" id="repeat-btn" title="Takrorlash">
+        <button class="panel-icon-btn action-btn" onclick="toggleRepeat()" id="repeat-btn" title="Takrorlash">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
         </button>
       </div>
     </div>
     <div class="panel-search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" class="panel-search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="surah-search" placeholder="Search" oninput="filterSurahs(this.value)">
+      <input type="text" id="surah-search" placeholder="Surani qidiring..." oninput="filterSurahs(this.value)">
     </div>
     <div id="surah-list"></div>
+  </div>
+</div>
+
+<div id="qori-panel">
+  <div class="panel-glass-card">
+    <div class="panel-card-header">
+      <button class="panel-icon-btn close-btn" onclick="closePanel('qori')" title="Yopish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <span class="panel-card-title">Qorilar</span>
+      <div class="panel-card-actions"></div>
+    </div>
+    <div class="panel-search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" class="panel-search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="qori-search" placeholder="Qorini qidiring..." oninput="filterQoris(this.value)">
+    </div>
+    <div id="qori-list"></div>
   </div>
 </div>
 
@@ -1220,9 +1662,9 @@
 
   <!-- VOLUME POPUP -->
   <div class="popup" id="volume-popup" onclick="event.stopPropagation()">
-    <div class="vol-section-title" style="padding-top:14px">Quron</div>
+    <div class="vol-section-title">QURON</div>
     <div class="vol-row">
-      <div class="vol-icon" id="quran-vol-icon">🔇</div>
+      <div class="vol-icon" style="color: #ff3b30;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></div>
       <div class="vol-slider-wrap">
         <div class="vol-track">
           <div class="vol-fill" id="quran-vol-fill" style="width:70%"></div>
@@ -1230,17 +1672,17 @@
           <input type="range" class="vol-range" id="quran-vol" min="0" max="100" value="70" oninput="setQuranVol(this.value)">
         </div>
       </div>
-      <div class="vol-icon">🔊</div>
+      <div class="vol-icon" style="color: #5c8dff;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div>
     </div>
 
     <div class="vol-divider"></div>
-    <div class="vol-section-title">Fon Tovushi</div>
+    <div class="vol-section-title">FON TOVUSHI</div>
 
     <!-- Sound tabs -->
     <div class="sound-tabs" id="sound-tabs"></div>
 
     <div class="vol-row">
-      <div class="vol-icon" id="bg-vol-icon">🔇</div>
+      <div class="vol-icon" style="color: #ff3b30;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></div>
       <div class="vol-slider-wrap">
         <div class="vol-track">
           <div class="vol-fill" id="bg-vol-fill" style="width:80%"></div>
@@ -1248,7 +1690,7 @@
           <input type="range" class="vol-range" id="bg-vol" min="0" max="100" value="80" oninput="setBgVol(this.value)">
         </div>
       </div>
-      <div class="vol-icon">🔊</div>
+      <div class="vol-icon" style="color: #5c8dff;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></div>
     </div>
   </div>
 
@@ -1258,11 +1700,354 @@
     <div id="sleep-options"></div>
   </div>
 
+
+  <div class="popup" id="stats-popup" onclick="event.stopPropagation()">
+    <div class="stats-popup-close" onclick="closeAllPopups();showScreen('home')">✕</div>
+    <div class="sp-arc-wrap">
+      <svg class="arc-svg" viewBox="0 0 100 50">
+        <path class="arc-bg" d="M 10 50 A 40 40 0 0 1 90 50" stroke-width="6"/>
+        <path id="sp-arc-progress" class="arc-progress" d="M 10 50 A 40 40 0 0 1 90 50" stroke-width="6" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+      </svg>
+      <div style="position: absolute; bottom: 0; left: 0; right: 0;">
+        <div class="sp-time" id="sp-time-text">0:00</div>
+        <div class="sp-goal" id="sp-goal-text">5 daqiqalik maqsaddan</div>
+      </div>
+    </div>
+    
+    <div class="sp-status-title">Bugungi Tinglash</div>
+    <div class="sp-status-remain" id="sp-status-remain">5 daqiqa qoldi</div>
+    <div class="sp-status-desc">Siz kunlik maqsadingizga erishish yo'lidasiz.</div>
+    
+    <button class="sp-btn sp-btn-outline" onclick="openGoalPicker()">MAQSADNI O'ZGARTIRISH</button>
+  </div>
+
+</div>
+
+
+
+<!-- HOME SCREEN -->
+<div id="home-screen">
+  <div class="home-scroll">
+    <div class="home-header">
+      <div class="home-title" style="margin-bottom: 24px;">Uy</div>
+    </div>
+
+
+    <div class="featured-card" onclick="showScreen('player')">
+      <div class="featured-avatar" id="home-feat-avatar"></div>
+      <div class="featured-info">
+        <div class="featured-label">Sevimlilaringizdan</div>
+        <div class="featured-name" id="home-feat-name">Yasser Al-Dosari</div>
+        <button class="featured-btn" onclick="event.stopPropagation();continuePlaying()">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Davom etish
+        </button>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">⭐ Sevimlilar</div>
+      <div class="section-see-all" onclick="openPanel('qori')">Barchasi</div>
+    </div>
+    <div class="reciters-scroll" id="home-favs-list"></div>
+
+    <div style="height:28px"></div>
+
+    <div class="section-header">
+      <div class="section-title">Yangi qorilar</div>
+      <div class="section-see-all" onclick="openPanel('qori')">Barchasi</div>
+    </div>
+    <div id="home-new-list"></div>
+    <div class="insights-card">
+      <div class="insight-header">
+        <h3>Statistika</h3>
+        <span onclick="showPopup('stats-popup', event)">Batafsil</span>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2c-3.5 5.5-5 10-5 12a5 5 0 0 0 10 0c0-2-1.5-6.5-5-12z"/></svg>
+            Seriya
+          </div>
+          <div class="stat-val" id="stat-streak">0 kun</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Bu hafta
+          </div>
+          <div class="stat-val" id="stat-week">0 daq</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M8 21l1-4h6l1 4"/><path d="M5 17h14"/></svg>
+            Rekord
+          </div>
+          <div class="stat-val" id="stat-record">0 kun</div>
+        </div>
+      </div>
+
+      <div class="arc-container">
+        <svg class="arc-svg" viewBox="0 0 100 58">
+          <path class="arc-bg" d="M 10 54 A 40 40 0 0 1 90 54"/>
+          <path id="arc-progress" class="arc-progress" d="M 10 54 A 40 40 0 0 1 90 54" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+        </svg>
+        <div class="arc-text">
+          <div class="arc-title">Bugungi tinglash</div>
+          <div class="arc-time" id="arc-time-text">0:00</div>
+          <div class="arc-goal">
+            <span id="arc-goal-text">5 daqiqalik maqsaddan</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="days-row" id="days-row"></div>
+
+      <button class="insights-continue-btn" onclick="continuePlaying()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Tinglashda davom etish
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- RECITERS SCREEN -->
+<div id="reciters-screen" class="hidden">
+  <div class="page-title">Qorilar</div>
+  
+  <div class="search-container">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Qorilarni qidiring..." oninput="filterRecitersScreen(this.value)">
+  </div>
+
+  <div class="top-reciters-card" onclick="showScreen('top-reciters')">
+    <div class="tr-avatars" id="rs-top-avatars"></div>
+    <div class="tr-info">
+      <div>
+        <div class="tr-title">Top Qorilar</div>
+        <div class="tr-sub">Shu oyda</div>
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="20" height="20"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+
+  <div class="r-section-header">
+    <div class="r-section-title">
+      <svg viewBox="0 0 24 24" fill="#f5c842" width="22" height="22"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Sizning sevimlilaringiz
+    </div>
+    <div class="r-see-all" onclick="openPanel('qori')">Barchasi</div>
+  </div>
+  <div class="r-scroll" id="rs-favs-list"></div>
+
+  <div class="r-section-header" style="margin-top: 10px;">
+    <div class="r-section-title">Yangi qorilar</div>
+    <div class="r-see-all" onclick="openPanel('qori')">Barchasi</div>
+  </div>
+  <div class="r-scroll" id="rs-new-list"></div>
+</div>
+
+
+<div id="top-reciters-screen" class="hidden">
+  <div class="top-r-header">
+    <button class="top-r-back" onclick="showScreen('reciters')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+  </div>
+  
+  <div class="top-r-title">Top Qorilar</div>
+  
+  <div class="search-container">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Qorilarni qidiring..." oninput="filterTopReciters(this.value)">
+  </div>
+
+  <div class="top-r-subtitle">Shu oyda</div>
+  
+  <div id="tr-full-list"></div>
+</div>
+
+
+<div id="playlists-screen" class="hidden">
+  <div class="page-title">Ro'yxatlar</div>
+  <div class="pl-grid" id="playlists-grid"></div>
+</div>
+
+<div id="playlist-detail-screen" class="hidden">
+  <div class="pld-header" id="pld-header-container">
+    <div class="pld-header-bg" id="pld-header-bg"></div>
+    <button class="pld-back" onclick="showScreen('playlists')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="pld-icon-large" id="pld-icon-large"></div>
+    <div class="pld-title" id="pld-title">Sarlavha</div>
+    <div class="pld-sub">Masjidlar maxsus ro'yxati</div>
+    
+    <div class="pld-actions">
+      <button class="pld-btn-shuffle" onclick="toggleShuffle(); showToast('Aralash rejimi yoqildi')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+      </button>
+      <button class="pld-btn-play" onclick="playCurrentPlaylist()">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Tinglash
+      </button>
+    </div>
+  </div>
+  
+  <div class="pld-content">
+    <div class="pld-desc" id="pld-desc">Ta'rif bu yerda yoziladi...</div>
+    
+    <div class="pld-controls-row">
+      <div class="pld-count" id="pld-count">0 sura</div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5c8dff" stroke-width="2" width="22" height="22"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+    </div>
+    
+    <div class="pld-filters">
+      <button class="pld-filter-btn active">Barchasi</button>
+      <button class="pld-filter-btn">Suralar bo'yicha</button>
+      <button class="pld-filter-btn">Qorilar bo'yicha</button>
+    </div>
+    
+    <div id="pld-tracks"></div>
+  </div>
+</div>
+
+
+<div id="settings-screen" class="hidden">
+  <div class="page-title">Sozlamalar</div>
+
+  <div class="settings-group">
+    <div class="settings-item" onclick="toggleSettingSubtitle()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #007aff;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h4M7 14h2"/><path d="M15 10v4M17 12h-4"/></svg>
+        </div>
+        <div class="st-title">Arabcha matnni ko'rsatish</div>
+      </div>
+      <div class="st-right">
+        <div class="st-toggle on" id="st-toggle-sub"><div class="st-thumb"></div></div>
+      </div>
+    </div>
+    
+    <div class="settings-item" onclick="cacheMediaImages()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #34c759;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div class="st-title">Mediani yuklash (Rasmlar)</div>
+      </div>
+      <div class="st-right">
+        <span id="cache-status" style="font-size: 12px; font-weight: 500;"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="openPanel('video')">
+      <div class="st-left">
+        <div class="st-icon" style="background: #ff2d55;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="5" width="15" height="14" rx="3"/><path d="M17 9l5-2v10l-5-2V9z"/></svg>
+        </div>
+        <div class="st-title">Fon videosini o'zgartirish</div>
+      </div>
+      <div class="st-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="toggleVolumePopup(event)">
+      <div class="st-left">
+        <div class="st-icon" style="background: #5856d6;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </div>
+        <div class="st-title">Fon tovushi va ovoz</div>
+      </div>
+      <div class="st-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-group">
+    <div class="settings-item" onclick="openGoalPicker()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #ff9500;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="st-title">Kunlik maqsadni sozlash</div>
+      </div>
+      <div class="st-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="resetStatsApp()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #ff3b30;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </div>
+        <div class="st-title">Statistikani tozalash</div>
+      </div>
+      <div class="st-right"></div>
+    </div>
+  </div>
+  
+  <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">
+    Masjidlar v1.0<br>
+  </div>
+</div>
+
+<!-- MINI PLAYER -->
+<div id="mini-player" onclick="showScreen('player')">
+  <div class="mini-avatar" id="mini-avatar"></div>
+  <div class="mini-info">
+    <div class="mini-surah" id="mini-surah">1. Al-Fatihah (الفاتحة)</div>
+    <div class="mini-qori" id="mini-qori">Yasser Al-Dosari</div>
+  </div>
+  <div class="mini-controls" onclick="event.stopPropagation()">
+    <button class="mini-btn" onclick="togglePlay()">
+      <svg id="mini-play-icon" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+    <button class="mini-btn" onclick="nextSurah()">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="5 4 14 12 5 20"/><polygon points="15 4 24 12 15 20"/></svg>
+    </button>
+  </div>
+  <div class="mini-progress">
+    <div class="mini-progress-fill" id="mini-progress-fill"></div>
+  </div>
+</div>
+
+<!-- NAV BAR -->
+<div id="nav-bar">
+  <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Uy</span>
+  </button>
+  <button class="nav-item" id="nav-reciters" onclick="showScreen('reciters')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="9" y1="22" x2="15" y2="22"/></svg>
+    <span>Qorilar</span>
+  </button>
+  <button class="nav-item" id="nav-playlists" onclick="showScreen('playlists')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+    <span>Ro'yxatlar</span>
+  </button>
+  <button class="nav-item" id="nav-settings" onclick="showScreen('settings')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>Sozlamalar</span>
+  </button>
 </div>
 
 <!-- PLAYER -->
-<div id="app">
+<div id="player-screen" class="hidden">
   <div id="player-card">
+
+    <!-- Back to home -->
+    <div class="player-back-row">
+      <button class="player-back-btn" onclick="showScreen('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="28" height="28"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
 
     <!-- Current ayah display -->
     <div id="ayah-display">
@@ -1541,7 +2326,16 @@ const QORIS = [
   { id: 'ar.muhammadjibreel', name: 'Muhammad Jibreel', origin: 'Misr', img: 'jibreel.jpg', prefix: 'https://server8.mp3quran.net/jbrl/' },
   { id: 'ar.abdulsamad', name: 'Abdul Basit (Murattal)', origin: 'Misr', img: 'abdulsamad.jpg', prefix: 'https://server7.mp3quran.net/basit/' },
   { id: 'ar.minshawi', name: 'Mohammad Al-Minshawi', origin: 'Misr', img: 'minshawi.jpg', prefix: 'https://server10.mp3quran.net/minsh/' },
-  { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', origin: 'Misr', img: 'husary.jpg', prefix: 'https://server13.mp3quran.net/husr/' }
+  { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', origin: 'Misr', img: 'husary.jpg', prefix: 'https://server13.mp3quran.net/husr/' },
+  // Qo'shimcha: Mp3Quran API dan tekshirilgan, aniq ishlaydigan yangi qorilar
+  { id: 'ar.saadalghamdi', name: 'Saad Al-Ghamdi', origin: 'SA', img: 'ghamdi.jpg', prefix: 'https://server7.mp3quran.net/s_gmd/' },
+  { id: 'ar.faresabbad', name: 'Fares Abbad', origin: 'Yaman', img: 'abbad.jpg', prefix: 'https://server8.mp3quran.net/frs_a/' },
+  { id: 'ar.abdulrahmanalosi', name: 'Abdul Rahman Al-Osi', origin: 'SA', img: 'osi.jpg', prefix: 'https://server6.mp3quran.net/aloosi/' },
+  { id: 'ar.idrisabkar', name: 'Idris Abkar', origin: 'Yaman', img: 'abkar.jpg', prefix: 'https://server6.mp3quran.net/abkr/' },
+  { id: 'ar.wadihalyamani', name: 'Wadih Al-Yamani', origin: 'Yaman', img: 'wadih.jpg', prefix: 'https://server6.mp3quran.net/wdee3/' },
+  { id: 'ar.nasseralqatami', name: 'Nasser Al-Qatami', origin: 'SA', img: 'qatami.jpg', prefix: 'https://server6.mp3quran.net/qtm/' },
+  { id: 'ar.khalidaljalil', name: 'Khalid Al-Jalil', origin: 'SA', img: 'jalil.jpg', prefix: 'https://server10.mp3quran.net/jleel/' },
+  { id: 'ar.bandarbaleela', name: 'Bandar Baleela', origin: 'Makka, SA', img: 'bandar.jpg', prefix: 'https://server6.mp3quran.net/bndr/' }
 ];
 
 // MP3Quran tarmog'idan to'liq surani olish (uzilishlarsiz barqaror manba)
@@ -1558,11 +2352,11 @@ function getSurahAudioUrl(qoriId, surahNum) {
 
 // Background sounds
 const BG_SOUNDS = [
-  { id: 'none',   label: 'Off',      emoji: '🔇', url: null },
-  { id: 'rain',   label: 'Yomg\'ir', emoji: '🌧️', url: 'sounds/rain.mp3' },
-  { id: 'ocean',  label: 'Okean',    emoji: '🌊', url: 'sounds/ocean.mp3' },
-  { id: 'fire',   label: 'Olov',     emoji: '🔥', url: 'sounds/fire.mp3' },
-  { id: 'nature', label: 'Tabiat',   emoji: '🌿', url: 'sounds/nature.mp3' },
+  { id: 'none',   label: 'Off',      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2.5"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>', url: null },
+  { id: 'rain',   label: 'Yomg\'ir', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#5c8dff" stroke-width="2.5"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M8 19v1"/><path d="M8 14v1"/><path d="M16 19v1"/><path d="M16 14v1"/><path d="M12 21v1"/><path d="M12 16v1"/></svg>', url: 'sounds/rain.mp3' },
+  { id: 'ocean',  label: 'Okean',    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#00a8ff" stroke-width="2.5"><path d="M2 12h20"/><path d="M2 18h20"/><path d="M2 6h20"/></svg>', url: 'sounds/ocean.mp3' },
+  { id: 'fire',   label: 'Olov',     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#ff9500" stroke-width="2.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>', url: 'sounds/fire.mp3' },
+  { id: 'nature', label: 'Tabiat',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.5"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 2v20"/><path d="M12 12c-2.5-2.5-2.5-6-2.5-6s3.5 0 6 2.5"/></svg>', url: 'sounds/nature.mp3' },
 ];
 
 const VIDEOS = [
@@ -1608,6 +2402,107 @@ let state = {
   videoIdx: 0,
 };
 
+// STATISTIKA LOGIKASI
+const GOALS = [300, 900, 1800, 3600, 5400, 7200]; // 5m, 15m, 30m, 60m, 90m, 120m (soniyalarda)
+let userStats = JSON.parse(localStorage.getItem('quranStats')) || {
+  today: 0,
+  goal: 300,
+  streak: 0,
+  week: 0,
+  record: 0,
+  lastDate: ''
+};
+
+// Kun almashganini tekshirish
+const todayStr = new Date().toDateString();
+if (userStats.lastDate !== todayStr) {
+  if (userStats.today >= userStats.goal) {
+    userStats.streak += 1; // Kecha maqsad bajarilgan bo'lsa seriya oshadi
+    if(userStats.streak > userStats.record) userStats.record = userStats.streak;
+  } else if (userStats.lastDate !== '') {
+    userStats.streak = 0; // Bajarilmasa uziladi
+  }
+  // Agar hafta yangilangan bo'lsa (Dushanba) week ni 0 qilish mumkin, hozircha oddiy tutamiz
+  userStats.lastDate = todayStr;
+  userStats.today = 0;
+  userStats.goal = 300; // Har kuni yangi maqsad 5 daqiqadan boshlanadi
+  saveStats();
+}
+
+function saveStats() {
+  localStorage.setItem('quranStats', JSON.stringify(userStats));
+}
+
+// Har 1 soniyada vaqtni hisoblash
+setInterval(() => {
+  if (state.isPlaying) {
+    userStats.today++;
+    userStats.week++;
+    
+    // Maqsadga yetganda avtomatik oshirish (5 -> 15 -> 30...)
+    while (userStats.today >= userStats.goal) {
+      let currentGoalIdx = GOALS.indexOf(userStats.goal);
+      if (currentGoalIdx >= 0 && currentGoalIdx < GOALS.length - 1) {
+        userStats.goal = GOALS[currentGoalIdx + 1];
+      } else {
+        userStats.goal += 3600; // Maksimaldan o'tsa 1 soatdan qo'shib ketaveradi
+      }
+    }
+    
+    updateStatsUI();
+    if (userStats.today % 5 === 0) saveStats(); // Har 5 soniyada xotiraga saqlaymiz
+  }
+}, 1000);
+
+function updateStatsUI() {
+  const arcPath = 125.6; // SVG arc length
+  const progress = Math.min(userStats.today / userStats.goal, 1);
+  const offset = arcPath - (arcPath * progress);
+  
+  const arc1 = document.getElementById('arc-progress');
+  const arc2 = document.getElementById('sp-arc-progress');
+  if(arc1) arc1.style.strokeDashoffset = offset;
+  if(arc2) arc2.style.strokeDashoffset = offset;
+
+  const m = Math.floor(userStats.today / 60);
+  const s = userStats.today % 60;
+  const timeStr = m + ':' + (s < 10 ? '0' : '') + s;
+  const goalMins = Math.floor(userStats.goal / 60);
+
+  const txt1 = document.getElementById('arc-time-text');
+  const txt2 = document.getElementById('sp-time-text');
+  if(txt1) txt1.textContent = timeStr;
+  if(txt2) txt2.textContent = timeStr;
+
+  const goal1 = document.getElementById('arc-goal-text');
+  const goal2 = document.getElementById('sp-goal-text');
+  if(goal1) goal1.textContent = goalMins + " daqiqalik maqsaddan";
+  if(goal2) goal2.textContent = goalMins + " daqiqalik maqsaddan";
+
+  document.getElementById('stat-streak').textContent = userStats.streak + ' kun';
+  document.getElementById('stat-week').textContent = Math.floor(userStats.week / 60) + ' daq';
+  document.getElementById('stat-record').textContent = userStats.record + ' kun';
+
+  const remain = userStats.goal - userStats.today;
+  const remainMins = Math.ceil(remain / 60);
+  document.getElementById('sp-status-remain').textContent = remainMins + " daqiqa qoldi";
+}
+
+// Haftalik kunlar vizuali
+function renderDaysRow() {
+  const days = ['Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan', 'Yak'];
+  const currentDay = (new Date().getDay() + 6) % 7; // Dushanbani 0 qilish
+  const container = document.getElementById('days-row');
+  if(!container) return;
+  
+  container.innerHTML = days.map((d, i) => `
+    <div class="day-col">
+      <div class="day-circle ${i === currentDay ? 'active' : (i < currentDay && userStats.streak > 0 ? 'filled' : '')}"></div>
+      <div class="day-label" style="color: ${i === currentDay ? '#fff' : ''}">${d}</div>
+    </div>
+  `).join('');
+}
+
 const quranAudio = new Audio();
 quranAudio.preload = 'metadata';
 let bgAudio = null;
@@ -1625,6 +2520,59 @@ function init() {
   buildVideoGrid();
   updateNowPlaying();
   setupAudioEvents();
+  buildHomeScreen();
+  buildRecitersScreen();
+  buildTopRecitersFull();
+  buildPlaylistsScreen(); // YANGLIK: Playlistlarni chizish
+  updateStatsUI(); 
+  renderDaysRow();
+}
+
+function buildRecitersScreen() {
+  // Top reciters avatars
+  const trContainer = document.getElementById('rs-top-avatars');
+  if(trContainer && QORIS.length >= 3) {
+    trContainer.innerHTML = `
+      <img src="reciter/${QORIS[2].img}" class="tr-avatar left" onerror="this.style.display='none'">
+      <img src="reciter/${QORIS[1].img}" class="tr-avatar right" onerror="this.style.display='none'">
+      <img src="reciter/${QORIS[0].img}" class="tr-avatar center" onerror="this.style.display='none'">
+    `;
+  }
+
+  // Sevimlilar
+  const favsContainer = document.getElementById('rs-favs-list');
+  if(favsContainer) {
+    favsContainer.innerHTML = QORIS.slice(0, 5).map((r, i) => `
+      <div class="r-card" onclick="selectQoriFromHome(${i})">
+        <div class="r-img-wrap">
+          <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.style.display='none'">
+        </div>
+        <div class="r-name">${r.name.split(' ').slice(0,2).join('<br>')}</div>
+      </div>
+    `).join('');
+  }
+
+  // Yangi qorilar
+  const newContainer = document.getElementById('rs-new-list');
+  if(newContainer) {
+    newContainer.innerHTML = QORIS.slice(-4).map((r, i) => `
+      <div class="r-card" onclick="selectQoriFromHome(${QORIS.length - 4 + i})">
+        <div class="r-img-wrap">
+          <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.style.display='none'">
+          <div class="r-badge">NEW</div>
+        </div>
+        <div class="r-name">${r.name.split(' ').slice(0,2).join('<br>')}</div>
+      </div>
+    `).join('');
+  }
+}
+
+function filterRecitersScreen(val) {
+  openPanel('qori');
+  const searchInput = document.getElementById('qori-search');
+  searchInput.value = val;
+  filterQoris(val);
+  searchInput.focus();
 }
 
 // ═══════════════════════════════════════════
@@ -1720,6 +2668,14 @@ const QORI_CDN_MAP = {
   'ar.abdulsamad':         'ar.abdulsamad',
   'ar.minshawi':           'ar.minshawi',
   'ar.husary':             'ar.husary',
+  'ar.saadalghamdi':       'ar.saadalghamdi',
+  'ar.faresabbad':         'ar.alafasy', // Everyayah API'da yo'qlar uchun matn vaqtini Alafasy'dan oladi
+  'ar.abdulrahmanalosi':   'ar.alafasy',
+  'ar.idrisabkar':         'ar.alafasy',
+  'ar.wadihalyamani':      'ar.alafasy',
+  'ar.nasseralqatami':     'ar.alafasy',
+  'ar.khalidaljalil':      'ar.alafasy',
+  'ar.bandarbaleela':      'ar.alafasy',
 };
 
 async function loadSurahAyahs(surahNum) {
@@ -1967,8 +2923,8 @@ function buildQoriList(filter='') {
          onclick="selectQori(${i})">
       <div class="qori-avatar" style="overflow:hidden;padding:0;border:2px solid ${i === state.qoriIdx ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}" >
         <img src="reciter/${q.img}" alt="${q.name}"
-             style="width:100%;height:100%;object-fit:cover;"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            style="width:100%;height:100%;object-fit:cover;"
+            onerror="this.onerror=null;this.style.display='none'">
         <svg style="display:none;width:100%;height:100%;align-items:center;justify-content:center" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" width="22" height="22">
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
           <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -2002,7 +2958,9 @@ function buildSoundTabs() {
   const container = document.getElementById('sound-tabs');
   container.innerHTML = BG_SOUNDS.map((s,i) => `
     <button class="sound-tab ${i === state.bgSoundIdx ? 'active' : ''}"
-            onclick="selectBgSound(${i})">${s.emoji} ${s.label}</button>
+            onclick="selectBgSound(${i})">
+      ${s.icon} <span>${s.label}</span>
+    </button>
   `).join('');
 }
 
@@ -2030,8 +2988,9 @@ function updateNowPlaying() {
   const avatarEl = document.getElementById('np-avatar');
   avatarEl.innerHTML = `
     <img src="reciter/${q.img}" alt="${q.name}"
-         style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
-         onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1a2a3a,#2a3a2a)'">`;
+     style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+     onerror="this.onerror=null;this.style.display='none'">
+  `;
 
   // Fav
   const favBtn = document.getElementById('fav-btn');
@@ -2062,6 +3021,7 @@ function updateNowPlaying() {
 
   // Load all ayahs for sync with audio
   loadSurahAyahs(s.n);
+  updateMiniPlayer();
 }
 
 // ═══════════════════════════════════════════
@@ -2072,11 +3032,13 @@ function togglePlay() {
     quranAudio.play().then(() => {
       state.isPlaying = true;
       setPlayIcon(false);
+      updateMiniPlayer();
     }).catch(()=>{});
   } else {
     quranAudio.pause();
     state.isPlaying = false;
     setPlayIcon(true);
+    updateMiniPlayer();
   }
 }
 
@@ -2100,6 +3062,9 @@ function onTimeUpdate() {
   document.getElementById('progress-range').value = pct;
   document.getElementById('time-current').textContent = fmt(c);
   document.getElementById('time-remain').textContent = '-' + fmt(d - c);
+
+  const mf = document.getElementById('mini-progress-fill');
+  if (mf) mf.style.width = pct + '%';
 
   if (!isSubtitleOn || surahAyahs.length === 0 || d === 0) return;
 
@@ -2218,8 +3183,6 @@ function setQuranVol(val) {
   quranAudio.volume = state.quranVol;
   document.getElementById('quran-vol-fill').style.width = val+'%';
   document.getElementById('quran-vol-thumb').style.left = val+'%';
-  document.getElementById('quran-vol-icon').textContent =
-    val == 0 ? '🔇' : val < 40 ? '🔉' : '🔊';
 }
 
 function setBgVol(val) {
@@ -2227,8 +3190,6 @@ function setBgVol(val) {
   if (bgAudio) bgAudio.volume = state.bgVol;
   document.getElementById('bg-vol-fill').style.width = val+'%';
   document.getElementById('bg-vol-thumb').style.left = val+'%';
-  document.getElementById('bg-vol-icon').textContent =
-    val == 0 ? '🔇' : val < 40 ? '🔉' : '🔊';
 }
 
 // ═══════════════════════════════════════════
@@ -2390,33 +3351,37 @@ function closeAllPopups() {
   activePopup = null;
 }
 
+// Statistika pop-up'ini to'liq ekran qilish uchun
 function showPopup(id, event) {
   event && event.stopPropagation();
   if (activePopup === id) { closeAllPopups(); return; }
-  document.getElementById('popup-backdrop').classList.add('show');
-  ['speed-popup','volume-popup','sleep-popup'].forEach(p => {
+  
+  // Backdrop-ni ko'rsatish
+  const backdrop = document.getElementById('popup-backdrop');
+  backdrop.classList.add('show');
+  backdrop.style.background = 'rgba(0,0,0,0.95)'; // Qora fon
+  
+  // Barchasini yashirish
+  ['speed-popup','volume-popup','sleep-popup', 'stats-popup'].forEach(p => {
     document.getElementById(p).style.display = 'none';
   });
+  
   const popup = document.getElementById(id);
-  popup.style.display = '';
-
-  // Tugma pozitsiyasini topib, popupni ustiga joylashtirish
-  if (event && event.currentTarget) {
-    const btn = event.currentTarget;
-    const btnRect = btn.getBoundingClientRect();
-    const popupW = popup.offsetWidth || 280;
-    const margin = 12;
-
-    // Vertikal: tugmaning ustida
-    const bottomFromViewport = window.innerHeight - btnRect.top + 16;
-    popup.style.bottom = bottomFromViewport + 'px';
-    popup.style.top = 'auto';
-
-    // Horizontal: tugma markaziga align, lekin ekrandan chiqmasin
-    let left = btnRect.left + btnRect.width / 2 - popupW / 2;
-    left = Math.max(margin, Math.min(left, window.innerWidth - popupW - margin));
-    popup.style.left = left + 'px';
-    popup.style.right = 'auto';
+  popup.style.display = 'block';
+  
+  // Statistika bo'lsa to'liq ekran (desktop va mobil uchun)
+  if (id === 'stats-popup') {
+    popup.style.top = '0';
+    popup.style.bottom = '0';
+    popup.style.left = '0';
+    popup.style.right = '0';
+    popup.style.width = '100%';
+    popup.style.height = '100%';
+    popup.style.borderRadius = '0';
+    popup.style.display = 'flex';
+    popup.style.flexDirection = 'column';
+    popup.style.alignItems = 'center';
+    popup.style.justifyContent = 'center';
   }
 
   activePopup = id;
@@ -2456,7 +3421,7 @@ bgVid.loop = true;
 // ═══════════════════════════════════════════
 //  SHUFFLE & REPEAT
 // ═══════════════════════════════════════════
-let isSubtitleOn = true;
+let isSubtitleOn = false; // Standart o'chiq holat
 let isShuffle = false;
 let isRepeat = false;
 
@@ -2486,9 +3451,531 @@ function toggleRepeat() {
 }
 
 // ═══════════════════════════════════════════
+//  NAVIGATION & HOME SCREEN
+// ═══════════════════════════════════════════
+let currentScreen = 'home';
+
+function showScreen(screen) {
+  // 1. Dastlab barcha 6 ta ekranni majburiy yashiramiz (xatolik bo'lmasligi uchun)
+  const allScreens = [
+    document.getElementById('home-screen'),
+    document.getElementById('reciters-screen'),
+    document.getElementById('top-reciters-screen'),
+    document.getElementById('playlists-screen'),
+    document.getElementById('playlist-detail-screen'),
+    document.getElementById('settings-screen'),
+    document.getElementById('player-screen')
+  ];
+  
+  allScreens.forEach(el => {
+    if (el) el.classList.add('hidden');
+  });
+
+  // 2. Faqat foydalanuvchi bosgan ekranni ochamiz
+  const targetEl = document.getElementById(screen + '-screen');
+  if (targetEl) targetEl.classList.remove('hidden');
+
+  // Qo'shimcha elementlarni boshqarish
+  const miniEl = document.getElementById('mini-player');
+  const navEl = document.getElementById('nav-bar');
+  const bgVideo = document.getElementById('bg-video');
+  const bgOverlay = document.querySelector('.bg-overlay');
+
+  if (screen === 'player') {
+    miniEl.style.display = 'none';
+    navEl.style.display = 'none';
+    bgVideo.style.opacity = '0.85';
+    bgOverlay.style.opacity = '1';
+    bgVideo.play().catch(()=>{});
+  } else {
+    miniEl.style.display = 'flex';
+    navEl.style.display = 'flex';
+    bgVideo.style.opacity = '0';
+    bgOverlay.style.opacity = '0';
+    setTimeout(() => bgVideo.pause(), 100);
+    updateMiniPlayer();
+    
+    // Ma'lumotlarni qayta yuklash
+    if (screen === 'home') buildHomeScreen();
+    if (screen === 'playlists' || screen === 'playlist-detail') buildPlaylistsScreen();
+  }
+
+  currentScreen = screen;
+  
+  // 3. Pastki Menyudagi faol tugmani belgilash
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  
+  let navId = 'nav-home';
+  if (screen === 'reciters' || screen === 'top-reciters') navId = 'nav-reciters';
+  if (screen === 'playlists' || screen === 'playlist-detail') navId = 'nav-playlists';
+  if (screen === 'settings') navId = 'nav-settings';
+  
+  const activeNav = document.getElementById(navId);
+  if (activeNav) activeNav.classList.add('active');
+}
+
+function continuePlaying() {
+  state.isPlaying = true;
+  setPlayIcon(false);
+  updateMiniPlayer();
+  quranAudio.play().catch(()=>{});
+  showScreen('player');
+}
+
+function buildHomeScreen() {
+  const q = QORIS[state.qoriIdx];
+
+  // Featured card
+  const featAvatar = document.getElementById('home-feat-avatar');
+  if (featAvatar) featAvatar.innerHTML = `<img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`;
+  const featName = document.getElementById('home-feat-name');
+  if (featName) featName.textContent = q.name;
+
+  // Your favourites (first 8)
+  const favsList = document.getElementById('home-favs-list');
+  if (favsList) {
+    favsList.innerHTML = QORIS.slice(0, 8).map((r, i) => `
+      <div class="reciter-card" onclick="selectQoriFromHome(${i})">
+        <div class="reciter-img ${i === state.qoriIdx ? 'active-border' : ''}">
+          <img src="reciter/${r.img}" alt="${r.name}" onerror="this.onerror=null;this.style.display='none'">
+        </div>
+        <div class="reciter-name">${r.name.split(' ').slice(0,2).join(' ')}</div>
+      </div>
+    `).join('');
+  }
+
+  // New reciters (last 3)
+  const newList = document.getElementById('home-new-list');
+  if (newList) {
+    newList.innerHTML = QORIS.slice(-3).map((r, i) => `
+      <div class="new-reciter-card" onclick="selectQoriFromHome(${QORIS.length - 3 + i})">
+        <div class="new-reciter-img">
+          <img src="reciter/${r.img}" alt="${r.name}" onerror="this.onerror=null;this.style.display='none'">
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:600">${r.name}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.42);margin-top:2px">${r.origin}</div>
+        </div>
+        <div class="new-badge">NEW</div>
+      </div>
+    `).join('');
+  }
+
+  // Desktop uchun faqat Sevimlilarni ushlab surish (drag-to-scroll) funksiyasi
+  const sliders = document.querySelectorAll('.reciters-scroll');
+  sliders.forEach(slider => {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.style.cursor = 'grabbing';
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'grab'; });
+    slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+    slider.addEventListener('mousemove', (e) => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2; // Surish tezligi
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  });
+}
+
+function updateMiniPlayer() {
+  const s = SURAHS[state.surahIdx];
+  const q = QORIS[state.qoriIdx];
+  const miniSurah = document.getElementById('mini-surah');
+  const miniQori = document.getElementById('mini-qori');
+  const miniAvatar = document.getElementById('mini-avatar');
+  const miniPlayIcon = document.getElementById('mini-play-icon');
+  if (miniSurah) miniSurah.textContent = s.n + '. ' + s.en + ' (' + s.ar + ')';
+  if (miniQori) miniQori.textContent = q.name;
+  if (miniAvatar) miniAvatar.innerHTML = `<img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.style.display='none'">`;
+  if (miniPlayIcon) miniPlayIcon.innerHTML = state.isPlaying
+    ? '<rect x="5" y="3" width="5" height="18" rx="2"/><rect x="14" y="3" width="5" height="18" rx="2"/>'
+    : '<polygon points="5 3 19 12 5 21 5 3"/>';
+}
+
+function selectQoriFromHome(idx) {
+  state.qoriIdx = idx;
+  updateNowPlaying();
+  if (state.isPlaying) quranAudio.play().catch(()=>{});
+  showScreen('player');
+  showToast('Qori: ' + QORIS[idx].name);
+}
+
+// ═══════════════════════════════════════════
 //  START
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  GOAL PICKER
+// ═══════════════════════════════════════════
+let pickerMins = 5;
+let gpScrollTimer = null;
+
+function openGoalPicker() {
+  const sheet = document.getElementById('goal-picker-sheet');
+  const scroll = document.getElementById('goal-picker-scroll');
+  const MIN = 1, MAX = 120;
+  const ITEM_H = 44;
+
+  let html = `<div style="height:${ITEM_H * 2 + 2}px;flex-shrink:0"></div>`;
+  for (let i = MIN; i <= MAX; i++) {
+    html += `<div class="goal-picker-item" data-val="${i}">${i}</div>`;
+  }
+  html += `<div style="height:${ITEM_H * 2 + 2}px;flex-shrink:0"></div>`;
+  scroll.innerHTML = html;
+
+  sheet.style.display = 'flex';
+  pickerMins = Math.max(1, Math.min(120, Math.floor(userStats.goal / 60) || 5));
+
+  requestAnimationFrame(() => {
+    scroll.scrollTop = (pickerMins - MIN) * ITEM_H;
+    updateGPHighlight();
+  });
+
+  scroll.addEventListener('scroll', onGPScroll);
+}
+
+function onGPScroll() {
+  if (gpScrollTimer) clearTimeout(gpScrollTimer);
+  gpScrollTimer = setTimeout(updateGPHighlight, 50);
+}
+
+function updateGPHighlight() {
+  const scroll = document.getElementById('goal-picker-scroll');
+  if (!scroll) return;
+  const ITEM_H = 44;
+  const idx = Math.round(scroll.scrollTop / ITEM_H);
+  pickerMins = idx + 1;
+
+  document.querySelectorAll('.goal-picker-item').forEach((el, i) => {
+    el.classList.remove('gp-selected', 'gp-near');
+    if (i === idx) el.classList.add('gp-selected');
+    else if (Math.abs(i - idx) === 1) el.classList.add('gp-near');
+  });
+}
+
+function saveGoalPicker() {
+  const mins = Math.max(1, Math.min(120, pickerMins));
+  userStats.goal = mins * 60;
+  saveStats();
+  updateStatsUI();
+  showToast('✓ Maqsad: ' + mins + ' daq/kun');
+  closeGoalPicker();
+}
+
+function closeGoalPicker() {
+  document.getElementById('goal-picker-sheet').style.display = 'none';
+  const scroll = document.getElementById('goal-picker-scroll');
+  if (scroll) scroll.removeEventListener('scroll', onGPScroll);
+}
+
+function buildTopRecitersFull(filter = '') {
+  const container = document.getElementById('tr-full-list');
+  if (!container) return;
+
+  // Haqiqiy ma'lumot yo'qligi uchun chiroyli "Tinglovchi" raqamlarini generatsiya qilamiz
+  const getListens = (i) => {
+    if(i === 0) return '3.6M';
+    if(i === 1) return '1.7M';
+    if(i === 2) return '1.4M';
+    if(i === 3) return '1.2M';
+    return (Math.max(0.1, 1.1 - (i * 0.05))).toFixed(1) + 'M';
+  };
+
+  const filtered = filter
+    ? QORIS.filter(q => q.name.toLowerCase().includes(filter.toLowerCase()))
+    : QORIS;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div style="text-align:center; color:gray; padding: 20px;">Topilmadi</div>`;
+    return;
+  }
+
+  let html = '';
+  
+  // Asosiy 1-o'rin (Katta rasm)
+  const q1 = filtered[0];
+  const idx1 = QORIS.indexOf(q1); // asil indeksi, pleyerga uzatish uchun
+  html += `
+    <div class="top1-card" onclick="selectQoriFromHome(${idx1})">
+      <div class="top1-avatar-wrap">
+        <img src="reciter/${q1.img}" class="top1-avatar" onerror="this.style.display='none'">
+        <div class="rank-badge-1">1</div>
+      </div>
+      <div class="top1-name">${q1.name}</div>
+      <div class="top1-listens">${getListens(idx1)} tinglovchi</div>
+    </div>
+    <div class="top-grid">
+  `;
+
+  // 2-o'rindan boshlab pastdagi to'rga (Grid) joylanadi
+  for (let i = 1; i < filtered.length; i++) {
+    const q = filtered[i];
+    const idx = QORIS.indexOf(q);
+    html += `
+      <div class="top-grid-item" onclick="selectQoriFromHome(${idx})">
+        <div class="tg-avatar-wrap">
+          <img src="reciter/${q.img}" class="tg-avatar" onerror="this.style.display='none'">
+          <div class="tg-rank">${i + 1}</div>
+        </div>
+        <div class="tg-name">${q.name.split(' ').slice(0, 2).join('<br>')}</div>
+        <div class="tg-listens">${getListens(idx)} tinglovchi</div>
+      </div>
+    `;
+  }
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function filterTopReciters(val) {
+  buildTopRecitersFull(val);
+}
+
+
+// ═══════════════════════════════════════════
+//  PLAYLISTS DATA & LOGIC
+// ═══════════════════════════════════════════
+
+const PLAYLIST_DATA = [
+  {
+    id: 'favs', title: 'Sevimlilar', sub: '', bgClass: 'bg-fav',
+    icon: `<svg width="80" height="80" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
+    desc: 'O\'zingiz yoqtirgan va saqlab qo\'ygan suralar va qorilar ro\'yxati.',
+    getTracks: () => Array.from(state.favs).map(sIdx => ({ surahIdx: sIdx, qoriIdx: state.qoriIdx }))
+  },
+  {
+    id: 'focus', title: 'Diqqat va Ish', sub: '', bgClass: 'bg-focus',
+    icon: `<svg width="200" height="200" viewBox="0 0 100 100"><circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>`,
+    desc: 'O\'qish yoki ishlash jarayonida xotirjamlik va diqqatni jamlash uchun sokin qiroatlar to\'plami. Qalbingizni xotirjam tuting.',
+    tracks: [
+      { surahIdx: 17, qoriIdx: 0 }, // Kahf - Alafasy
+      { surahIdx: 1,  qoriIdx: 3 }, // Baqarah - Muaiqly
+      { surahIdx: 35, qoriIdx: 1 }, // Yasin - Dosari
+      { surahIdx: 54, qoriIdx: 2 }, // Rahman - Luhaidan
+      { surahIdx: 55, qoriIdx: 6 }  // Waqiah - Shaatree
+    ]
+  },
+  {
+    id: 'beautiful', title: 'Eng Go\'zal Qiroatlar', sub: '', bgClass: 'bg-beautiful',
+    icon: `<svg width="180" height="180" viewBox="0 0 100 100"><path d="M50 20 C60 20, 70 40, 50 50 C30 40, 40 20, 50 20 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M50 80 C60 80, 70 60, 50 50 C30 60, 40 80, 50 80 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M20 50 C20 40, 40 30, 50 50 C40 70, 20 60, 20 50 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M80 50 C80 40, 60 30, 50 50 C60 70, 80 60, 80 50 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>`,
+    desc: 'Qalblarni larzaga keltiruvchi, eng go\'zal va ta\'sirli Qur\'on tilovatlari.',
+    tracks: [
+      { surahIdx: 18, qoriIdx: 2 }, // Maryam - Luhaidan
+      { surahIdx: 19, qoriIdx: 1 }, // Taha - Dosari
+      { surahIdx: 11, qoriIdx: 0 }, // Yusuf - Alafasy
+      { surahIdx: 66, qoriIdx: 3 }  // Mulk - Muaiqly
+    ]
+  },
+  {
+    id: 'sleep', title: 'Uyqu Rejimi', sub: '', bgClass: 'bg-sleep',
+    icon: `<svg width="120" height="120" viewBox="0 0 100 100"><path d="M20 30 L40 30 L20 50 L40 50" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M50 60 L70 60 L50 80 L70 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M70 20 L85 20 L70 35 L85 35" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/></svg>`,
+    desc: 'Tungi uyqudan oldin tinglash uchun sokin, mayin ovozdagi qiroatlar. Uyqu taymerini yoqishni unutmang.',
+    tracks: [
+      { surahIdx: 66, qoriIdx: 0 }, // Mulk
+      { surahIdx: 31, qoriIdx: 0 }, // Sajdah
+      { surahIdx: 111, qoriIdx: 0 }, // Ikhlas
+      { surahIdx: 112, qoriIdx: 0 }, // Falaq
+      { surahIdx: 113, qoriIdx: 0 }  // Nas
+    ]
+  },
+  {
+    id: 'luhaidan', title: 'Muhammad Al-Luhaidan', sub: 'Maxsus to\'plam', bgClass: 'bg-luhaidan',
+    qoriImg: 'luhaidan.jpg',
+    icon: `<svg width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L40 20 L50 30 L80 30 L80 80 L20 80 Z" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/></svg>`,
+    desc: 'Shayx Muhammad Al-Luhaidanning eng ta\'sirli qiroatlaridan tuzilgan maxsus to\'plam.',
+    tracks: [
+      { surahIdx: 0, qoriIdx: 2 }, { surahIdx: 18, qoriIdx: 2 }, { surahIdx: 54, qoriIdx: 2 }, { surahIdx: 74, qoriIdx: 2 }
+    ]
+  },
+  {
+    id: 'dosari', title: 'Yasser Al-Dosari', sub: 'Maxsus to\'plam', bgClass: 'bg-dosari',
+    qoriImg: 'dosari.jpg',
+    icon: `<svg width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L40 20 L50 30 L80 30 L80 80 L20 80 Z" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/></svg>`,
+    desc: 'Shayx Yasser Al-Dosarining yurakni titratuvchi go\'zal qiroatlari to\'plami.',
+    tracks: [
+      { surahIdx: 0, qoriIdx: 1 }, { surahIdx: 35, qoriIdx: 1 }, { surahIdx: 55, qoriIdx: 1 }, { surahIdx: 66, qoriIdx: 1 }
+    ]
+  }
+];
+
+function buildPlaylistsScreen() {
+  const container = document.getElementById('playlists-grid');
+  if(!container) return;
+  
+  container.innerHTML = PLAYLIST_DATA.map(p => `
+    <div class="pl-card ${p.bgClass}" onclick="openPlaylistDetail('${p.id}')">
+      ${p.qoriImg ? `<img src="reciter/${p.qoriImg}" class="pl-avatar" onerror="this.style.display='none'">` : ''}
+      <div class="pl-icon" style="${p.id === 'favs' ? 'top: 20px;' : 'top: -20px; left: 20px;'}">${p.icon}</div>
+      ${p.sub ? `<div class="pl-sub">${p.sub}</div>` : ''}
+      <div class="pl-title">${p.title}</div>
+    </div>
+  `).join('');
+}
+
+let currentActivePlaylist = null;
+
+function openPlaylistDetail(id) {
+  const p = PLAYLIST_DATA.find(x => x.id === id);
+  if(!p) return;
+  
+  currentActivePlaylist = p;
+  
+  document.getElementById('pld-header-bg').className = 'pld-header-bg ' + p.bgClass;
+  document.getElementById('pld-icon-large').innerHTML = p.icon;
+  document.getElementById('pld-title').textContent = p.title;
+  document.getElementById('pld-desc').textContent = p.desc;
+  
+  const tracks = p.id === 'favs' ? p.getTracks() : p.tracks;
+  document.getElementById('pld-count').textContent = tracks.length + ' sura';
+  
+  const tracksContainer = document.getElementById('pld-tracks');
+  if(tracks.length === 0) {
+    tracksContainer.innerHTML = '<div style="color:rgba(255,255,255,0.4); text-align:center; padding:20px;">Hozircha bo\'sh</div>';
+  } else {
+    tracksContainer.innerHTML = tracks.map(t => {
+      const s = SURAHS[t.surahIdx];
+      const q = QORIS[t.qoriIdx];
+      return `
+        <div class="pld-track" onclick="playTrackFromPlaylist(${t.surahIdx}, ${t.qoriIdx})">
+          <div class="pld-track-num">${s.n}</div>
+          <div class="pld-track-info">
+            <div class="pld-track-title">${s.en} <span style="font-size:13px; font-family:'Amiri'; color:rgba(255,255,255,0.5)">(${s.ar})</span></div>
+            <div class="pld-track-qori">${q.name}</div>
+          </div>
+          <div class="pld-track-actions">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  showScreen('playlist-detail');
+}
+
+function playTrackFromPlaylist(surahIdx, qoriIdx) {
+  state.surahIdx = surahIdx;
+  state.qoriIdx = qoriIdx;
+  state.isPlaying = true;
+  setPlayIcon(false);
+  updateNowPlaying();
+  quranAudio.play().catch(()=>{});
+  showScreen('player');
+}
+
+function playCurrentPlaylist() {
+  if(!currentActivePlaylist) return;
+  const tracks = currentActivePlaylist.id === 'favs' ? currentActivePlaylist.getTracks() : currentActivePlaylist.tracks;
+  if(tracks.length > 0) {
+    playTrackFromPlaylist(tracks[0].surahIdx, tracks[0].qoriIdx);
+  }
+}
+
+// ═══════════════════════════════════════════
+//  SETTINGS LOGIC
+// ═══════════════════════════════════════════
+
+function toggleSettingSubtitle() {
+  toggleSubtitle(); // Suralar oynasidagi asil funksiyani ishga tushiradi
+  updateSettingsUI();
+}
+
+function updateSettingsUI() {
+  const subToggle = document.getElementById('st-toggle-sub');
+  if (subToggle) {
+    if (isSubtitleOn) subToggle.classList.add('on');
+    else subToggle.classList.remove('on');
+  }
+}
+
+function resetStatsApp() {
+  if(confirm("Barcha tinglash statistikangiz (seriya, rekordlar) o'chirib tashlansinmi? Bu amalni orqaga qaytarib bo'lmaydi.")) {
+    userStats = {
+      today: 0,
+      goal: 300,
+      streak: 0,
+      week: 0,
+      record: 0,
+      lastDate: new Date().toDateString()
+    };
+    saveStats();
+    updateStatsUI();
+    showToast("✓ Statistika tozalandi");
+  }
+}
+
+// Medialarni qurilmaga oldindan saqlash (Kesh)
+async function cacheMediaImages() {
+  const statusEl = document.getElementById('cache-status');
+  if(statusEl) statusEl.textContent = 'Yuklanmoqda...';
+  showToast('Medialar keshlanmoqda, kuting...');
+  
+  let loaded = 0;
+  const total = QORIS.length;
+
+  // Rasmlarni brauzer xotirasiga (cache) olish
+  for(const qori of QORIS) {
+    const img = new Image();
+    img.src = `reciter/${qori.img}`;
+    
+    img.onload = () => { checkDone(); };
+    img.onerror = () => { checkDone(); }; // Xato bo'lsa ham qotib qolmasligi uchun
+
+    function checkDone() {
+      loaded++;
+      if(loaded === total) {
+        if(statusEl) {
+          statusEl.textContent = 'Yuklangan';
+          statusEl.style.color = '#34c759'; // Yashil rangda
+        }
+        showToast('✓ Barcha rasmlar qurilmaga saqlandi');
+        localStorage.setItem('mediaCached', 'true');
+      }
+    }
+  }
+}
+
+// Boshlang'ich holatda Settings UI ni moslash
+document.addEventListener("DOMContentLoaded", () => {
+  updateSettingsUI();
+  
+  // Kesh holatini tekshirish
+  if(localStorage.getItem('mediaCached') === 'true') {
+    const statusEl = document.getElementById('cache-status');
+    if(statusEl) {
+      statusEl.textContent = 'Yuklangan';
+      statusEl.style.color = '#34c759';
+    }
+  }
+});
+
+// Barcha ma'lumotlar yaratilgandan so'ng tizimni ishga tushirish
 init();
+
 </script>
+<!-- GOAL PICKER BOTTOM SHEET -->
+<div id="goal-picker-sheet" style="position:fixed;inset:0;z-index:500;display:none;align-items:flex-end;background:rgba(0,0,0,0.55);" onclick="closeGoalPicker()">
+  <div class="goal-picker-card" onclick="event.stopPropagation()">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:99px;margin:12px auto 0;"></div>
+    <div class="goal-picker-header">
+      <div class="goal-picker-title">Kunlik Tinglash Maqsadi</div>
+      <button class="goal-picker-done" onclick="saveGoalPicker()">Tayyor</button>
+    </div>
+    <div class="goal-picker-body">
+      <div class="goal-picker-wrap">
+        <div id="goal-picker-scroll" class="goal-picker-scroll"></div>
+        <div class="goal-picker-selection"></div>
+      </div>
+      <div class="goal-picker-unit">daq/kun</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
