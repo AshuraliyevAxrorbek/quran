@@ -1191,12 +1191,12 @@
   .r-section-title { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
   .r-see-all { font-size: 14px; color: #5c8dff; font-weight: 500; cursor: pointer; }
   
-  .r-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px 20px; }
+  .r-scroll { display: flex; gap: 28px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px 20px; }
   .r-scroll::-webkit-scrollbar { display: none; }
   
   .r-card { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 94px; flex-shrink: 0; cursor: pointer; position: relative; transition: transform 0.15s; }
   .r-card:active { transform: scale(0.92); }
-  .r-img-wrap { width: 94px; height: 94px; border-radius: 50%; position: relative; }
+  .r-img-wrap { width: 108px; height: 108px; border-radius: 50%; position: relative; }
   .r-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #2a2a2c; }
   .r-name { font-size: 13px; font-weight: 500; text-align: center; line-height: 1.3; color: #fff; }
   .r-badge { position: absolute; top: -2px; right: -2px; background: #22c55e; color: #fff; font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 10px; letter-spacing: 0.5px; border: 2px solid #0a0c0e; z-index: 2; }
@@ -1519,11 +1519,11 @@
   .section-see-all { font-size: 13px; color: rgba(80,150,255,0.85); cursor: pointer; font-weight: 500; }
   .section-see-all:hover { color: rgba(110,170,255,1); }
 
-  .reciters-scroll { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 16px; }
+  .reciters-scroll { display: flex; gap: 0px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 16px; }
   .reciters-scroll::-webkit-scrollbar { display: none; }
-  .reciter-card { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; flex-shrink: 0; width: 94px; transition: transform 0.18s; }
+  .reciter-card { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; flex-shrink: 0; width: 124px; transition: transform 0.18s; }
   .reciter-card:active { transform: scale(0.90); }
-  .reciter-img { width: 102px; height: 102px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(255,255,255,0.10); background: linear-gradient(135deg, #1a2a3a, #2a3a2a); }
+  .reciter-img { width: 108px; height: 108px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(255,255,255,0.10); background: linear-gradient(135deg, #1a2a3a, #2a3a2a); }
   .reciter-img.active-border { border-color: var(--gold) !important; }
   .reciter-img img { width: 100%; height: 100%; object-fit: cover; }
   .reciter-name { font-size: 12px; text-align: center; color: rgba(255,255,255,0.85); line-height: 1.3; font-weight: 600; }
@@ -2185,6 +2185,8 @@
     <div class="r-see-all" onclick="openPanel('qori')">Barchasi</div>
   </div>
  <div class="r-scroll" id="rs-new-list"></div>
+
+ <div id="rs-by-country"></div>
 </div>
 
 <!-- MUSHAF — SURALAR RO'YXATI -->
@@ -2901,20 +2903,33 @@ const SLEEP_OPTIONS = [
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
+// localStorage'dan oldingi sevimlilarni tiklash
+function loadSavedSet(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch (e) { return new Set(); }
+}
+function saveSet(key, set) {
+  try { localStorage.setItem(key, JSON.stringify(Array.from(set))); } catch (e) {}
+}
+
 let state = {
-  surahIdx: 0, 
-  qoriIdx: 0,  
+  surahIdx: Number(localStorage.getItem('lastSurahIdx')) || 0,
+  qoriIdx: Number(localStorage.getItem('lastQoriIdx')) || 0,
   isPlaying: false,
-  speed: 1,
-  quranVol: 0.7,
-  bgVol: 0.8,
+  speed: Number(localStorage.getItem('playerSpeed')) || 1,
+  quranVol: localStorage.getItem('quranVol') !== null ? Number(localStorage.getItem('quranVol')) : 0.7,
+  bgVol: localStorage.getItem('bgVol') !== null ? Number(localStorage.getItem('bgVol')) : 0.8,
   bgSoundIdx: 0,
   sleepOption: 0, 
   sleepTimer: null,
   sleepRemain: 0,
-  favs: new Set(),
-  favQoris: new Set(),
-  videoIdx: 0,
+  favs: loadSavedSet('favSurahs'),
+  favQoris: loadSavedSet('favQoris'),
+  videoIdx: Number(localStorage.getItem('lastVideoIdx')) || 0,
   audioQuality: localStorage.getItem('audioQuality') || '128',
 };
 
@@ -3107,6 +3122,10 @@ function init() {
   buildSoundTabs();
   buildSleepOptions();
   buildVideoGrid();
+  // Saqlangan fon videosini tiklash
+  if (state.videoIdx > 0 && VIDEOS[state.videoIdx]) {
+    document.getElementById('bg-video').src = VIDEOS[state.videoIdx].file;
+  }
   updateNowPlaying();
   setupAudioEvents();
   buildHomeScreen();
@@ -3118,6 +3137,18 @@ function init() {
   renderDailyVerse();
   renderHistorySection();
   updateSleepSettingsLabel();
+}
+
+// Origin qiymatini umumiy davlat nomiga moslashtirish (masalan "Makka, SA" → "Saudiya Arabistoni")
+const ORIGIN_TO_COUNTRY = {
+  'SA': 'Saudiya Arabistoni',
+  'Makka, SA': 'Saudiya Arabistoni',
+  'Misr': 'Misr',
+  'Yaman': 'Yaman',
+  'Quvayt': 'Quvayt',
+};
+function countryOf(origin) {
+  return ORIGIN_TO_COUNTRY[origin] || origin;
 }
 
 function buildRecitersScreen() {
@@ -3157,6 +3188,85 @@ function buildRecitersScreen() {
       </div>
     `).join('');
   }
+
+  buildRecitersByCountry();
+}
+
+// Davlatlar bo'yicha guruhlangan bo'limlarni qurish ("From Saudi Arabia" uslubida)
+function buildRecitersByCountry(filter = '') {
+  const container = document.getElementById('rs-by-country');
+  if (!container) return;
+
+  let list = QORIS.map((q, i) => ({ ...q, idx: i }));
+  if (filter) {
+    list = list.filter(q => q.name.toLowerCase().includes(filter.toLowerCase()) || q.origin.toLowerCase().includes(filter.toLowerCase()));
+  }
+
+  // Davlat bo'yicha guruhlash, tartib birinchi uchrashgan ketma-ketlikda
+  const groups = {};
+  const order = [];
+  list.forEach(q => {
+    const country = countryOf(q.origin);
+    if (!groups[country]) { groups[country] = []; order.push(country); }
+    groups[country].push(q);
+  });
+
+  if (order.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.4);padding:20px 0;">Topilmadi</div>';
+    return;
+  }
+
+  container.innerHTML = order.map(country => {
+    const items = groups[country];
+    return `
+      <div class="r-section-header" style="margin-top: 10px;">
+        <div class="r-section-title">${country}dan</div>
+        <div class="r-see-all" onclick="openCountryFull('${country.replace(/'/g, "\\'")}')">Barchasi</div>
+      </div>
+      <div class="r-scroll">
+        ${items.map(r => `
+          <div class="r-card" onclick="selectQoriFromHome(${r.idx})">
+            <div class="r-img-wrap">
+              <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.src='reciter/qori.png'">
+            </div>
+            <div class="r-name">${r.name.split(' ').slice(0,2).join('<br>')}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+function filterRecitersByCountry(val) {
+  buildRecitersByCountry(val);
+}
+
+// "Barchasi" bosilganda — shu davlatning to'liq ro'yxatini Qorilar panelida ko'rsatish
+function openCountryFull(country) {
+  openPanel('qori');
+  const searchInput = document.getElementById('qori-search');
+  // Davlat nomi bo'yicha emas, origin matni bo'yicha filtrlash uchun maxsus mexanizm:
+  buildQoriListByCountry(country);
+  searchInput.value = '';
+}
+
+function buildQoriListByCountry(country) {
+  const container = document.getElementById('qori-list');
+  const filtered = QORIS.map((q,i) => ({...q, idx:i})).filter(q => countryOf(q.origin) === country);
+  container.innerHTML = filtered.map(q => `
+    <div class="qori-item ${q.idx === state.qoriIdx ? 'active' : ''}" onclick="selectQori(${q.idx})">
+      <div class="qori-avatar" style="overflow:hidden;padding:0;border:2px solid ${q.idx === state.qoriIdx ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}" onclick="openQoriProfile(${q.idx}, event)">
+        <img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.src='reciter/qori.png'">
+      </div>
+      <div class="qori-info">
+        <div class="qori-name">${q.name}</div>
+        <div class="qori-origin">${q.origin}</div>
+      </div>
+      <div class="qori-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+    </div>
+  `).join('');
 }
 
 function filterRecitersScreen(val) {
@@ -3204,6 +3314,7 @@ function selectVideo(id) {
   vid.style.opacity = '0.65';
   showToast(VIDEOS[id].emoji + ' ' + VIDEOS[id].label + ' videosi');
   closePanel('video');
+  localStorage.setItem('lastVideoIdx', id);
 }
 
 let surahAyahs = [];
@@ -3615,6 +3726,8 @@ function updateNowPlaying() {
   loadSurahAyahs(s.n);
   updateMiniPlayer();
   addToHistory(state.surahIdx, state.qoriIdx);
+  localStorage.setItem('lastSurahIdx', state.surahIdx);
+  localStorage.setItem('lastQoriIdx', state.qoriIdx);
 }
 
 // ═══════════════════════════════════════════
@@ -3804,6 +3917,7 @@ function setSpeed(s) {
   document.getElementById('speed-btn').textContent = s === 1 ? '1×' : s+'×';
   buildSpeedDots();
   showToast('Tezlik: ' + (s === 1 ? '1×' : s+'×'));
+  localStorage.setItem('playerSpeed', s);
 }
 
 function updateSpeedTrack() {
@@ -3820,6 +3934,7 @@ function setQuranVol(val) {
   quranAudio.volume = state.quranVol;
   document.getElementById('quran-vol-fill').style.width = val+'%';
   document.getElementById('quran-vol-thumb').style.left = val+'%';
+  localStorage.setItem('quranVol', state.quranVol);
 }
 
 function setBgVol(val) {
@@ -3827,16 +3942,26 @@ function setBgVol(val) {
   if (bgAudio) bgAudio.volume = state.bgVol;
   document.getElementById('bg-vol-fill').style.width = val+'%';
   document.getElementById('bg-vol-thumb').style.left = val+'%';
+  localStorage.setItem('bgVol', state.bgVol);
 }
 
 // ═══════════════════════════════════════════
 //  BACKGROUND SOUND
 // ═══════════════════════════════════════════
+// Har bir selectBgSound chaqiruvini o'zining "avlod raqami" bilan belgilaymiz,
+// shunda eski (kechikkan) yuklanish keyingi tanlovni bosib ketolmaydi.
+let bgSoundGen = 0;
+
 function selectBgSound(idx) {
   state.bgSoundIdx = idx;
   buildSoundTabs();
 
-  // Avval barcha eski audio resurslarni to'liq tozala
+  // Joriy chaqiruv uchun yangi avlod raqami
+  bgSoundGen++;
+  const myGen = bgSoundGen;
+
+  // Eski audio nima holatda bo'lishidan qat'iy nazar — DARHOL to'xtatamiz.
+  // Bu eski va yangi tovush bir vaqtda eshitilib ketishining oldini oladi.
   if (bgAudio) {
     bgAudio.pause();
     bgAudio.src = '';
@@ -3846,45 +3971,60 @@ function selectBgSound(idx) {
 
   const sound = BG_SOUNDS[idx];
 
+  // OFF bosilganda — har doim va shartsiz o'chadi
   if (!sound.url) {
     showToast('Fon tovushi o\'chirildi');
     return;
   }
 
-  // Yangi audio ob'ektini yaratish
+  // Yangi audio elementi
   const newAudio = new Audio();
   newAudio.loop = true;
   newAudio.volume = 0;
   newAudio.preload = 'auto';
+  newAudio.src = sound.url;
 
-  newAudio.addEventListener('canplaythrough', () => {
+  const startPlayback = () => {
+    // Shu orada foydalanuvchi boshqa tovush yoki OFF bosgan bo'lsa — bu eski
+    // chaqiruv hisoblanadi, uni ijro etmaymiz (race condition yo'qoladi)
+    if (myGen !== bgSoundGen) return;
+
     bgAudio = newAudio;
-    bgAudio.play().then(() => {
-      // Smooth fade-in: 0 → 0.20
+    newAudio.play().then(() => {
+      if (myGen !== bgSoundGen) { newAudio.pause(); return; }
+
+      // Joriy slayder qiymatidan boshlab yumshoq fade-in (state.bgVol saqlanadi)
+      const targetVol = state.bgVol || 0.20;
       let v = 0;
       const fadeIn = setInterval(() => {
-        v = Math.min(v + 0.02, 0.20);
-        bgAudio.volume = v;
-        if (v >= 0.20) clearInterval(fadeIn);
+        if (myGen !== bgSoundGen) { clearInterval(fadeIn); return; }
+        v = Math.min(v + 0.02, targetVol);
+        newAudio.volume = v;
+        if (v >= targetVol) clearInterval(fadeIn);
       }, 40);
 
-      state.bgVol = 0.20;
-      document.getElementById('bg-vol').value = 20;
-      document.getElementById('bg-vol-fill').style.width = '20%';
-      document.getElementById('bg-vol-thumb').style.left = '20%';
-      document.getElementById('bg-vol-icon').textContent = '🔉';
+      const volPct = Math.round(targetVol * 100);
+      document.getElementById('bg-vol').value = volPct;
+      document.getElementById('bg-vol-fill').style.width = volPct + '%';
+      document.getElementById('bg-vol-thumb').style.left = volPct + '%';
     }).catch(() => {
+      if (myGen !== bgSoundGen) return;
       showToast('Fayl topilmadi: ' + sound.url);
       bgAudio = null;
     });
-  }, { once: true });
+  };
+
+  // iOS/Android'da "canplaythrough" kech yoki kelmasligi mumkin —
+  // shuning uchun "canplay" yetarli bo'lganda darhol ijro boshlanadi,
+  // bu mobil qurilmalarda tugma "ishlamayapti" degan taassurotni yo'qotadi.
+  newAudio.addEventListener('canplay', startPlayback, { once: true });
 
   newAudio.addEventListener('error', () => {
+    if (myGen !== bgSoundGen) return;
     showToast('Audio xatosi: ' + sound.label);
     bgAudio = null;
   }, { once: true });
 
-  newAudio.src = sound.url;
   newAudio.load();
 
   showToast(sound.emoji + ' ' + sound.label + ' yuklanmoqda...');
@@ -4033,6 +4173,7 @@ function toggleFav() {
     document.getElementById('star-icon').style.fill = 'currentColor';
     showToast('★ Sevimlilarga qo\'shildi');
   }
+  saveSet('favSurahs', state.favs);
 }
 
 // ═══════════════════════════════════════════
@@ -4530,6 +4671,7 @@ function toggleQoriFavFromProfile() {
     favBtn.classList.add('active');
     showToast('★ Sevimli qorilarga qo\'shildi');
   }
+  saveSet('favQoris', state.favQoris);
 }
 
 function playFromProfile() {
@@ -4870,6 +5012,7 @@ function togglePldFav(surahIdx) {
     state.favs.add(surahIdx);
     showToast('★ Sevimlilarga qo\'shildi');
   }
+  saveSet('favSurahs', state.favs);
   if (surahIdx === state.surahIdx) {
     const favBtn = document.getElementById('fav-btn');
     const starIcon = document.getElementById('star-icon');
