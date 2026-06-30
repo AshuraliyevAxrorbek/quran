@@ -477,7 +477,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    margin: 14px 14px 6px;
+    margin: 14px 14px 28px;
     padding: 8px 6px;
     border-radius: 32px;
     position: relative;
@@ -561,6 +561,40 @@
     left: 16px;
     padding: 0 0 16px;
   }
+
+  /* Sleep popup */
+  #sleep-popup {
+    bottom: calc(env(safe-area-inset-bottom, 16px) + 80px);
+    right: 16px;
+    padding: 0 0 8px;
+    min-width: 220px;
+  }
+  .sleep-popup-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 8px;
+  }
+  .sleep-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  .sleep-option:hover { background: rgba(255,255,255,0.06); }
+  .sleep-check {
+    display: none;
+    color: var(--gold);
+  }
+  .sleep-option.active .sleep-check { display: flex; }
 
   .popup-title {
     display: flex;
@@ -877,6 +911,51 @@
     font-weight: 600;
     color: rgba(255,255,255,0.85);
     margin-bottom: 2px;
+  }
+
+  /* Sleep timer — goal-picker bilan bir xil scroll-wheel uslubi */
+  .sleep-picker-wrap {
+    position: relative;
+    height: 220px;
+    width: 100%;
+  }
+  .sleep-picker-scroll {
+    height: 220px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .sleep-picker-scroll::-webkit-scrollbar { display: none; }
+  .sleep-picker-item {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.25);
+    scroll-snap-align: center;
+    transition: color 0.15s, font-size 0.15s, font-weight 0.15s;
+  }
+  .sleep-picker-item.sp-selected {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .sleep-picker-item.sp-near {
+    color: rgba(255,255,255,0.5);
+    font-size: 18px;
+  }
+  .sleep-picker-selection {
+    position: absolute;
+    top: 50%;
+    left: 4px; right: 4px;
+    height: 44px;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.07);
+    border-radius: 12px;
+    pointer-events: none;
   }
 
   /* Hamburger icon for list */
@@ -1237,7 +1316,7 @@
 
   .pld-header { height: 340px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 0 0 40px 40px; overflow: hidden; margin-bottom: 24px;}
   .pld-header-bg { position: absolute; inset: 0; z-index: 0; }
-  .pld-back { position: absolute; top: 54px; left: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:#fff; border:none; backdrop-filter: blur(10px); cursor: pointer; z-index: 10; transition: background 0.2s; }
+  .pld-back { position: absolute; top: 100px; left: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:#fff; border:none; backdrop-filter: blur(10px); cursor: pointer; z-index: 10; transition: background 0.2s; }
   .pld-back:active { background: rgba(0,0,0,0.5); }
   .pld-icon-large { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; opacity: 0.7; z-index: 1; pointer-events: none; }
   
@@ -1271,7 +1350,7 @@
 
   /* ═══ NAV BAR ═══ */
   #nav-bar {
-    position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
+    position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
     left: 16px; right: 16px; z-index: 90;
     display: flex; align-items: center; justify-content: space-around;
     padding: 8px 12px;
@@ -1297,7 +1376,7 @@
   /* ═══ MINI PLAYER ═══ */
   #mini-player {
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 90px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 95px);
     left: 16px; right: 16px; z-index: 85;
     background: #121212;
     border: none;
@@ -1383,7 +1462,7 @@
 
   /* POPUP STATS DETAILED */
   #stats-popup { top: 0; bottom: 0; left: 0; right: 0; height: 100%; border-radius: 0; padding: 24px; background: #000; border: none; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .stats-popup-close { position: absolute; top: 20px; right: 20px; width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; cursor: pointer; z-index: 10;}
+  .stats-popup-close { position: absolute; top: 100px; right: 20px; width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; cursor: pointer; z-index: 10;}
   .sp-arc-wrap { max-width: 300px; margin: 40px auto 30px; position: relative; }
   .sp-time { font-size: 64px; font-weight: 700; text-align: center; letter-spacing: -2px; font-variant-numeric: tabular-nums; line-height: 1; }
   .sp-goal { font-size: 15px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 8px; }
@@ -1436,7 +1515,7 @@
   }
 
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .section-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .section-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px; }
   .section-see-all { font-size: 13px; color: rgba(80,150,255,0.85); cursor: pointer; font-weight: 500; }
   .section-see-all:hover { color: rgba(110,170,255,1); }
 
@@ -1444,7 +1523,7 @@
   .reciters-scroll::-webkit-scrollbar { display: none; }
   .reciter-card { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; flex-shrink: 0; width: 94px; transition: transform 0.18s; }
   .reciter-card:active { transform: scale(0.90); }
-  .reciter-img { width: 88px; height: 88px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.10); background: linear-gradient(135deg, #1a2a3a, #2a3a2a); }
+  .reciter-img { width: 102px; height: 102px; border-radius: 50%; overflow: hidden; border: 2.5px solid rgba(255,255,255,0.10); background: linear-gradient(135deg, #1a2a3a, #2a3a2a); }
   .reciter-img.active-border { border-color: var(--gold) !important; }
   .reciter-img img { width: 100%; height: 100%; object-fit: cover; }
   .reciter-name { font-size: 12px; text-align: center; color: rgba(255,255,255,0.85); line-height: 1.3; font-weight: 600; }
@@ -1547,6 +1626,103 @@
     #mini-player:active { transform: translateX(-50%) scale(0.98); }
     #nav-bar { width: 50%; max-width: none; left: 50%; right: auto; transform: translateX(-50%); border-radius: 20px; justify-content: center; gap: 40px; }
     .nav-item { max-width: 150px; }
+  }
+
+  /* ═══ KUNNING OYATI ═══ */
+  .daily-verse-card {
+    background: #111113;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 24px;
+    padding: 22px 20px;
+    margin-top: 28px;
+    margin-bottom: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .dv-label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 16px; }
+  .dv-arabic { font-family: 'Amiri', serif; font-size: 22px; line-height: 1.9; color: #fff; direction: rtl; text-align: center; margin-bottom: 16px; padding: 0 4px; }
+  .dv-uz { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.78); margin-bottom: 12px; }
+  .dv-ref { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; }
+
+  /* ═══ QORI PROFILE SCREEN ═══ */
+  #qori-profile-screen {
+    position: fixed; inset: 0; z-index: 12;
+    overflow-y: auto; scrollbar-width: none;
+    background: #000;
+  }
+  #qori-profile-screen::-webkit-scrollbar { display: none; }
+  #qori-profile-screen.hidden { opacity: 0; pointer-events: none; }
+
+  .qp-header {
+    position: relative; height: 360px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding-bottom: 28px; overflow: hidden; border-radius: 0 0 40px 40px;
+  }
+  .qp-header-bg {
+    position: absolute; inset: -20px;
+    background-size: cover; background-position: center;
+    filter: blur(30px) brightness(0.5) saturate(1.3);
+    transform: scale(1.2); z-index: 0;
+  }
+  .qp-header::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 100%);
+    z-index: 1;
+  }
+  .qp-back {
+    position: absolute; top: 100px; left: 16px; z-index: 5;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+    border: none; color: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .qp-back:active { background: rgba(0,0,0,0.5); }
+  .qp-avatar-wrap {
+    position: relative; z-index: 2;
+    width: 128px; height: 128px; border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.15);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .qp-avatar { width: 100%; height: 100%; object-fit: cover; }
+  .qp-name { position: relative; z-index: 2; font-size: 24px; font-weight: 800; color: #fff; text-align: center; letter-spacing: -0.4px; padding: 0 20px; }
+  .qp-origin { position: relative; z-index: 2; font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 4px; font-weight: 500; }
+
+  .qp-content { padding: 24px 16px calc(env(safe-area-inset-bottom, 0px) + 120px); max-width: 620px; margin: 0 auto; }
+  .qp-actions { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .qp-play-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--gold); color: #000; border: none; border-radius: 30px;
+    padding: 15px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .qp-play-btn:active { transform: scale(0.97); opacity: 0.9; }
+  .qp-fav-btn {
+    width: 50px; height: 50px; border-radius: 50%; flex-shrink: 0;
+    background: #1c1c1e; border: none; color: rgba(255,255,255,0.6);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .qp-fav-btn.active { color: var(--gold); background: var(--gold-dim); }
+
+  .qp-section-title { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+  .qp-bio-card { background: #1c1c1e; border-radius: 20px; padding: 18px 20px; font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,0.82); margin-bottom: 28px; }
+
+  .qp-stats-row { display: flex; background: #1c1c1e; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
+  .qp-stat { flex: 1; text-align: center; padding: 18px 8px; border-right: 1px solid rgba(255,255,255,0.06); }
+  .qp-stat:last-child { border-right: none; }
+  .qp-stat-val { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .qp-stat-label { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; }
+
+  /* ═══ AUDIO SIFATI TUGMALARI ═══ */
+  .aq-options { display: flex; gap: 6px; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 14px; }
+  .aq-option { border: none; background: transparent; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 700; font-family: 'Inter', sans-serif; padding: 7px 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+  .aq-option.active { background: var(--gold); color: #000; }
+
+  @media (min-width: 768px) {
+    .qp-header { height: 420px; border-radius: 0 0 48px 48px; }
+    .qp-avatar-wrap { width: 160px; height: 160px; }
+    .qp-name { font-size: 30px; }
+    .qp-content { max-width: 700px; padding-top: 32px; }
   }
 
 </style>
@@ -1696,7 +1872,12 @@
 
   <!-- SLEEP POPUP -->
   <div class="popup" id="sleep-popup" onclick="event.stopPropagation()">
-    <div class="sleep-popup-title">Uyqu Taymer</div>
+    <div class="sleep-popup-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      Uyqu Taymer
+    </div>
     <div id="sleep-options"></div>
   </div>
 
@@ -1746,18 +1927,35 @@
     </div>
 
     <div class="section-header">
-      <div class="section-title">⭐ Sevimlilar</div>
+      <div class="section-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Sevimlilar
+      </div>
       <div class="section-see-all" onclick="openPanel('qori')">Barchasi</div>
     </div>
     <div class="reciters-scroll" id="home-favs-list"></div>
 
     <div style="height:28px"></div>
 
+    <div id="home-history-wrap" style="display:none;">
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          So'nggi tinglangan
+        </div>
+      </div>
+      <div class="reciters-scroll" id="home-history-list"></div>
+      <div style="height:28px"></div>
+    </div>
+
     <div class="section-header">
       <div class="section-title">Yangi qorilar</div>
       <div class="section-see-all" onclick="openPanel('qori')">Barchasi</div>
     </div>
     <div id="home-new-list"></div>
+
+    <div class="daily-verse-card" id="daily-verse-card"></div>
+
     <div class="insights-card">
       <div class="insight-header">
         <h3>Statistika</h3>
@@ -1846,7 +2044,44 @@
     <div class="r-section-title">Yangi qorilar</div>
     <div class="r-see-all" onclick="openPanel('qori')">Barchasi</div>
   </div>
-  <div class="r-scroll" id="rs-new-list"></div>
+ <div class="r-scroll" id="rs-new-list"></div>
+</div>
+
+<!-- QORI PROFILE SCREEN -->
+<div id="qori-profile-screen" class="hidden">
+  <div class="qp-header">
+    <div class="qp-header-bg" id="qp-header-bg"></div>
+    <button class="qp-back" onclick="closeQoriProfile()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="qp-avatar-wrap">
+      <img id="qp-avatar" class="qp-avatar" src="" onerror="this.onerror=null;this.src='reciter/qori.png'">
+    </div>
+    <div class="qp-name" id="qp-name">Ism</div>
+    <div class="qp-origin" id="qp-origin">Mamlakat</div>
+  </div>
+
+  <div class="qp-content">
+    <div class="qp-actions">
+      <button class="qp-play-btn" onclick="playFromProfile()">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Tinglashni boshlash
+      </button>
+      <button class="qp-fav-btn" id="qp-fav-btn" onclick="toggleQoriFavFromProfile()" title="Sevimli qori">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
+    </div>
+
+    <div class="qp-section-title">Qori haqida</div>
+    <div class="qp-bio-card" id="qp-bio"></div>
+
+    <div class="qp-section-title">Ma'lumot</div>
+    <div class="qp-stats-row">
+      <div class="qp-stat"><div class="qp-stat-val">114</div><div class="qp-stat-label">Sura</div></div>
+      <div class="qp-stat"><div class="qp-stat-val" id="qp-stat-style">Murattal</div><div class="qp-stat-label">Uslub</div></div>
+      <div class="qp-stat"><div class="qp-stat-val" id="qp-stat-origin2">SA</div><div class="qp-stat-label">Mamlakat</div></div>
+    </div>
+  </div>
 </div>
 
 
@@ -1905,9 +2140,9 @@
     </div>
     
     <div class="pld-filters">
-      <button class="pld-filter-btn active">Barchasi</button>
-      <button class="pld-filter-btn">Suralar bo'yicha</button>
-      <button class="pld-filter-btn">Qorilar bo'yicha</button>
+      <button class="pld-filter-btn active" onclick="setPldFilter('all')">Barchasi</button>
+      <button class="pld-filter-btn" onclick="setPldFilter('surah')">Suralar bo'yicha</button>
+      <button class="pld-filter-btn" onclick="setPldFilter('qori')">Qorilar bo'yicha</button>
     </div>
     
     <div id="pld-tracks"></div>
@@ -1956,6 +2191,43 @@
       </div>
     </div>
 
+    <div class="settings-item" onclick="openTranslationPanel()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #af52de;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+        </div>
+        <div class="st-title">Tarjima manbasi</div>
+      </div>
+      <div class="st-right">
+        <span id="translation-name-label" style="font-size: 13px; font-weight: 500;">Sodiq</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="toggleAutoNext()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #007aff;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="5 4 14 12 5 20"/><polygon points="15 4 24 12 15 20"/></svg>
+        </div>
+        <div class="st-title">Avtomatik keyingi sura</div>
+      </div>
+      <div class="st-right">
+        <div class="st-toggle on" id="st-toggle-autonext"><div class="st-thumb"></div></div>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="toggleRepeatSetting()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #34c759;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        </div>
+        <div class="st-title">Surani takrorlash</div>
+      </div>
+      <div class="st-right">
+        <div class="st-toggle" id="st-toggle-repeat"><div class="st-thumb"></div></div>
+      </div>
+    </div>
+
     <div class="settings-item" onclick="toggleVolumePopup(event)">
       <div class="st-left">
         <div class="st-icon" style="background: #5856d6;">
@@ -1965,6 +2237,20 @@
       </div>
       <div class="st-right">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" style="cursor:default;">
+      <div class="st-left">
+        <div class="st-icon" style="background: #ff9f0a;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <div class="st-title">Audio sifati</div>
+      </div>
+      <div class="aq-options" id="aq-options">
+        <button class="aq-option" data-q="64" onclick="setAudioQuality('64')">64</button>
+        <button class="aq-option" data-q="128" onclick="setAudioQuality('128')">128</button>
+        <button class="aq-option" data-q="192" onclick="setAudioQuality('192')">192</button>
       </div>
     </div>
   </div>
@@ -1978,6 +2264,19 @@
         <div class="st-title">Kunlik maqsadni sozlash</div>
       </div>
       <div class="st-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="openSleepTimerSettings()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #5856d6;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </div>
+        <div class="st-title">Uyqu taymeri</div>
+      </div>
+      <div class="st-right">
+        <span id="settings-sleep-label" style="font-size: 13px; font-weight: 500;">O'chiq</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
@@ -2310,33 +2609,72 @@ const SURAHS = [
 
 
 const QORIS = [
-  // Mp3Quran.net serverlariga to'g'rilangan aniq manzillar (prefix) bilan
-  { id: 'ar.alafasy', name: 'Mishary Rashid Al-Afasy', origin: 'Quvayt', img: 'mishari.jpg', prefix: 'https://server8.mp3quran.net/afs/' },
-  { id: 'ar.yasseraldossari', name: 'Yasser Al-Dosari', origin: 'SA', img: 'dosari.jpg', prefix: 'https://server11.mp3quran.net/yasser/' },
-  { id: 'ar.luhaidan', name: 'Muhammad Al-Luhaidan', origin: 'SA', img: 'luhaidan.jpg', prefix: 'https://server8.mp3quran.net/lhdan/' },
-  { id: 'ar.mahermuaiqly', name: 'Maher Al-Muaiqly', origin: 'Makka, SA', img: 'muaiqly.jpg', prefix: 'https://server12.mp3quran.net/maher/' },
-  { id: 'ar.abdurrahmaansudais', name: 'Abdurrahman As-Sudais', origin: 'Makka, SA', img: 'sudais.jpg', prefix: 'https://server11.mp3quran.net/sds/' },
-  { id: 'ar.saoodshuraym', name: 'Saood Ash-Shuraym', origin: 'SA', img: 'shuraym.jpg', prefix: 'https://server7.mp3quran.net/shur/' },
-  { id: 'ar.shaatree', name: 'Abu Bakr Ash-Shaatree', origin: 'SA', img: 'shaatree.jpg', prefix: 'https://server11.mp3quran.net/shatri/' },
-  { id: 'ar.ahmedajamy', name: 'Ahmed Al-Ajmi', origin: 'SA', img: 'ajmi.jpg', prefix: 'https://server10.mp3quran.net/ajm/' },
-  { id: 'ar.abdullahbasfar', name: 'Abdullah Basfar', origin: 'SA', img: 'basfar.jpg', prefix: 'https://server6.mp3quran.net/bsfr/' },
-  { id: 'ar.hanirifai', name: 'Hani Ar-Rifai', origin: 'SA', img: 'hani.jpg', prefix: 'https://server8.mp3quran.net/hani/' },
-  { id: 'ar.hudhaify', name: 'Ali Al-Hudhaify', origin: 'SA', img: 'hudhaify.jpg', prefix: 'https://server9.mp3quran.net/hthfi/' },
-  { id: 'ar.muhammadayyoub', name: 'Muhammad Ayyoub', origin: 'SA', img: 'ayyoub.jpg', prefix: 'https://server8.mp3quran.net/ayyub/' },
-  { id: 'ar.muhammadjibreel', name: 'Muhammad Jibreel', origin: 'Misr', img: 'jibreel.jpg', prefix: 'https://server8.mp3quran.net/jbrl/' },
-  { id: 'ar.abdulsamad', name: 'Abdul Basit (Murattal)', origin: 'Misr', img: 'abdulsamad.jpg', prefix: 'https://server7.mp3quran.net/basit/' },
-  { id: 'ar.minshawi', name: 'Mohammad Al-Minshawi', origin: 'Misr', img: 'minshawi.jpg', prefix: 'https://server10.mp3quran.net/minsh/' },
-  { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', origin: 'Misr', img: 'husary.jpg', prefix: 'https://server13.mp3quran.net/husr/' },
-  // Qo'shimcha: Mp3Quran API dan tekshirilgan, aniq ishlaydigan yangi qorilar
-  { id: 'ar.saadalghamdi', name: 'Saad Al-Ghamdi', origin: 'SA', img: 'ghamdi.jpg', prefix: 'https://server7.mp3quran.net/s_gmd/' },
-  { id: 'ar.faresabbad', name: 'Fares Abbad', origin: 'Yaman', img: 'abbad.jpg', prefix: 'https://server8.mp3quran.net/frs_a/' },
-  { id: 'ar.abdulrahmanalosi', name: 'Abdul Rahman Al-Osi', origin: 'SA', img: 'osi.jpg', prefix: 'https://server6.mp3quran.net/aloosi/' },
-  { id: 'ar.idrisabkar', name: 'Idris Abkar', origin: 'Yaman', img: 'abkar.jpg', prefix: 'https://server6.mp3quran.net/abkr/' },
-  { id: 'ar.wadihalyamani', name: 'Wadih Al-Yamani', origin: 'Yaman', img: 'wadih.jpg', prefix: 'https://server6.mp3quran.net/wdee3/' },
-  { id: 'ar.nasseralqatami', name: 'Nasser Al-Qatami', origin: 'SA', img: 'qatami.jpg', prefix: 'https://server6.mp3quran.net/qtm/' },
-  { id: 'ar.khalidaljalil', name: 'Khalid Al-Jalil', origin: 'SA', img: 'jalil.jpg', prefix: 'https://server10.mp3quran.net/jleel/' },
-  { id: 'ar.bandarbaleela', name: 'Bandar Baleela', origin: 'Makka, SA', img: 'bandar.jpg', prefix: 'https://server6.mp3quran.net/bndr/' }
+  { id: 'ar.alafasy', name: 'Mishary Rashid Al-Afasy', origin: 'Quvayt', img: 'mishari.jpg', prefix: 'https://server8.mp3quran.net/afs/', bio: 'Taniqli xalqaro qori, go\'zal va ravon ovozi bilan butun dunyo bo\'ylab mashhur bo\'lgan.' },
+  { id: 'ar.yasseraldossari', name: 'Yasser Al-Dosari', origin: 'SA', img: 'dosari.jpg', prefix: 'https://server11.mp3quran.net/yasser/', bio: 'Yoshlar orasida juda sevilgan, hissiyotga boy va ta\'sirchan tilovati bilan tanilgan qori.' },
+  { id: 'ar.luhaidan', name: 'Muhammad Al-Luhaidan', origin: 'SA', img: 'luhaidan.jpg', prefix: 'https://server8.mp3quran.net/lhdan/', bio: 'Sokin va ohorli ovozi bilan diqqatni jamlashga yordam beruvchi tilovati bilan mashhur.' },
+  { id: 'ar.mahermuaiqly', name: 'Maher Al-Muaiqly', origin: 'Makka, SA', img: 'muaiqly.jpg', prefix: 'https://server12.mp3quran.net/maher/', bio: 'Makkai Mukarramadagi Masjidul Haram imomi, baquvvat va vazmin tilovati bilan tanilgan.' },
+  { id: 'ar.abdurrahmaansudais', name: 'Abdurrahman As-Sudais', origin: 'Makka, SA', img: 'sudais.jpg', prefix: 'https://server11.mp3quran.net/sds/', bio: 'Masjidul Haramning bosh imomlaridan biri, dunyodagi eng mashhur qorilardan hisoblanadi.' },
+  { id: 'ar.saoodshuraym', name: 'Saood Ash-Shuraym', origin: 'SA', img: 'shuraym.jpg', prefix: 'https://server7.mp3quran.net/shur/', bio: 'Masjidul Haramda uzoq yillar imomlik qilgan, kuchli va musaffo ovozi bilan tanilgan.' },
+  { id: 'ar.shaatree', name: 'Abu Bakr Ash-Shaatree', origin: 'SA', img: 'shaatree.jpg', prefix: 'https://server11.mp3quran.net/shatri/', bio: 'Go\'zal va sokin uslubdagi tilovati bilan ko\'plab muxlislarga ega bo\'lgan qori.' },
+  { id: 'ar.ahmedajamy', name: 'Ahmed Al-Ajmi', origin: 'SA', img: 'ajmi.png', prefix: 'https://server10.mp3quran.net/ajm/', bio: 'Tez va ravon tilovat uslubi bilan ajralib turadigan mashhur qori.' },
+  { id: 'ar.abdullahbasfar', name: 'Abdullah Basfar', origin: 'SA', img: 'basfar.jpg', prefix: 'https://server6.mp3quran.net/bsfr/', bio: 'Aniq talaffuzi va ta\'limiy uslubdagi tilovati bilan tanilgan mashhur qori.' },
+  { id: 'ar.hanirifai', name: 'Hani Ar-Rifai', origin: 'SA', img: 'hani.jpg', prefix: 'https://server8.mp3quran.net/hani/', bio: 'Mayin va xotirjam ovozi bilan tinglovchilar orasida mashhur bo\'lgan qori.' },
+  { id: 'ar.hudhaify', name: 'Ali Al-Hudhaify', origin: 'SA', img: 'hudhaify.jpg', prefix: 'https://server9.mp3quran.net/hthfi/', bio: 'Madinai Munavvaradagi Masjid an-Nabaviyning sobiq imomlaridan biri.' },
+  { id: 'ar.muhammadayyoub', name: 'Muhammad Ayyoub', origin: 'SA', img: 'ayyoub.jpg', prefix: 'https://server8.mp3quran.net/ayyub/', bio: 'Masjid an-Nabaviyda imomlik qilgan, sokin va vazmin tilovati bilan tanilgan.' },
+  { id: 'ar.muhammadjibreel', name: 'Muhammad Jibreel', origin: 'Misr', img: 'jibreel.png', prefix: 'https://server8.mp3quran.net/jbrl/', bio: 'Klassik Misr maktabi uslubidagi go\'zal va melodik tilovati bilan mashhur.' },
+  { id: 'ar.abdulsamad', name: 'Abdul Basit (Murattal)', origin: 'Misr', img: 'abdulsamad.png', prefix: 'https://server7.mp3quran.net/basit/', bio: 'Tarixning eng buyuk qorilaridan biri sifatida tan olingan, betakror ovozi bilan mashhur.' },
+  { id: 'ar.minshawi', name: 'Mohammad Al-Minshawi', origin: 'Misr', img: 'minshawi.png', prefix: 'https://server10.mp3quran.net/minsh/', bio: 'Hissiyotga boy va chuqur ta\'sir qiluvchi tilovati bilan jahonga mashhur bo\'lgan qori.' },
+  { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', origin: 'Misr', img: 'husary.png', prefix: 'https://server13.mp3quran.net/husr/', bio: 'Tajvid ilmi bo\'yicha ustoz sifatida tanilgan, aniq va ta\'limiy tilovati bilan mashhur.' },
+  { id: 'ar.saadalghamdi', name: 'Saad Al-Ghamdi', origin: 'SA', img: 'ghamdi.jpg', prefix: 'https://server7.mp3quran.net/s_gmd/', bio: 'Yoqimli va sokin ovozi bilan butun dunyoda sevib tinglanadigan qori.' },
+  { id: 'ar.faresabbad', name: 'Fares Abbad', origin: 'Yaman', img: 'abbad.jpg', prefix: 'https://server8.mp3quran.net/frs_a/', bio: 'Musaffo va ta\'sirchan tilovat uslubi bilan tanilgan yosh qorilardan biri.' },
+  { id: 'ar.abdulrahmanalosi', name: 'Abdul Rahman Al-Osi', origin: 'SA', img: 'osi.jpg', prefix: 'https://server6.mp3quran.net/aloosi/', bio: 'Barqaror va vazmin tilovati bilan tinglovchilar orasida obro\' qozongan qori.' },
+  { id: 'ar.idrisabkar', name: 'Idris Abkar', origin: 'Yaman', img: 'abkar.jpg', prefix: 'https://server6.mp3quran.net/abkr/', bio: 'Go\'zal ohang va sokin uslubdagi tilovati bilan tanilgan qori.' },
+  { id: 'ar.wadihalyamani', name: 'Wadih Al-Yamani', origin: 'Yaman', img: 'wadih.jpg', prefix: 'https://server6.mp3quran.net/wdee3/', bio: 'Mayin va samimiy ovozi bilan ko\'plab tinglovchilarning sevimlisiga aylangan qori.' },
+  { id: 'ar.nasseralqatami', name: 'Nasser Al-Qatami', origin: 'SA', img: 'qatami.jpg', prefix: 'https://server6.mp3quran.net/qtm/', bio: 'Yoqimli va ravon tilovat uslubi bilan keng mashhurlikka erishgan qori.' },
+  { id: 'ar.khalidaljalil', name: 'Khalid Al-Jalil', origin: 'SA', img: 'jalil.jpg', prefix: 'https://server10.mp3quran.net/jleel/', bio: 'Sokin va xotirjam tilovati bilan diniy mashg\'ulotlar uchun ko\'p tanlanadigan qori.' },
+  { id: 'ar.bandarbaleela', name: 'Bandar Baleela', origin: 'Makka, SA', img: 'bandar.jpg', prefix: 'https://server6.mp3quran.net/bndr/', bio: 'Masjidul Haram imomlaridan biri, kuchli va vazmin ovozi bilan tanilgan.' }
 ];
+
+// Tarjima manbalari ro'yxati
+const TRANSLATIONS = [
+  { id: 'uz.sodik', name: 'Sodiq', sub: 'Muhammad Sodiq Muhammad Yusuf' },
+  { id: 'uz.mansour', name: 'Mansur', sub: 'Alouddin Mansour' },
+];
+let currentTranslation = localStorage.getItem('translationId') || 'uz.sodik';
+
+function openTranslationPanel() {
+  const sheet = document.getElementById('translation-sheet');
+  const list = document.getElementById('translation-list');
+  list.innerHTML = TRANSLATIONS.map(t => `
+    <div class="settings-item" onclick="selectTranslation('${t.id}')" style="cursor:pointer;">
+      <div class="st-left">
+        <div>
+          <div class="st-title">${t.name}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">${t.sub}</div>
+        </div>
+      </div>
+      <div class="st-right">
+        ${t.id === currentTranslation ? '<svg viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.5" width="20" height="20"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+      </div>
+    </div>
+  `).join('');
+  sheet.style.display = 'flex';
+}
+
+function closeTranslationPanel() {
+  document.getElementById('translation-sheet').style.display = 'none';
+}
+
+function selectTranslation(id) {
+  currentTranslation = id;
+  localStorage.setItem('translationId', id);
+  const t = TRANSLATIONS.find(x => x.id === id);
+  document.getElementById('translation-name-label').textContent = t.name;
+  closeTranslationPanel();
+  showToast('Tarjima: ' + t.name);
+  // Joriy o'qilayotgan surani yangi tarjima bilan qayta yuklash
+  loadSurahAyahs(SURAHS[state.surahIdx].n);
+}
 
 // MP3Quran tarmog'idan to'liq surani olish (uzilishlarsiz barqaror manba)
 function getSurahAudioUrl(qoriId, surahNum) {
@@ -2399,8 +2737,83 @@ let state = {
   sleepTimer: null,
   sleepRemain: 0,
   favs: new Set(),
+  favQoris: new Set(),
   videoIdx: 0,
+  audioQuality: localStorage.getItem('audioQuality') || '128',
 };
+
+// ═══════════════════════════════════════════
+//  SO'NGGI TINGLANGANLAR TARIXI
+// ═══════════════════════════════════════════
+let playHistory = JSON.parse(localStorage.getItem('quranHistory') || '[]');
+
+function addToHistory(surahIdx, qoriIdx) {
+  playHistory = playHistory.filter(h => !(h.surahIdx === surahIdx && h.qoriIdx === qoriIdx));
+  playHistory.unshift({ surahIdx, qoriIdx, ts: Date.now() });
+  if (playHistory.length > 10) playHistory = playHistory.slice(0, 10);
+  localStorage.setItem('quranHistory', JSON.stringify(playHistory));
+  renderHistorySection();
+}
+
+function renderHistorySection() {
+  const container = document.getElementById('home-history-list');
+  const wrap = document.getElementById('home-history-wrap');
+  if (!container || !wrap) return;
+  if (playHistory.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  container.innerHTML = playHistory.map(h => {
+    const s = SURAHS[h.surahIdx];
+    const q = QORIS[h.qoriIdx];
+    return `
+      <div class="reciter-card" onclick="playTrackFromPlaylist(${h.surahIdx}, ${h.qoriIdx})">
+        <div class="reciter-img">
+          <img src="reciter/${q.img}" alt="${q.name}" onerror="this.onerror=null;this.src='reciter/qori.png'">
+        </div>
+        <div class="reciter-name">${s.n}. ${s.en}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+//  KUNNING OYATI / HADISI
+// ═══════════════════════════════════════════
+const DAILY_VERSES = [
+  { type:'ayah', ar:'قُلْ هُوَ اللَّهُ أَحَدٌ', uz:'Ayting: "U — Alloh, U yagona va betakrordir."', ref:'Ixlos surasi, 1-oyat' },
+  { type:'ayah', ar:'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', uz:'Albatta, har bir mashaqqat bilan birga yengillik ham bor.', ref:'Sharh surasi, 5-oyat' },
+  { type:'ayah', ar:'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', uz:'Shubhasiz, Alloh sabr qiluvchilar bilan birgadir.', ref:'Baqara surasi, 153-oyat' },
+  { type:'ayah', ar:'وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ', uz:'Kim Allohga tavakkal qilsa, U unga kifoya qiladi.', ref:'Taloq surasi, 3-oyat' },
+  { type:'ayah', ar:'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', uz:'Bilingki, qalblar faqat Allohni zikr qilish bilan tinchlanadi.', ref:'Ra\'d surasi, 28-oyat' },
+  { type:'ayah', ar:'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', uz:'Alloh hech kimga toqatidan tashqari yuk yuklamaydi.', ref:'Baqara surasi, 286-oyat' },
+  { type:'ayah', ar:'وَبَشِّرِ الصَّابِرِينَ', uz:'Sabr qiluvchilarga xushxabar ber.', ref:'Baqara surasi, 155-oyat' },
+  { type:'hadith', uz:'Imonning eng afzali — odamlarga ozor bermaslik va tilni yomonlikdan tiyishdir.', ref:'Hadis (umumiy mazmuni)' },
+  { type:'hadith', uz:'Kim bir yaxshilikka yo\'l ko\'rsatsa, unga shu ishni qilganning savobiga teng savob beriladi.', ref:'Hadis (umumiy mazmuni)' },
+  { type:'hadith', uz:'Eng yaxshi insonlar — odamlarga ko\'proq foydasi tegadiganlardir.', ref:'Hadis (umumiy mazmuni)' },
+  { type:'ayah', ar:'وَقُل رَّبِّ زِدْنِي عِلْمًا', uz:'Va ayting: "Robbim, ilmimni ziyoda qilgin."', ref:'Toha surasi, 114-oyat' },
+  { type:'ayah', ar:'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ', uz:'U qayerda bo\'lsangiz ham, sizlar bilan birgadir.', ref:'Hadid surasi, 4-oyat' },
+];
+
+function getDailyVerse() {
+  const start = new Date(new Date().getFullYear(), 0, 0);
+  const diff = new Date() - start;
+  const dayOfYear = Math.floor(diff / 86400000);
+  return DAILY_VERSES[dayOfYear % DAILY_VERSES.length];
+}
+
+function renderDailyVerse() {
+  const v = getDailyVerse();
+  const card = document.getElementById('daily-verse-card');
+  if (!card) return;
+  const icon = v.type === 'ayah'
+    ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H9a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H15a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h8z"/></svg>'
+    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  card.innerHTML = `
+    <div class="dv-label">${icon} ${v.type === 'ayah' ? 'Kunning oyati' : 'Kunning hikmati'}</div>
+    ${v.ar ? `<div class="dv-arabic">${v.ar}</div>` : ''}
+    <div class="dv-uz">${v.uz}</div>
+    <div class="dv-ref">${v.ref}</div>
+  `;
+}
 
 // STATISTIKA LOGIKASI
 const GOALS = [300, 900, 1800, 3600, 5400, 7200]; // 5m, 15m, 30m, 60m, 90m, 120m (soniyalarda)
@@ -2526,6 +2939,9 @@ function init() {
   buildPlaylistsScreen(); // YANGLIK: Playlistlarni chizish
   updateStatsUI(); 
   renderDaysRow();
+  renderDailyVerse();
+  renderHistorySection();
+  updateSleepSettingsLabel();
 }
 
 function buildRecitersScreen() {
@@ -2632,7 +3048,7 @@ function setupAudioEvents() {
     // Tanlangan qorida surah topilmasa, Alafasy audio manziliga o'tadi (Zaxira tizimi)
     if (QORIS[state.qoriIdx].id !== 'ar.alafasy') {
       const s = SURAHS[state.surahIdx];
-      quranAudio.src = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${s.n}.mp3`;
+      quranAudio.src = `https://cdn.islamic.network/quran/audio-surah/${state.audioQuality}/ar.alafasy/${s.n}.mp3`;
       if (state.isPlaying) {
         quranAudio.play().catch(()=>{});
       }
@@ -2692,7 +3108,7 @@ async function loadSurahAyahs(surahNum) {
 
     // Arabic + O'zbek tarjimasi bir so'rovda (editions param bilan)
     const [comboData, timestamps] = await Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,uz.sodik`)
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,${currentTranslation}`)
         .then(r => r.json())
         .catch(() => ({ code: 0 })),
       buildAyahTimestamps(surahNum, ayahCount, QORIS[state.qoriIdx]?.id || 'ar.alafasy')
@@ -2755,7 +3171,7 @@ async function measureAyahDurations(surahNum, ayahCount, qoriId) {
   // Faqat birinchi 10 ta oyatni parallel o'lchab, qolganlarini o'rtacha bilan to'ldirish
   // (Chunki 286 ta oyatli suralar uchun barchani yuklash sekin)
   const MAX_MEASURE = Math.min(ayahCount, 15);
-  const BASE_URL = `https://cdn.islamic.network/quran/audio/128/${qoriId}`;
+  const BASE_URL = `https://cdn.islamic.network/quran/audio/${state.audioQuality}/${qoriId}`;
 
   // Global ayah raqamlarini hisoblash (surah 1 dan boshlanganda)
   const globalStartAyah = getGlobalAyahStart(surahNum);
@@ -2819,7 +3235,7 @@ function getAudioDuration(url) {
 // Barcha oyatlar uchun timestamp massivini qurish
 async function buildAyahTimestamps(surahNum, ayahCount, qoriId) {
   const cdnId = QORI_CDN_MAP[qoriId] || 'ar.alafasy';
-  const BASE = `https://cdn.islamic.network/quran/audio/128/${cdnId}`;
+  const BASE = `https://cdn.islamic.network/quran/audio/${state.audioQuality}/${cdnId}`;
   const globalStart = getGlobalAyahStart(surahNum);
 
   // Barcha oyatlarni parallel yuklash (max 30 ta bir vaqtda)
@@ -2921,7 +3337,7 @@ function buildQoriList(filter='') {
   container.innerHTML = filtered.map((q,i) => `
     <div class="qori-item ${i === state.qoriIdx ? 'active' : ''}"
          onclick="selectQori(${i})">
-      <div class="qori-avatar" style="overflow:hidden;padding:0;border:2px solid ${i === state.qoriIdx ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}" >
+      <div class="qori-avatar" style="overflow:hidden;padding:0;border:2px solid ${i === state.qoriIdx ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}" onclick="openQoriProfile(${i}, event)">
         <img src="reciter/${q.img}" alt="${q.name}"
             style="width:100%;height:100%;object-fit:cover;"
             onerror="this.onerror=null;this.src='reciter/qori.png'">
@@ -3022,6 +3438,7 @@ function updateNowPlaying() {
   // Load all ayahs for sync with audio
   loadSurahAyahs(s.n);
   updateMiniPlayer();
+  addToHistory(state.surahIdx, state.qoriIdx);
 }
 
 // ═══════════════════════════════════════════
@@ -3110,6 +3527,37 @@ function seek(val) {
   if (d) quranAudio.currentTime = (val/100)*d;
 }
 
+// Standart: avtomatik keyingi sura yoqilgan, takrorlash o'chirilgan.
+// Foydalanuvchi tanlovi localStorage'da saqlanadi.
+let isAutoNext = localStorage.getItem('repeatSurah') === 'on' ? false : true;
+let isRepeatSetting = localStorage.getItem('repeatSurah') === 'on';
+
+function toggleAutoNext() {
+  isAutoNext = !isAutoNext;
+  if (isAutoNext) {
+    // Avtomatik keyingi sura yoqilsa, takrorlash avtomatik o'chadi
+    isRepeatSetting = false;
+    localStorage.setItem('repeatSurah', 'off');
+    document.getElementById('st-toggle-repeat').classList.remove('on');
+  }
+  localStorage.setItem('autoNext', isAutoNext ? 'on' : 'off');
+  document.getElementById('st-toggle-autonext').classList.toggle('on', isAutoNext);
+  showToast(isAutoNext ? 'Avtomatik o\'tish yoqildi' : 'Avtomatik o\'tish o\'chirildi');
+}
+
+function toggleRepeatSetting() {
+  isRepeatSetting = !isRepeatSetting;
+  if (isRepeatSetting) {
+    // Takrorlash yoqilsa, avtomatik keyingi sura avtomatik o'chadi
+    isAutoNext = false;
+    localStorage.setItem('autoNext', 'off');
+    document.getElementById('st-toggle-autonext').classList.remove('on');
+  }
+  localStorage.setItem('repeatSurah', isRepeatSetting ? 'on' : 'off');
+  document.getElementById('st-toggle-repeat').classList.toggle('on', isRepeatSetting);
+  showToast(isRepeatSetting ? 'Takrorlash yoqildi' : 'Takrorlash o\'chirildi');
+}
+
 function onEnded() {
   if (state.sleepOption === -1) {
     state.isPlaying = false;
@@ -3118,7 +3566,20 @@ function onEnded() {
     showToast('Surah tugadi. Uyqu taymer o\'chdi.');
     return;
   }
-  nextSurah();
+
+  if (isRepeatSetting) {
+    quranAudio.currentTime = 0;
+    quranAudio.play().catch(()=>{});
+    return;
+  }
+
+  if (isAutoNext) {
+    nextSurah();
+  } else {
+    state.isPlaying = false;
+    setPlayIcon(true);
+    updateMiniPlayer();
+  }
 }
 
 function nextSurah() {
@@ -3261,6 +3722,7 @@ function setSleep(val) {
   clearSleepTimer();
   buildSleepOptions();
   closeAllPopups();
+  updateSleepSettingsLabel();
 
   const sleepBtn = document.getElementById('sleep-btn');
   const badge = document.getElementById('sleep-badge');
@@ -3299,9 +3761,78 @@ function setSleep(val) {
       clearSleepTimer();
       badge.classList.remove('show');
       sleepBtn.classList.remove('active');
+      updateSleepSettingsLabel();
       showToast('Uyqu taymer tugadi ✨');
     }
   }, 1000);
+}
+
+function updateSleepSettingsLabel() {
+  const label = document.getElementById('settings-sleep-label');
+  if (!label) return;
+  const opt = SLEEP_OPTIONS.find(o => o.value === state.sleepOption);
+  label.textContent = opt ? opt.label : 'O\'chiq';
+}
+
+let sleepPickerIdx = 0;
+let spScrollTimer = null;
+
+function openSleepTimerSettings() {
+  const sheet = document.getElementById('sleep-timer-sheet');
+  const scroll = document.getElementById('sleep-picker-scroll');
+  const ITEM_H = 44;
+
+  let html = `<div style="height:${ITEM_H * 2 + 2}px;flex-shrink:0"></div>`;
+  SLEEP_OPTIONS.forEach((o, i) => {
+    html += `<div class="sleep-picker-item" data-val="${o.value}">${o.label}</div>`;
+  });
+  html += `<div style="height:${ITEM_H * 2 + 2}px;flex-shrink:0"></div>`;
+  scroll.innerHTML = html;
+
+  sheet.style.display = 'flex';
+
+  // Joriy tanlangan qiymatni topish
+  let startIdx = SLEEP_OPTIONS.findIndex(o => o.value === state.sleepOption);
+  if (startIdx < 0) startIdx = 0;
+  sleepPickerIdx = startIdx;
+
+  requestAnimationFrame(() => {
+    scroll.scrollTop = startIdx * ITEM_H;
+    updateSPHighlight();
+  });
+
+  scroll.addEventListener('scroll', onSPScroll);
+}
+
+function onSPScroll() {
+  if (spScrollTimer) clearTimeout(spScrollTimer);
+  spScrollTimer = setTimeout(updateSPHighlight, 50);
+}
+
+function updateSPHighlight() {
+  const scroll = document.getElementById('sleep-picker-scroll');
+  if (!scroll) return;
+  const ITEM_H = 44;
+  const idx = Math.round(scroll.scrollTop / ITEM_H);
+  sleepPickerIdx = Math.max(0, Math.min(SLEEP_OPTIONS.length - 1, idx));
+
+  document.querySelectorAll('.sleep-picker-item').forEach((el, i) => {
+    el.classList.remove('sp-selected', 'sp-near');
+    if (i === sleepPickerIdx) el.classList.add('sp-selected');
+    else if (Math.abs(i - sleepPickerIdx) === 1) el.classList.add('sp-near');
+  });
+}
+
+function saveSleepTimerSheet() {
+  const opt = SLEEP_OPTIONS[sleepPickerIdx];
+  setSleep(opt.value);
+  closeSleepTimerSheet();
+}
+
+function closeSleepTimerSheet() {
+  document.getElementById('sleep-timer-sheet').style.display = 'none';
+  const scroll = document.getElementById('sleep-picker-scroll');
+  if (scroll) scroll.removeEventListener('scroll', onSPScroll);
 }
 
 function clearSleepTimer() {
@@ -3389,7 +3920,10 @@ function showPopup(id, event) {
 
 function toggleSpeedPopup(e) { showPopup('speed-popup', e); }
 function toggleVolumePopup(e) { showPopup('volume-popup', e); }
-function toggleSleepPopup(e) { showPopup('sleep-popup', e); }
+function toggleSleepPopup(e) {
+  if (e) e.stopPropagation();
+  openSleepTimerSettings();
+}
 
 // ═══════════════════════════════════════════
 //  TOAST
@@ -3583,6 +4117,8 @@ function buildHomeScreen() {
       slider.scrollLeft = scrollLeft - walk;
     });
   });
+
+  renderHistorySection();
 }
 
 function updateMiniPlayer() {
@@ -3606,6 +4142,54 @@ function selectQoriFromHome(idx) {
   if (state.isPlaying) quranAudio.play().catch(()=>{});
   showScreen('player');
   showToast('Qori: ' + QORIS[idx].name);
+}
+
+// ═══════════════════════════════════════════
+//  QORI PROFILI
+// ═══════════════════════════════════════════
+let qpActiveIdx = 0;
+
+function openQoriProfile(idx, event) {
+  if (event) event.stopPropagation();
+  qpActiveIdx = idx;
+  const q = QORIS[idx];
+  document.getElementById('qp-header-bg').style.backgroundImage = `url('reciter/${q.img}')`;
+  document.getElementById('qp-avatar').src = `reciter/${q.img}`;
+  document.getElementById('qp-name').textContent = q.name;
+  document.getElementById('qp-origin').textContent = q.origin;
+  document.getElementById('qp-bio').textContent = q.bio || 'Bu qori haqida ma\'lumot tez orada qo\'shiladi.';
+  document.getElementById('qp-stat-style').textContent = q.style || 'Murattal';
+  document.getElementById('qp-stat-origin2').textContent = q.origin;
+
+  document.getElementById('qp-fav-btn').classList.toggle('active', state.favQoris.has(idx));
+
+  document.getElementById('qori-profile-screen').classList.remove('hidden');
+  document.getElementById('mini-player').style.display = 'none';
+  document.getElementById('nav-bar').style.display = 'none';
+}
+
+function closeQoriProfile() {
+  document.getElementById('qori-profile-screen').classList.add('hidden');
+  document.getElementById('mini-player').style.display = 'flex';
+  document.getElementById('nav-bar').style.display = 'flex';
+}
+
+function toggleQoriFavFromProfile() {
+  const favBtn = document.getElementById('qp-fav-btn');
+  if (state.favQoris.has(qpActiveIdx)) {
+    state.favQoris.delete(qpActiveIdx);
+    favBtn.classList.remove('active');
+    showToast('Sevimli qorilardan olib tashlandi');
+  } else {
+    state.favQoris.add(qpActiveIdx);
+    favBtn.classList.add('active');
+    showToast('★ Sevimli qorilarga qo\'shildi');
+  }
+}
+
+function playFromProfile() {
+  selectQoriFromHome(qpActiveIdx);
+  closeQoriProfile();
 }
 
 // ═══════════════════════════════════════════
@@ -3820,44 +4404,96 @@ function buildPlaylistsScreen() {
 
 let currentActivePlaylist = null;
 
+let pldFilterMode = 'all';
+
 function openPlaylistDetail(id) {
   const p = PLAYLIST_DATA.find(x => x.id === id);
   if(!p) return;
-  
+
   currentActivePlaylist = p;
-  
+  pldFilterMode = 'all';
+  document.querySelectorAll('.pld-filter-btn').forEach((btn, i) => btn.classList.toggle('active', i === 0));
+
   document.getElementById('pld-header-bg').className = 'pld-header-bg ' + p.bgClass;
   document.getElementById('pld-icon-large').innerHTML = p.icon;
   document.getElementById('pld-title').textContent = p.title;
   document.getElementById('pld-desc').textContent = p.desc;
-  
-  const tracks = p.id === 'favs' ? p.getTracks() : p.tracks;
-  document.getElementById('pld-count').textContent = tracks.length + ' sura';
-  
-  const tracksContainer = document.getElementById('pld-tracks');
-  if(tracks.length === 0) {
-    tracksContainer.innerHTML = '<div style="color:rgba(255,255,255,0.4); text-align:center; padding:20px;">Hozircha bo\'sh</div>';
-  } else {
-    tracksContainer.innerHTML = tracks.map(t => {
-      const s = SURAHS[t.surahIdx];
-      const q = QORIS[t.qoriIdx];
-      return `
-        <div class="pld-track" onclick="playTrackFromPlaylist(${t.surahIdx}, ${t.qoriIdx})">
-          <div class="pld-track-num">${s.n}</div>
-          <div class="pld-track-info">
-            <div class="pld-track-title">${s.en} <span style="font-size:13px; font-family:'Amiri'; color:rgba(255,255,255,0.5)">(${s.ar})</span></div>
-            <div class="pld-track-qori">${q.name}</div>
-          </div>
-          <div class="pld-track-actions">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-  
+
+  renderPldTracks();
   showScreen('playlist-detail');
+}
+
+function setPldFilter(mode) {
+  pldFilterMode = mode;
+  document.querySelectorAll('.pld-filter-btn').forEach((btn, i) => {
+    btn.classList.toggle('active',
+      (mode === 'all' && i === 0) ||
+      (mode === 'surah' && i === 1) ||
+      (mode === 'qori' && i === 2)
+    );
+  });
+  renderPldTracks();
+}
+
+function renderPldTracks() {
+  if (!currentActivePlaylist) return;
+  const p = currentActivePlaylist;
+  let tracks = p.id === 'favs' ? p.getTracks() : [...p.tracks];
+
+  if (pldFilterMode === 'surah') {
+    tracks.sort((a, b) => SURAHS[a.surahIdx].en.localeCompare(SURAHS[b.surahIdx].en));
+  } else if (pldFilterMode === 'qori') {
+    tracks.sort((a, b) => QORIS[a.qoriIdx].name.localeCompare(QORIS[b.qoriIdx].name));
+  }
+
+  document.getElementById('pld-count').textContent = tracks.length + ' sura';
+
+  const tracksContainer = document.getElementById('pld-tracks');
+  if (tracks.length === 0) {
+    tracksContainer.innerHTML = '<div style="color:rgba(255,255,255,0.4); text-align:center; padding:20px;">Hozircha bo\'sh</div>';
+    return;
+  }
+
+  tracksContainer.innerHTML = tracks.map(t => {
+    const s = SURAHS[t.surahIdx];
+    const q = QORIS[t.qoriIdx];
+    const isFav = state.favs.has(t.surahIdx);
+    return `
+      <div class="pld-track">
+        <div class="pld-track-num" onclick="playTrackFromPlaylist(${t.surahIdx}, ${t.qoriIdx})">${s.n}</div>
+        <div class="pld-track-info" onclick="playTrackFromPlaylist(${t.surahIdx}, ${t.qoriIdx})">
+          <div class="pld-track-title">${s.en} <span style="font-size:13px; font-family:'Amiri'; color:rgba(255,255,255,0.5)">(${s.ar})</span></div>
+          <div class="pld-track-qori">${q.name}</div>
+        </div>
+        <div class="pld-track-actions">
+          <svg onclick="event.stopPropagation();togglePldFav(${t.surahIdx})" viewBox="0 0 24 24" fill="${isFav ? '#fff' : 'none'}" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function togglePldFav(surahIdx) {
+  if (state.favs.has(surahIdx)) {
+    state.favs.delete(surahIdx);
+    showToast('Sevimlilardan olib tashlandi');
+  } else {
+    state.favs.add(surahIdx);
+    showToast('★ Sevimlilarga qo\'shildi');
+  }
+  if (surahIdx === state.surahIdx) {
+    const favBtn = document.getElementById('fav-btn');
+    const starIcon = document.getElementById('star-icon');
+    if (state.favs.has(surahIdx)) {
+      favBtn.classList.add('active');
+      starIcon.style.fill = 'currentColor';
+    } else {
+      favBtn.classList.remove('active');
+      starIcon.style.fill = 'none';
+    }
+  }
+  renderPldTracks();
 }
 
 function playTrackFromPlaylist(surahIdx, qoriIdx) {
@@ -3881,6 +4517,15 @@ function playCurrentPlaylist() {
 // ═══════════════════════════════════════════
 //  SETTINGS LOGIC
 // ═══════════════════════════════════════════
+
+function setAudioQuality(q) {
+  state.audioQuality = q;
+  localStorage.setItem('audioQuality', q);
+  document.querySelectorAll('.aq-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.q === q);
+  });
+  showToast('Audio sifati: ' + (q === '64' ? 'Past (64kbps) — tejamkor' : q === '192' ? 'Yuqori (192kbps)' : 'O\'rtacha (128kbps)'));
+}
 
 function toggleSettingSubtitle() {
   toggleSubtitle(); // Suralar oynasidagi asil funksiyani ishga tushiradi
@@ -3945,6 +4590,19 @@ async function cacheMediaImages() {
 // Boshlang'ich holatda Settings UI ni moslash
 document.addEventListener("DOMContentLoaded", () => {
   updateSettingsUI();
+
+  // Tarjima nomini ko'rsatish
+  const tName = document.getElementById('translation-name-label');
+  if (tName) {
+    const t = TRANSLATIONS.find(x => x.id === currentTranslation);
+    if (t) tName.textContent = t.name;
+  }
+
+  // Auto-next va repeat toggle holatini belgilash
+  const autoNextToggle = document.getElementById('st-toggle-autonext');
+  if (autoNextToggle) autoNextToggle.classList.toggle('on', isAutoNext);
+  const repeatToggle = document.getElementById('st-toggle-repeat');
+  if (repeatToggle) repeatToggle.classList.toggle('on', isRepeatSetting);
   
   // Kesh holatini tekshirish
   if(localStorage.getItem('mediaCached') === 'true') {
@@ -3954,6 +4612,11 @@ document.addEventListener("DOMContentLoaded", () => {
       statusEl.style.color = '#34c759';
     }
   }
+
+  // Audio sifati tugmasini belgilash
+  document.querySelectorAll('.aq-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.q === state.audioQuality);
+  });
 });
 
 // Barcha ma'lumotlar yaratilgandan so'ng tizimni ishga tushirish
@@ -3974,6 +4637,34 @@ init();
         <div class="goal-picker-selection"></div>
       </div>
       <div class="goal-picker-unit">daq/kun</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSLATION BOTTOM SHEET -->
+<div id="translation-sheet" style="position:fixed;inset:0;z-index:500;display:none;align-items:flex-end;background:rgba(0,0,0,0.55);" onclick="closeTranslationPanel()">
+  <div class="goal-picker-card" onclick="event.stopPropagation()">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:99px;margin:12px auto 0;"></div>
+    <div class="goal-picker-header">
+      <div class="goal-picker-title">Tarjima manbasi</div>
+      <button class="goal-picker-done" onclick="closeTranslationPanel()">Yopish</button>
+    </div>
+    <div id="translation-list" style="padding: 0 0 12px;"></div>
+  </div>
+</div>
+<!-- SLEEP TIMER BOTTOM SHEET -->
+<div id="sleep-timer-sheet" style="position:fixed;inset:0;z-index:500;display:none;align-items:flex-end;background:rgba(0,0,0,0.55);" onclick="closeSleepTimerSheet()">
+  <div class="goal-picker-card" onclick="event.stopPropagation()">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,0.2);border-radius:99px;margin:12px auto 0;"></div>
+    <div class="goal-picker-header">
+      <div class="goal-picker-title">Uyqu Taymeri</div>
+      <button class="goal-picker-done" onclick="saveSleepTimerSheet()">Tayyor</button>
+    </div>
+    <div class="goal-picker-body" style="padding: 8px 0 16px;">
+      <div class="sleep-picker-wrap">
+        <div id="sleep-picker-scroll" class="sleep-picker-scroll"></div>
+        <div class="sleep-picker-selection"></div>
+      </div>
     </div>
   </div>
 </div>
