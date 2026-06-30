@@ -1078,7 +1078,7 @@
   #reciters-screen {
     position: fixed; inset: 0; z-index: 10;
     overflow-y: auto; scrollbar-width: none;
-    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
   }
   #reciters-screen::-webkit-scrollbar { display: none; }
@@ -1163,7 +1163,7 @@
   #playlists-screen {
     position: fixed; inset: 0; z-index: 10;
     overflow-y: auto; scrollbar-width: none;
-    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
     background: #000;
   }
@@ -1198,7 +1198,7 @@
   #settings-screen {
     position: fixed; inset: 0; z-index: 10;
     overflow-y: auto; scrollbar-width: none;
-    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
     background: #000;
   }
@@ -1271,7 +1271,7 @@
 
   /* ═══ NAV BAR ═══ */
   #nav-bar {
-    position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 4px);
     left: 16px; right: 16px; z-index: 90;
     display: flex; align-items: center; justify-content: space-around;
     padding: 8px 12px;
@@ -1396,7 +1396,7 @@
 
   /* ═══ HOME CONTENT ═══ */
   .home-scroll {
-    padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+    padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
   }
   .top-bar {
@@ -1467,7 +1467,7 @@
 
   .player-back-row { 
     position: absolute; 
-    top: calc(env(safe-area-inset-top, 20px) + 20px); 
+    top: calc(env(safe-area-inset-top, 20px) + 60px); 
     left: 0; right: 0; 
     display: flex; justify-content: center; 
     z-index: 50; 
@@ -1481,7 +1481,7 @@
   .player-back-btn:active { transform: scale(0.9); }
 
   @media (min-width: 768px) {
-    #reciters-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    #reciters-screen { padding-top: 100px; max-width: 900px; margin: 0 auto; }
     .page-title { font-size: 46px; margin-bottom: 32px; }
     .tr-avatars { height: 160px; margin-bottom: 30px; }
     .tr-avatar.left { width: 100px; height: 100px; transform: translateX(-80px); }
@@ -1498,16 +1498,16 @@
     .tg-avatar-wrap { width: 120px; height: 120px; }
     .tg-name { font-size: 15px; }
 
-    #playlists-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    #playlists-screen { padding-top: 100px; max-width: 900px; margin: 0 auto; }
     .pl-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; }
     
     #playlist-detail-screen { max-width: 900px; margin: 0 auto; }
     .pld-header { height: 420px; border-radius: 40px; margin-top: 40px; }
     .pld-title { font-size: 42px; }
     .pld-content { max-width: 800px; }
-    #settings-screen { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    #settings-screen { padding-top: 100px; max-width: 900px; margin: 0 auto; }
 
-    .home-scroll { padding-top: 80px; max-width: 900px; margin: 0 auto; }
+    .home-scroll { padding-top: 100px; max-width: 900px; margin: 0 auto; }
     .insights-card { margin-top: 60px !important; }
     .home-title { font-size: 46px; margin-bottom: 32px; }
     .featured-card { padding: 0; margin-bottom: 50px; }
@@ -2533,9 +2533,9 @@ function buildRecitersScreen() {
   const trContainer = document.getElementById('rs-top-avatars');
   if(trContainer && QORIS.length >= 3) {
     trContainer.innerHTML = `
-      <img src="reciter/${QORIS[2].img}" class="tr-avatar left" onerror="this.style.display='none'">
-      <img src="reciter/${QORIS[1].img}" class="tr-avatar right" onerror="this.style.display='none'">
-      <img src="reciter/${QORIS[0].img}" class="tr-avatar center" onerror="this.style.display='none'">
+      <img src="reciter/${QORIS[2].img}" class="tr-avatar left" onerror="this.onerror=null;this.src='reciter/qori.png'">
+      <img src="reciter/${QORIS[1].img}" class="tr-avatar right" onerror="this.onerror=null;this.src='reciter/qori.png'">
+      <img src="reciter/${QORIS[0].img}" class="tr-avatar center" onerror="this.onerror=null;this.src='reciter/qori.png'">
     `;
   }
 
@@ -2545,7 +2545,7 @@ function buildRecitersScreen() {
     favsContainer.innerHTML = QORIS.slice(0, 5).map((r, i) => `
       <div class="r-card" onclick="selectQoriFromHome(${i})">
         <div class="r-img-wrap">
-          <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.style.display='none'">
+          <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.src='reciter/qori.png'">
         </div>
         <div class="r-name">${r.name.split(' ').slice(0,2).join('<br>')}</div>
       </div>
@@ -2558,7 +2558,7 @@ function buildRecitersScreen() {
     newContainer.innerHTML = QORIS.slice(-4).map((r, i) => `
       <div class="r-card" onclick="selectQoriFromHome(${QORIS.length - 4 + i})">
         <div class="r-img-wrap">
-          <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.style.display='none'">
+          <img src="reciter/${r.img}" class="r-img" onerror="this.onerror=null;this.src='reciter/qori.png'">
           <div class="r-badge">NEW</div>
         </div>
         <div class="r-name">${r.name.split(' ').slice(0,2).join('<br>')}</div>
@@ -2924,7 +2924,7 @@ function buildQoriList(filter='') {
       <div class="qori-avatar" style="overflow:hidden;padding:0;border:2px solid ${i === state.qoriIdx ? 'var(--gold)' : 'rgba(255,255,255,0.1)'}" >
         <img src="reciter/${q.img}" alt="${q.name}"
             style="width:100%;height:100%;object-fit:cover;"
-            onerror="this.onerror=null;this.style.display='none'">
+            onerror="this.onerror=null;this.src='reciter/qori.png'">
         <svg style="display:none;width:100%;height:100%;align-items:center;justify-content:center" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" width="22" height="22">
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
           <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -2989,7 +2989,7 @@ function updateNowPlaying() {
   avatarEl.innerHTML = `
     <img src="reciter/${q.img}" alt="${q.name}"
      style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
-     onerror="this.onerror=null;this.style.display='none'">
+     onerror="this.onerror=null;this.src='reciter/qori.png'">
   `;
 
   // Fav
@@ -3527,7 +3527,7 @@ function buildHomeScreen() {
 
   // Featured card
   const featAvatar = document.getElementById('home-feat-avatar');
-  if (featAvatar) featAvatar.innerHTML = `<img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`;
+  if (featAvatar) featAvatar.innerHTML = `<img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.onerror=null;this.src='reciter/qori.png'">`;
   const featName = document.getElementById('home-feat-name');
   if (featName) featName.textContent = q.name;
 
@@ -3537,7 +3537,7 @@ function buildHomeScreen() {
     favsList.innerHTML = QORIS.slice(0, 8).map((r, i) => `
       <div class="reciter-card" onclick="selectQoriFromHome(${i})">
         <div class="reciter-img ${i === state.qoriIdx ? 'active-border' : ''}">
-          <img src="reciter/${r.img}" alt="${r.name}" onerror="this.onerror=null;this.style.display='none'">
+          <img src="reciter/${r.img}" alt="${r.name}" onerror="this.onerror=null;this.src='reciter/qori.png'">
         </div>
         <div class="reciter-name">${r.name.split(' ').slice(0,2).join(' ')}</div>
       </div>
@@ -3550,7 +3550,7 @@ function buildHomeScreen() {
     newList.innerHTML = QORIS.slice(-3).map((r, i) => `
       <div class="new-reciter-card" onclick="selectQoriFromHome(${QORIS.length - 3 + i})">
         <div class="new-reciter-img">
-          <img src="reciter/${r.img}" alt="${r.name}" onerror="this.onerror=null;this.style.display='none'">
+          <img src="reciter/${r.img}" alt="${r.name}" onerror="this.onerror=null;this.src='reciter/qori.png'">
         </div>
         <div>
           <div style="font-size:14px;font-weight:600">${r.name}</div>
@@ -3594,7 +3594,7 @@ function updateMiniPlayer() {
   const miniPlayIcon = document.getElementById('mini-play-icon');
   if (miniSurah) miniSurah.textContent = s.n + '. ' + s.en + ' (' + s.ar + ')';
   if (miniQori) miniQori.textContent = q.name;
-  if (miniAvatar) miniAvatar.innerHTML = `<img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.style.display='none'">`;
+  if (miniAvatar) miniAvatar.innerHTML = `<img src="reciter/${q.img}" alt="${q.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.onerror=null;this.src='reciter/qori.png'">`;
   if (miniPlayIcon) miniPlayIcon.innerHTML = state.isPlaying
     ? '<rect x="5" y="3" width="5" height="18" rx="2"/><rect x="14" y="3" width="5" height="18" rx="2"/>'
     : '<polygon points="5 3 19 12 5 21 5 3"/>';
@@ -3705,7 +3705,7 @@ function buildTopRecitersFull(filter = '') {
   html += `
     <div class="top1-card" onclick="selectQoriFromHome(${idx1})">
       <div class="top1-avatar-wrap">
-        <img src="reciter/${q1.img}" class="top1-avatar" onerror="this.style.display='none'">
+        <img src="reciter/${q1.img}" class="top1-avatar" onerror="this.onerror=null;this.src='reciter/qori.png'">
         <div class="rank-badge-1">1</div>
       </div>
       <div class="top1-name">${q1.name}</div>
@@ -3721,7 +3721,7 @@ function buildTopRecitersFull(filter = '') {
     html += `
       <div class="top-grid-item" onclick="selectQoriFromHome(${idx})">
         <div class="tg-avatar-wrap">
-          <img src="reciter/${q.img}" class="tg-avatar" onerror="this.style.display='none'">
+          <img src="reciter/${q.img}" class="tg-avatar" onerror="this.onerror=null;this.src='reciter/qori.png'">
           <div class="tg-rank">${i + 1}</div>
         </div>
         <div class="tg-name">${q.name.split(' ').slice(0, 2).join('<br>')}</div>
