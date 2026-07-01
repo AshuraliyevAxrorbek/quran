@@ -3237,12 +3237,13 @@ function init() {
   buildSoundTabs();
   buildSleepOptions();
   buildVideoGrid();
-  // Saqlangan fon videosini tiklash
-  if (state.videoIdx > 0 && VIDEOS[state.videoIdx]) {
-    getVideoSrc(VIDEOS[state.videoIdx].file).then(src => {
-      document.getElementById('bg-video').src = src;
-    });
-  }
+  // Saqlangan fon videosini tiklash (iOS qotib qolmasligi uchun to'g'rilandi)
+  const currentVideo = VIDEOS[state.videoIdx] ? VIDEOS[state.videoIdx].file : VIDEOS[0].file;
+  getVideoSrc(currentVideo).then(src => {
+    const bgVid = document.getElementById('bg-video');
+    bgVid.src = src;
+    bgVid.load(); // iPhone uchun majburiy yuklash buyrug'i
+  });
   updateNowPlaying();
   setupAudioEvents();
   buildHomeScreen();
@@ -5258,7 +5259,11 @@ async function idbSetVideo(key, blob) {
 // Videoni keshdan olish, bo'lmasa asl manzilni qaytarish
 async function getVideoSrc(file) {
   const blob = await idbGetVideo(file);
-  if (blob) return URL.createObjectURL(blob);
+  if (blob) {
+    // iOS'da qotib qolmasligi uchun formatini aniq video/mp4 deb belgilaymiz
+    const videoBlob = new Blob([blob], { type: 'video/mp4' });
+    return URL.createObjectURL(videoBlob);
+  }
   return file;
 }
 
@@ -5280,7 +5285,9 @@ async function cacheVideos() {
         const resp = await fetch(v.file);
         if (resp.ok) {
           const blob = await resp.blob();
-          await idbSetVideo(v.file, blob);
+          // Saqlayotganda ham formatini video/mp4 deb kafolatlaymiz
+          const videoBlob = new Blob([blob], { type: 'video/mp4' });
+          await idbSetVideo(v.file, videoBlob);
         }
       }
     } catch (e) {}
