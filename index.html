@@ -1208,7 +1208,6 @@
     overflow-y: auto; scrollbar-width: none;
     padding: 54px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
-    background: #000;
   }
   #top-reciters-screen::-webkit-scrollbar { display: none; }
   #top-reciters-screen.hidden { opacity: 0; pointer-events: none; }
@@ -1244,7 +1243,6 @@
     overflow-y: auto; scrollbar-width: none;
     padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
-    background: #000;
   }
   #playlists-screen::-webkit-scrollbar { display: none; }
   #playlists-screen.hidden { opacity: 0; pointer-events: none; }
@@ -1264,11 +1262,18 @@
   .bg-sleep { background: linear-gradient(135deg, #000428 0%, #004e92 100%); }
   .bg-luhaidan { background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%); }
   .bg-dosari { background: linear-gradient(135deg, #141e30 0%, #243b55 100%); }
+  /* Yangi ro'yxatlar uchun fonlar */
+  .bg-peace { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+  .bg-comfort { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  .bg-short { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+  .bg-top10 { background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%); }
+  .bg-recent { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+  .bg-routine { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
 
   #playlist-detail-screen {
     position: fixed; inset: 0; z-index: 11;
     overflow-y: auto; scrollbar-width: none;
-    background: #000; padding-bottom: 200px;
+    padding-bottom: 200px;
   }
   #playlist-detail-screen::-webkit-scrollbar { display: none; }
   #playlist-detail-screen.hidden { opacity: 0; pointer-events: none; }
@@ -1279,7 +1284,6 @@
     overflow-y: auto; scrollbar-width: none;
     padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
     max-width: 620px; margin: 0 auto;
-    background: #000;
   }
   #settings-screen::-webkit-scrollbar { display: none; }
   #settings-screen.hidden { opacity: 0; pointer-events: none; }
@@ -2331,7 +2335,7 @@
 <div id="settings-screen" class="hidden">
   <div class="page-title">Sozlamalar</div>
 
-  <div class="settings-group">
+    <div class="settings-group">
     <div class="settings-item" onclick="toggleSettingSubtitle()">
       <div class="st-left">
         <div class="st-icon" style="background: #007aff;">
@@ -2341,31 +2345,6 @@
       </div>
       <div class="st-right">
         <div class="st-toggle on" id="st-toggle-sub"><div class="st-thumb"></div></div>
-      </div>
-    </div>
-    
-    <div class="settings-item" onclick="cacheMediaImages()">
-      <div class="st-left">
-        <div class="st-icon" style="background: #34c759;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </div>
-        <div class="st-title">Mediani yuklash (Rasmlar)</div>
-      </div>
-      <div class="st-right">
-        <span id="cache-status" style="font-size: 12px; font-weight: 500;"></span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </div>
-
-    <div class="settings-item" onclick="openPanel('video')">
-      <div class="st-left">
-        <div class="st-icon" style="background: #ff2d55;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="5" width="15" height="14" rx="3"/><path d="M17 9l5-2v10l-5-2V9z"/></svg>
-        </div>
-        <div class="st-title">Fon videosini o'zgartirish</div>
-      </div>
-      <div class="st-right">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
 
@@ -2406,18 +2385,6 @@
       </div>
     </div>
 
-    <div class="settings-item" onclick="toggleVolumePopup(event)">
-      <div class="st-left">
-        <div class="st-icon" style="background: #5856d6;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-        </div>
-        <div class="st-title">Fon tovushi va ovoz</div>
-      </div>
-      <div class="st-right">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </div>
-
     <div class="settings-item" style="cursor:default;">
       <div class="st-left">
         <div class="st-icon" style="background: #ff9f0a;">
@@ -2433,7 +2400,74 @@
     </div>
   </div>
 
-  <div class="settings-group">
+    <div class="settings-group">
+    <div class="settings-item" onclick="openPanel('video')">
+      <div class="st-left">
+        <div class="st-icon" style="background: #ff2d55;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="5" width="15" height="14" rx="3"/><path d="M17 9l5-2v10l-5-2V9z"/></svg>
+        </div>
+        <div class="st-title">Fon videosini o'zgartirish</div>
+      </div>
+      <div class="st-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="toggleVolumePopup(event)">
+      <div class="st-left">
+        <div class="st-icon" style="background: #5856d6;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </div>
+        <div class="st-title">Fon tovushi va ovoz</div>
+      </div>
+      <div class="st-right">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </div>
+
+    <div class="settings-group">
+    <div class="settings-item" onclick="cacheMediaImages()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #34c759;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div class="st-title">Mediani yuklash (Rasmlar)</div>
+      </div>
+      <div class="st-right">
+        <span id="cache-status" style="font-size: 12px; font-weight: 500;"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="cacheVideos()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #ff375f;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="5" width="15" height="14" rx="3"/><path d="M17 9l5-2v10l-5-2V9z"/></svg>
+        </div>
+        <div class="st-title">Videolarni yuklab olish</div>
+      </div>
+      <div class="st-right">
+        <span id="video-cache-status" style="font-size: 12px; font-weight: 500;"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="cacheQuranTexts()">
+      <div class="st-left">
+        <div class="st-icon" style="background: #30d158;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H9a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H15a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h8z"/></svg>
+        </div>
+        <div class="st-title">Qur'on matnini yuklab olish</div>
+      </div>
+      <div class="st-right">
+        <span id="quran-cache-status" style="font-size: 12px; font-weight: 500;"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </div>
+
+    <div class="settings-group">
     <div class="settings-item" onclick="openGoalPicker()">
       <div class="st-left">
         <div class="st-icon" style="background: #ff9500;">
@@ -2802,7 +2836,9 @@ const QORIS = [
   { id: 'ar.muhammadjibreel', name: 'Muhammad Jibreel', origin: 'Misr', img: 'jibreel.png', prefix: 'https://server8.mp3quran.net/jbrl/', bio: 'Klassik Misr maktabi uslubidagi go\'zal va melodik tilovati bilan mashhur.' },
   { id: 'ar.abdulsamad', name: 'Abdul Basit (Murattal)', origin: 'Misr', img: 'abdulsamad.png', prefix: 'https://server7.mp3quran.net/basit/', bio: 'Tarixning eng buyuk qorilaridan biri sifatida tan olingan, betakror ovozi bilan mashhur.' },
   { id: 'ar.minshawi', name: 'Mohammad Al-Minshawi', origin: 'Misr', img: 'minshawi.png', prefix: 'https://server10.mp3quran.net/minsh/', bio: 'Hissiyotga boy va chuqur ta\'sir qiluvchi tilovati bilan jahonga mashhur bo\'lgan qori.' },
+  { id: 'ar.minshawimujawwad', name: 'Mohammad Al-Minshawi (Mujawwad)', origin: 'Misr', img: 'minshawi-mujawwad.png', prefix: 'https://server10.mp3quran.net/minsh_mjwd/', bio: 'Minshaviyning mashhur "Mujawwad" uslubidagi tilovati — har bir ayatni sekin va tarannum bilan o\'qish bilan tanilgan.' },
   { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', origin: 'Misr', img: 'husary.png', prefix: 'https://server13.mp3quran.net/husr/', bio: 'Tajvid ilmi bo\'yicha ustoz sifatida tanilgan, aniq va ta\'limiy tilovati bilan mashhur.' },
+  { id: 'ar.husarymujawwad', name: 'Mahmoud Khalil Al-Husary (Mujawwad)', origin: 'Misr', img: 'husary-mujawwad.png', prefix: 'https://server13.mp3quran.net/husr_mjwd/', bio: 'Husariyning klassik "Mujawwad" uslubidagi tilovati, tajvid qoidalariga alohida e\'tibor bilan o\'qiladigan rasmiy versiya.' },
   { id: 'ar.saadalghamdi', name: 'Saad Al-Ghamdi', origin: 'SA', img: 'ghamdi.jpg', prefix: 'https://server7.mp3quran.net/s_gmd/', bio: 'Yoqimli va sokin ovozi bilan butun dunyoda sevib tinglanadigan qori.' },
   { id: 'ar.faresabbad', name: 'Fares Abbad', origin: 'Yaman', img: 'abbad.jpg', prefix: 'https://server8.mp3quran.net/frs_a/', bio: 'Musaffo va ta\'sirchan tilovat uslubi bilan tanilgan yosh qorilardan biri.' },
   { id: 'ar.abdulrahmanalosi', name: 'Abdul Rahman Al-Osi', origin: 'SA', img: 'osi.jpg', prefix: 'https://server6.mp3quran.net/aloosi/', bio: 'Barqaror va vazmin tilovati bilan tinglovchilar orasida obro\' qozongan qori.' },
@@ -2811,7 +2847,85 @@ const QORIS = [
   { id: 'ar.nasseralqatami', name: 'Nasser Al-Qatami', origin: 'SA', img: 'qatami.jpg', prefix: 'https://server6.mp3quran.net/qtm/', bio: 'Yoqimli va ravon tilovat uslubi bilan keng mashhurlikka erishgan qori.' },
   { id: 'ar.khalidaljalil', name: 'Khalid Al-Jalil', origin: 'SA', img: 'jalil.jpg', prefix: 'https://server10.mp3quran.net/jleel/', bio: 'Sokin va xotirjam tilovati bilan diniy mashg\'ulotlar uchun ko\'p tanlanadigan qori.' },
   { id: 'ar.bandarbaleela', name: 'Bandar Baleela', origin: 'Makka, SA', img: 'bandar.jpg', prefix: 'https://server6.mp3quran.net/bndr/', bio: 'Masjidul Haram imomlaridan biri, kuchli va vazmin ovozi bilan tanilgan.' },
-  { id: 'uz.muhammadloyiq', name: 'Muhammadloyiq Qori', origin: 'Oʻzbekiston', img: 'muhammadloyiq.png', prefix: 'https://raw.githubusercontent.com/AshuraliyevAxrorbek/quran-audio-api/main/reciters/muhammadloyiq-qori/', bio: 'Oʻzbekistonlik qori. Ravon va taʼsirchan Qurʼon tilovati bilan tanilgan.' }
+  { id: 'ar.ibrahimakhbar', name: 'Ibrahim Al-Akhdar', origin: 'Madina, SA', img: 'ibrahim-akhdar.png', prefix: 'https://server8.mp3quran.net/akhdar/', bio: 'Madinai Munavvaradagi Masjid an-Nabaviyning sobiq imomi va qiroat ilmi bo\'yicha ustoz, betakror va ohorli ovozi bilan tanilgan.' },
+  { id: 'ar.aymanswoaid', name: 'Ayman Suwaid', origin: 'Damashq, Suriya / Jidda, SA', img: 'ayman-suwaid.png', prefix: 'https://server8.mp3quran.net/ayman/', bio: 'Tajvid ilmi bo\'yicha dunyodagi eng yirik mutaxassislardan biri, o\'nta qiroat ilmida olim va mashhur ustoz qori.' },
+  { id: 'ar.mustafaismail', name: 'Mustafa Ismail', origin: 'Misr', img: 'mustafa-ismail.png', prefix: 'https://server8.mp3quran.net/mustafa/', bio: 'O\'tgan asrning eng buyuk misrlik afsonaviy qorilaridan biri, betakror ovozi bilan tarixda qolgan.' },
+  { id: 'ar.mahmoudalbanna', name: 'Mahmoud Ali Al-Banna', origin: 'Misr', img: 'mahmoud-al-banna.png', prefix: 'https://server8.mp3quran.net/bna/', bio: 'Klassik Misr qiroat maktabining ustozlaridan biri, kuchli va tantanavor ovozi bilan mashhur.' },
+  { id: 'ar.tablawy', name: 'Mohammad Al-Tablawy', origin: 'Misr', img: 'tablawy.png', prefix: 'https://server12.mp3quran.net/tblawi/', bio: 'Misrning taniqli klassik uslubdagi qorilaridan, chuqur va ta\'sirchan tilovati bilan tanilgan.' },
+  { id: 'ar.mustafaraad', name: 'Mustafa Ra\'d Al-Azawi', origin: 'Iroq', img: 'mustafa-raad.png', prefix: 'https://server8.mp3quran.net/ra3ad/', bio: 'Yosh va iqtidorli iroqlik qori, ijtimoiy tarmoqlarda millionlab tinglovchilarga ega.' },
+  { id: 'ar.jamalshaker', name: 'Jamal Shaker Abdullah', origin: 'Iroq', img: 'jamal-shaker.png', prefix: 'https://server6.mp3quran.net/jamal/', bio: 'Iroqlik taniqli qori, sof va aniq talaffuzi bilan ajralib turadi.' },
+  { id: 'ar.jamaanalosaimi', name: 'Jamaan Al-Osaimi', origin: 'SA', img: 'jamaan-alosaimi.png', prefix: 'https://server6.mp3quran.net/jaman/', bio: 'Saudiyalik qori, sokin va vazmin tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.muftahsultany', name: 'Muftah Al-Sultani', origin: 'Liviya', img: 'muftah-sultany.png', prefix: 'https://server14.mp3quran.net/muftah_sultany/Rewayat-Hafs-A-n-Assem/', bio: 'Liviyalik mashhur qori, bir nechta qiroat rivoyatlarini bilishi bilan tanilgan.' },
+  { id: 'ar.alzain', name: 'Al-Zain Mohammad Ahmed', origin: 'Sudan', img: 'alzain.png', prefix: 'https://server9.mp3quran.net/alzain/', bio: 'Sudanlik taniqli qori, o\'ziga xos ohangdor va hissiyotli tilovati bilan mashhur.' },
+  { id: 'ar.akramalalaqmi', name: 'Akram Al-Alaqmi', origin: 'Yaman', img: 'akram-alalaqmi.png', prefix: 'https://server9.mp3quran.net/akrm/', bio: 'Yamanlik yosh va mashhur qori, go\'zal va ta\'sirchan ovozi bilan keng tanilgan.' },
+  { id: 'ar.majedalenezi', name: 'Majed Al-Enezi', origin: 'SA', img: 'majed-alenezi.png', prefix: 'https://server8.mp3quran.net/majd_onazi/', bio: 'Saudiyalik qori, ravon va aniq tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.mohammedmuhaisany', name: 'Mohammed Al-Muhaisany', origin: 'SA', img: 'muhaisany.png', prefix: 'https://server11.mp3quran.net/mhsny/', bio: 'Saudiyalik qori, xotirjam va vazmin ovozi bilan tinglovchilar orasida sevimli.' },
+  { id: 'ar.khalidalqahtani', name: 'Khaled Al-Qahtani', origin: 'SA', img: 'khaled-alqahtani.png', prefix: 'https://server10.mp3quran.net/qht/', bio: 'Saudiyalik qori, kuchli va ravon tilovati bilan mashhur.' },
+  { id: 'ar.abdullahmatrood', name: 'Abdullah Al-Matrood', origin: 'SA', img: 'abdullah-almatrood.png', prefix: 'https://server8.mp3quran.net/mtrod/', bio: 'Saudiyalik qori, sokin uslubdagi tilovati bilan tanilgan.' },
+  { id: 'ar.abdullahjohany', name: 'Abdullah Al-Johany', origin: 'Madina, SA', img: 'abdullah-aljohany.png', prefix: 'https://server13.mp3quran.net/jhn/', bio: 'Madinai Munavvaradagi Masjid an-Nabaviy imomlaridan biri, vazmin va ta\'sirchan tilovati bilan tanilgan.' },
+  { id: 'ar.abdulmohsinqasim', name: 'Abdulmohsin Al-Qasim', origin: 'Madina, SA', img: 'abdulmohsin-alqasim.png', prefix: 'https://server8.mp3quran.net/qasm/', bio: 'Masjid an-Nabaviy imomlaridan biri, kuchli va uyg\'un ovozi bilan mashhur.' },
+  { id: 'ar.khalidghamdi', name: 'Khalid Al-Ghamdi', origin: 'SA', img: 'khalid-alghamdi.png', prefix: 'https://server6.mp3quran.net/ghamdi/', bio: 'Saudiyalik qori, yoqimli va ravon tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.abdullahkandari', name: 'Abdullah Al-Kandari', origin: 'Quvayt', img: 'abdullah-alkandari.png', prefix: 'https://server10.mp3quran.net/Abdullahk/', bio: 'Quvaytlik qori, sof va aniq talaffuzi bilan tanilgan.' },
+  { id: 'ar.abdullahkhayyat', name: 'Abdullah Khayyat', origin: 'Makka, SA', img: 'abdullah-khayyat.png', prefix: 'https://server12.mp3quran.net/kyat/', bio: 'Masjidul Haramning sobiq imomlaridan biri, tarixiy va tantanavor tilovati bilan mashhur.' },
+  { id: 'ar.salahalbudair', name: 'Salah Al-Budair', origin: 'Madina, SA', img: 'salah-albudair.png', prefix: 'https://server6.mp3quran.net/s_bud/', bio: 'Masjid an-Nabaviy imomi, chuqur ta\'sir qiluvchi va vazmin tilovati bilan tanilgan.' },
+  { id: 'ar.abdulazizzahrani', name: 'Abdulaziz Az-Zahrani', origin: 'SA', img: 'abdulaziz-azzahrani.png', prefix: 'https://server9.mp3quran.net/zahrani/', bio: 'Saudiyalik qori, yoqimli va sokin ovozi bilan tanilgan.' },
+  { id: 'ar.sahlyassin', name: 'Sahl Yassin', origin: 'Misr', img: 'sahl-yassin.png', prefix: 'https://server6.mp3quran.net/shl/', bio: 'Misrlik qori, Al-Azhar maktabi uslubidagi go\'zal tilovati bilan tanilgan.' },
+  { id: 'ar.ahmadalnufais', name: 'Ahmad Al-Nufais', origin: 'SA', img: 'ahmad-alnufais.png', prefix: 'https://server16.mp3quran.net/nufais/Rewayat-Hafs-A-n-Assem/', bio: 'Yosh saudiyalik qori, ijtimoiy tarmoqlarda mashhur bo\'lgan yoqimli ovozi bilan tanilgan.' },
+  { id: 'ar.baderalturki', name: 'Bader Al-Turki', origin: 'SA', img: 'bader-alturki.png', prefix: 'https://server10.mp3quran.net/bader/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik zamonaviy qori, go\'zal va sokin tilovat uslubi bilan mashhur.' },
+  { id: 'ar.islamsobhi', name: 'Islam Sobhi', origin: 'Misr', img: 'islam-sobhi.png', prefix: 'https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/', bio: 'Yosh misrlik qori, ijtimoiy tarmoqlarda mashhur bo\'lgan yoqimli va musaffo ovozi bilan tanilgan.' },
+  { id: 'ar.abdullahkamel', name: 'Abdullah Kamel', origin: 'Misr', img: 'abdullah-kamel.png', prefix: 'https://server16.mp3quran.net/kamel/Rewayat-Hafs-A-n-Assem/', bio: 'Misrning afsonaviy qorilaridan biri, Al-Azhar uslubidagi betakror tilovati bilan mashhur.' },
+  { id: 'uz.muhammadloyiq', name: 'Muhammadloyiq Qori', origin: 'Oʻzbekiston', img: 'muhammadloyiq.png', prefix: 'https://raw.githubusercontent.com/AshuraliyevAxrorbek/quran-audio-api/main/reciters/muhammadloyiq-qori/', bio: 'Oʻzbekistonlik qori. Ravon va taʼsirchan Qurʼon tilovati bilan tanilgan.' },
+  { id: 'uz.hasanxonyahyo', name: 'Hasanxon Yahyo Abdulmajid', origin: 'Oʻzbekiston', img: 'hasanxon-yahyo-abdulmajid.png', prefix: 'https://raw.githubusercontent.com/AshuraliyevAxrorbek/quran-audio-api/main/reciters/hasanxon-yahyo-abdulmajid/', bio: 'Oʻzbekistonlik qori. Chiroyli, ravon va taʼsirchan Qurʼon tilovati bilan tanilgan.' },
+  { id: 'ar.mustafalahoni', name: 'Mustafa Al-Lahoni', origin: 'Misr', img: 'mustafa-lahoni.png', prefix: 'https://server6.mp3quran.net/lahoni/', bio: 'Misrlik qori, klassik uslubdagi ravon tilovati bilan tanilgan.' },
+  { id: 'ar.abdulrahmanalsuwayid', name: 'Abdulrahman Al-Suwayid', origin: 'SA', img: 'abdulrahman-alsuwayid.png', prefix: 'https://server16.mp3quran.net/a_swaiyd/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, tiniq va vazmin ovozi bilan tanilgan.' },
+  { id: 'ar.abdulelahbinaoun', name: 'Abdulelah bin Aoun', origin: 'SA', img: 'abdulelah-bin-aoun.png', prefix: 'https://server16.mp3quran.net/a_binaoun/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, sokin uslubdagi tilovati bilan mashhur.' },
+  { id: 'ar.majedalzamil', name: 'Majed Al-Zamil', origin: 'SA', img: 'majed-alzamil.png', prefix: 'https://server9.mp3quran.net/zaml/', bio: 'Saudiyalik qori, ravon va aniq talaffuzi bilan tanilgan.' },
+  { id: 'ar.mahershakhashero', name: 'Maher Shakhashero', origin: 'Iordaniya', img: 'maher-shakhashero.png', prefix: 'https://server10.mp3quran.net/shaksh/', bio: 'Iordaniyalik qori, yoqimli va musaffo ovozi bilan tanilgan.' },
+  { id: 'ar.yassersalamah', name: 'Yasser Salamah', origin: 'Falastin', img: 'yasser-salamah.png', prefix: 'https://server12.mp3quran.net/salamah/Rewayat-Hafs-A-n-Assem/', bio: 'Falastinlik taniqli qori, hissiyotga boy tilovati bilan mashhur.' },
+  { id: 'ar.khalidalmohana', name: 'Khalid Al-Mohana', origin: 'SA', img: 'khalid-almohana.png', prefix: 'https://server11.mp3quran.net/mohna/', bio: 'Saudiyalik qori, vazmin va sokin uslubi bilan tanilgan.' },
+  { id: 'ar.adelalkhalbany', name: 'Adel Al-Kalbani', origin: 'Makka, SA', img: 'adel-alkhalbany.png', prefix: 'https://server8.mp3quran.net/a_klb/', bio: 'Masjidul Haramning sobiq imomi, kuchli va tantanavor tilovati bilan mashhur.' },
+  { id: 'ar.mousabilal', name: 'Mousa Bilal', origin: 'Iordaniya', img: 'mousa-bilal.png', prefix: 'https://server11.mp3quran.net/bilal/', bio: 'Yosh iordaniyalik qori, ijtimoiy tarmoqlarda mashhur bo\'lgan yoqimli ovozi bilan tanilgan.' },
+  { id: 'ar.hatemfareedalwaer', name: 'Hatem Fareed Al-Waer', origin: 'Suriya', img: 'hatem-fareed-alwaer.png', prefix: 'https://server11.mp3quran.net/hatem/', bio: 'Suriyalik qori, aniq va ravon tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.ibrahimaljormy', name: 'Ibrahim Al-Jormy', origin: 'Misr', img: 'ibrahim-aljormy.png', prefix: 'https://server11.mp3quran.net/jormy/', bio: 'Misrlik qori, klassik maktab uslubidagi go\'zal tilovati bilan mashhur.' },
+  { id: 'ar.tawfeeqassayegh', name: 'Tawfeeq As-Sayegh', origin: 'SA', img: 'tawfeeq-assayegh.png', prefix: 'https://server6.mp3quran.net/twfeeq/', bio: 'Saudiyalik qori, sokin va tiniq ovozi bilan tanilgan.' },
+  { id: 'ar.ibrahimaldosari', name: 'Ibrahim Al-Dosari', origin: 'SA', img: 'ibrahim-aldosari.png', prefix: 'https://server10.mp3quran.net/ibrahim_dosri/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, vazmin va ta\'sirchan tilovati bilan tanilgan.' },
+  { id: 'ar.moeedhalharthi', name: 'Moeedh Al-Harthi', origin: 'SA', img: 'moeedh-alharthi.png', prefix: 'https://server8.mp3quran.net/harthi/', bio: 'Saudiyalik qori, ravon va musaffo ovozi bilan mashhur.' },
+  { id: 'ar.mohammadrashadalshareef', name: 'Mohammad Rashad Al-Shareef', origin: 'SA', img: 'mohammad-rashad-alshareef.png', prefix: 'https://server10.mp3quran.net/rashad/', bio: 'Saudiyalik qori, yoqimli va barqaror tilovat uslubiga ega.' },
+  { id: 'ar.ahmedamer', name: 'Ahmed Amer', origin: 'Misr', img: 'ahmed-amer.png', prefix: 'https://server10.mp3quran.net/Aamer/', bio: 'Misrlik qori, klassik Misr maktabi uslubidagi tilovati bilan tanilgan.' },
+  { id: 'ar.yusufalaidroos', name: 'Yusuf Al-Aidroos', origin: 'Yaman', img: 'yusuf-alaidroos.png', prefix: 'https://server16.mp3quran.net/Y_ALaidroos/Rewayat-Hafs-A-n-Assem/', bio: 'Yamanlik qori, Hadramavt an\'analariga xos musaffo tilovati bilan mashhur.' },
+  { id: 'ar.hassanaldaghriri', name: 'Hassan Al-Daghriri', origin: 'SA', img: 'hassan-aldaghriri.png', prefix: 'https://server16.mp3quran.net/H-Aldaghriri/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, aniq va vazmin ovozi bilan tanilgan.' },
+  { id: 'ar.khalidalziyadi', name: 'Khalid Al-Ziyadi', origin: 'SA', img: 'khalid-alziyadi.png', prefix: 'https://server16.mp3quran.net/K-Alzadi/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, sokin va ravon tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.ibrahimalshahri', name: 'Ibrahim Al-Shahri', origin: 'SA', img: 'ibrahim-alshahri.png', prefix: 'https://server16.mp3quran.net/Ibrahim-Al-Shahri/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, yoqimli va barqaror ovozi bilan tanilgan.' },
+  { id: 'ar.abdulrahmanalbadr', name: 'Abdul Rahman Al-Badr', origin: 'SA', img: 'abdulrahman-albadr.png', prefix: 'https://server16.mp3quran.net/A-AlBadr/Rewayat-Hafs-A-n-Assem/', bio: 'Taniqli saudiyalik olim va qori, vazmin tilovati bilan tanilgan.' },
+  { id: 'ar.mohammedalzubaidi', name: 'Mohammed Al-Zubaidi', origin: 'Iroq', img: 'mohammed-alzubaidi.png', prefix: 'https://server16.mp3quran.net/M-AlZubaidi/Rewayat-Hafs-A-n-Assem/', bio: 'Iroqlik qori, kuchli va ta\'sirchan tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.asimalluhaidan', name: 'Asim Al-Luhaidan', origin: 'SA', img: 'asim-alluhaidan.png', prefix: 'https://server7.mp3quran.net/asim/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, sokin va xotirjam ovozi bilan mashhur.' },
+  { id: 'ar.raadalkurdi', name: 'Raad Al-Kurdi', origin: 'Iroq', img: 'raad-alkurdi.png', prefix: 'https://server6.mp3quran.net/kurdi/', bio: 'Iroqlik kurd qorisi, o\'ziga xos ohangdor tilovati bilan tanilgan.' },
+  { id: 'ar.ramialdeais', name: 'Rami Al-Deais', origin: 'Iordaniya', img: 'rami-aldeais.png', prefix: 'https://server6.mp3quran.net/rami/', bio: 'Iordaniyalik taniqli qori, go\'zal va ravon tilovati bilan mashhur.' },
+  { id: 'ar.abdulrahmanalmajed', name: 'Abdulrahman Al-Majed', origin: 'SA', img: 'abdulrahman-almajed.png', prefix: 'https://server10.mp3quran.net/a_majed/', bio: 'Saudiyalik qori, tiniq va barqaror ovozi bilan tanilgan.' },
+  { id: 'ar.khalifaaltunaiji', name: 'Khalifa Al-Tunaiji', origin: 'BAA', img: 'khalifa-altunaiji.png', prefix: 'https://server12.mp3quran.net/tnjy/', bio: 'BAA lik qori, sokin va vazmin tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.abdullahalmousa', name: 'Abdullah Al-Mousa', origin: 'SA', img: 'abdullah-almousa.png', prefix: 'https://server14.mp3quran.net/mousa/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, ravon va musaffo ovozi bilan mashhur.' },
+  { id: 'ar.abdullahalkhalaf', name: 'Abdullah Al-Khalaf', origin: 'SA', img: 'abdullah-alkhalaf.png', prefix: 'https://server14.mp3quran.net/khalf/', bio: 'Saudiyalik qori, aniq talaffuzi bilan tanilgan.' },
+  { id: 'ar.mansouralsalemi', name: 'Mansour Al-Salemi', origin: 'Yaman', img: 'mansour-alsalemi.png', prefix: 'https://server14.mp3quran.net/mansor/', bio: 'Yamanlik qori, yoqimli va sokin tilovati bilan tanilgan.' },
+  { id: 'ar.nasseralosfor', name: 'Nasser Al-Osfor', origin: 'Bahrayn', img: 'nasser-alosfor.png', prefix: 'https://server14.mp3quran.net/alosfor/', bio: 'Bahraynlik qori, vazmin va tiniq ovozi bilan mashhur.' },
+  { id: 'ar.mohammadalbukheet', name: 'Mohammad Al-Bukheet', origin: 'SA', img: 'mohammad-albukheet.png', prefix: 'https://server14.mp3quran.net/bukheet/', bio: 'Saudiyalik qori, ravon tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.nasseralmajed', name: 'Nasser Al-Majed', origin: 'SA', img: 'nasser-almajed.png', prefix: 'https://server14.mp3quran.net/nasser_almajed/', bio: 'Saudiyalik qori, sokin va barqaror ovozi bilan tanilgan.' },
+  { id: 'ar.ahmedalswailem', name: 'Ahmed Al-Swailem', origin: 'SA', img: 'ahmed-alswailem.png', prefix: 'https://server14.mp3quran.net/swlim/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, aniq va vazmin tilovati bilan tanilgan.' },
+  { id: 'ar.ahmadshaheen', name: 'Ahmad Shaheen', origin: 'Falastin', img: 'ahmad-shaheen.png', prefix: 'https://server16.mp3quran.net/shaheen/Rewayat-Hafs-A-n-Assem/', bio: 'Falastinlik qori, hissiyotga boy va ta\'sirchan tilovati bilan tanilgan.' },
+  { id: 'ar.saadalmqren', name: 'Saad Al-Muqren', origin: 'SA', img: 'saad-almqren.png', prefix: 'https://server16.mp3quran.net/saad/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, tiniq va ravon ovozi bilan mashhur.' },
+  { id: 'ar.ahmaddeban', name: 'Ahmad Deban', origin: 'Yaman', img: 'ahmad-deban.png', prefix: 'https://server16.mp3quran.net/deban/Rewayat-Hafs-A-n-Assem/', bio: 'Yamanlik qori, bir nechta qiroat rivoyatlarini bilishi bilan tanilgan.' },
+  { id: 'ar.peshawaalkurdi', name: 'Peshawa Qadr Al-Kurdi', origin: 'Iroq', img: 'peshawa-alkurdi.png', prefix: 'https://server16.mp3quran.net/peshawa/Rewayat-Hafs-A-n-Assem/', bio: 'Iroqlik kurd qorisi, o\'ziga xos va ta\'sirchan tilovati bilan mashhur.' },
+  { id: 'ar.nathieralmalki', name: 'Nathier Al-Malki', origin: 'SA', img: 'nathier-almalki.png', prefix: 'https://server16.mp3quran.net/nathier/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, sokin va vazmin ovozi bilan tanilgan.' },
+  { id: 'ar.haithamaldukhain', name: 'Haitham Al-Dukhain', origin: 'SA', img: 'haitham-aldukhain.png', prefix: 'https://server16.mp3quran.net/h_dukhain/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, ravon tilovat uslubi bilan mashhur.' },
+  { id: 'ar.mahmoudabdulhakam', name: 'Mahmoud Abdul Hakam', origin: 'Misr', img: 'mahmoud-abdulhakam.png', prefix: 'https://server16.mp3quran.net/m_abdelhakam/Rewayat-Hafs-A-n-Assem/', bio: 'Misrlik qori, klassik uslubdagi ta\'sirchan tilovati bilan tanilgan.' },
+  { id: 'ar.ahmadalmaasaraawi', name: 'Ahmad Issa Al-Maasaraawi', origin: 'Misr', img: 'ahmad-almaasaraawi.png', prefix: 'https://server16.mp3quran.net/a_maasaraawi/Rewayat-Hafs-A-n-Assem/', bio: 'Misrlik qori, an\'anaviy Misr maktabi uslubi bilan tanilgan.' },
+  { id: 'ar.fouadalkhamery', name: 'Fouad Al-Khamery', origin: 'Yaman', img: 'fouad-alkhamery.png', prefix: 'https://server16.mp3quran.net/f_khamery/Rewayat-Hafs-A-n-Assem/', bio: 'Yamanlik qori, musaffo va yoqimli ovozi bilan tanilgan.' },
+  { id: 'ar.malallahaljaber', name: 'Mal-Allah Abdulrahman Al-Jaber', origin: 'Quvayt', img: 'malallah-aljaber.png', prefix: 'https://server16.mp3quran.net/mal-allah_jaber/Rewayat-Hafs-A-n-Assem/', bio: 'Quvaytlik qori, vazmin va aniq tilovati bilan tanilgan.' },
+  { id: 'ar.salmanalsadeiq', name: 'Salman Al-Sadeiq', origin: 'Sudan', img: 'salman-alsadeiq.png', prefix: 'https://server16.mp3quran.net/s_sadeiq/Rewayat-Hafs-A-n-Assem/', bio: 'Sudanlik qori, hissiyotli va ohangdor tilovati bilan mashhur.' },
+  { id: 'ar.abdulrahmanalshahhat', name: 'Abdulrahman Al-Shahhat', origin: 'Misr', img: 'abdulrahman-alshahhat.png', prefix: 'https://server16.mp3quran.net/a_alshahhat/Rewayat-Hafs-A-n-Assem/', bio: 'Misrlik qori, ravon va go\'zal tilovat uslubi bilan tanilgan.' },
+  { id: 'ar.issasanankoua', name: 'Issa Omar Sanankoua', origin: 'Mali', img: 'issa-sanankoua.png', prefix: 'https://server16.mp3quran.net/i_sanankoua/Rewayat-Hafs-A-n-Assem/', bio: 'Malilik qori, Afrikaning o\'ziga xos qiroat maktabi vakili.' },
+  { id: 'ar.salehalquraishi', name: 'Saleh Al-Quraishi', origin: 'SA', img: 'saleh-alquraishi.png', prefix: 'https://server16.mp3quran.net/s_alquraishi/Rewayat-Hafs-A-n-Assem/', bio: 'Saudiyalik qori, tiniq va barqaror ovozi bilan tanilgan.' },
+  { id: 'ar.faisalalhajry', name: 'Faisal Al-Hajry', origin: 'Ummon', img: 'faisal-alhajry.png', prefix: 'https://server16.mp3quran.net/f_hajry/Rewayat-Hafs-A-n-Assem/', bio: 'Ummonlik qori, sokin va vazmin tilovati bilan tanilgan.' },
+  { id: 'ar.anasalemadi', name: 'Anas Al-Emadi', origin: 'Qatar', img: 'anas-alemadi.png', prefix: 'https://server16.mp3quran.net/a_alemadi/Rewayat-Hafs-A-n-Assem/', bio: 'Qatarlik qori, yoqimli va ravon tilovat uslubi bilan tanilgan.' },
 ];
 
 // Tarjima manbalari ro'yxati
@@ -3125,7 +3239,9 @@ function init() {
   buildVideoGrid();
   // Saqlangan fon videosini tiklash
   if (state.videoIdx > 0 && VIDEOS[state.videoIdx]) {
-    document.getElementById('bg-video').src = VIDEOS[state.videoIdx].file;
+    getVideoSrc(VIDEOS[state.videoIdx].file).then(src => {
+      document.getElementById('bg-video').src = src;
+    });
   }
   updateNowPlaying();
   setupAudioEvents();
@@ -3305,11 +3421,12 @@ function buildVideoGrid() {
   `).join('');
 }
 
-function selectVideo(id) {
+async function selectVideo(id) {
   state.videoIdx = id;
   buildVideoGrid();
   const vid = document.getElementById('bg-video');
-  vid.src = VIDEOS[id].file;
+  const src = await getVideoSrc(VIDEOS[id].file);
+  vid.src = src;
   vid.load();
   vid.play().catch(()=>{});
   vid.style.opacity = '0.65';
@@ -3394,20 +3511,17 @@ async function loadSurahAyahs(surahNum) {
   try {
     const ayahCount = SURAHS[surahNum - 1].ayahs;
 
-    // Arabic + O'zbek tarjimasi bir so'rovda (editions param bilan)
-    const [comboData, timestamps] = await Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,${currentTranslation}`)
-        .then(r => r.json())
-        .catch(() => ({ code: 0 })),
+    // Avval keshdan tekshiramiz, bo'lmasa tarmoqdan olib keshlaymiz
+    const [textData, timestamps] = await Promise.all([
+      fetchAndCacheSurahText(surahNum).catch(() => null),
       buildAyahTimestamps(surahNum, ayahCount, QORIS[state.qoriIdx]?.id || 'ar.alafasy')
     ]);
 
     if (SURAHS[state.surahIdx].n !== thisSurah) return;
 
-    // Combo muvaffaqiyatli bo'lsa
-    if (comboData.code === 200 && Array.isArray(comboData.data) && comboData.data.length >= 2) {
-      surahAyahs = comboData.data[0].ayahs;
-      uzbekAyahs = comboData.data[1].ayahs;
+    if (textData && textData.ar && textData.ar.length) {
+      surahAyahs = textData.ar;
+      uzbekAyahs = textData.uz || [];
     } else {
       // Fallback: faqat arabic
       const arabicData = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`)
@@ -3427,21 +3541,21 @@ async function loadSurahAyahs(surahNum) {
           }
         } catch(e) {}
       }
+
+      // Bismillah tozalash — arabcha
+      if (surahNum !== 1 && surahNum !== 9 &&
+          surahAyahs[0]?.text?.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')) {
+        surahAyahs[0].text = surahAyahs[0].text
+          .replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
+      }
+      // Bismillah tozalash — o'zbek
+      if (surahNum !== 1 && surahNum !== 9 && uzbekAyahs[0]?.text) {
+        uzbekAyahs[0].text = uzbekAyahs[0].text
+          .replace(/^(Mehribon va rahmli Allohning nomi bilan\.?\s*)/i, '').trim();
+      }
     }
 
     if (!surahAyahs.length) return;
-
-    // Bismillah tozalash — arabcha
-    if (surahNum !== 1 && surahNum !== 9 &&
-        surahAyahs[0]?.text?.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')) {
-      surahAyahs[0].text = surahAyahs[0].text
-        .replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
-    }
-    // Bismillah tozalash — o'zbek
-    if (surahNum !== 1 && surahNum !== 9 && uzbekAyahs[0]?.text) {
-      uzbekAyahs[0].text = uzbekAyahs[0].text
-        .replace(/^(Mehribon va rahmli Allohning nomi bilan\.?\s*)/i, '').trim();
-    }
 
     ayahTimestamps = timestamps;
     ayahSyncReady = (ayahTimestamps.length === surahAyahs.length);
@@ -4533,25 +4647,12 @@ async function openMushafReader(surahNum) {
       arAyahs = mushafReaderCache[surahNum].ar;
       uzAyahs = mushafReaderCache[surahNum].uz;
     } else {
-      const data = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,${currentTranslation}`)
-        .then(r => r.json());
-
-      if (data.code !== 200 || !Array.isArray(data.data) || data.data.length < 2) {
+      const textData = await fetchAndCacheSurahText(surahNum);
+      if (!textData || !textData.ar || !textData.ar.length) {
         throw new Error('Ma\'lumot topilmadi');
       }
-
-      arAyahs = data.data[0].ayahs;
-      uzAyahs = data.data[1].ayahs;
-
-      // Bismillahni tozalash (Fotiha va Tavbadan tashqari)
-      if (surahNum !== 1 && surahNum !== 9 &&
-          arAyahs[0]?.text?.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')) {
-        arAyahs[0].text = arAyahs[0].text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
-      }
-      if (surahNum !== 1 && surahNum !== 9 && uzAyahs[0]?.text) {
-        uzAyahs[0].text = uzAyahs[0].text.replace(/^(Mehribon va rahmli Allohning nomi bilan\.?\s*)/i, '').trim();
-      }
-
+      arAyahs = textData.ar;
+      uzAyahs = textData.uz || [];
       mushafReaderCache[surahNum] = { ar: arAyahs, uz: uzAyahs };
     }
 
@@ -4815,6 +4916,7 @@ function filterTopReciters(val) {
 // ═══════════════════════════════════════════
 
 const PLAYLIST_DATA = [
+  // Asosiy va Saqlanganlar
   {
     id: 'favs', title: 'Sevimlilar', sub: '', bgClass: 'bg-fav',
     icon: `<svg width="80" height="80" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
@@ -4827,58 +4929,85 @@ const PLAYLIST_DATA = [
     desc: 'Siz alohida saqlab qo\'ygan oyatlar — arabcha matni va o\'zbekcha tarjimasi bilan.',
     isBookmarkList: true
   },
+
+  // Yangi 1: Shaxsiy (Personalized) - Algoritm localStorage dan oxirgi tinglanganlarni o'qiydi
+  {
+    id: 'recent', title: 'Oxirgi Tinglanganlar', sub: 'Shaxsiy', bgClass: 'bg-recent',
+    icon: `<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    desc: 'Siz yaqinda tinglagan suralar va qorilar tarixining dinamik ro\'yxati.',
+    getTracks: () => {
+      const hist = JSON.parse(localStorage.getItem('quranHistory') || '[]');
+      return hist.map(h => ({ surahIdx: h.surahIdx, qoriIdx: h.qoriIdx }));
+    }
+  },
+
+  // Yangi 2: Mood-based (Kayfiyat) - Sokinlik va taskin
+  {
+    id: 'peace', title: 'Qalb Xotirjamligi', sub: 'Kayfiyat', bgClass: 'bg-peace',
+    icon: `<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+    desc: 'Qalbni tinchlantiruvchi, stress va xavotirni ketkazuvchi eng mayin va sokin tilovatlar.',
+    tracks: [
+      { surahIdx: 19, qoriIdx: 2 }, // Taha - Luhaidan
+      { surahIdx: 54, qoriIdx: 1 }, // Rahman - Dosari
+      { surahIdx: 18, qoriIdx: 0 }, // Maryam - Alafasy
+      { surahIdx: 92, qoriIdx: 7 }  // Duho - Ajmi
+    ]
+  },
+
+  // Yangi 3: Educational (Ta'lim) - Qisqa suralar
+  {
+    id: 'short', title: 'Qisqa Suralar', sub: 'Ta\'lim', bgClass: 'bg-short',
+    icon: `<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>`,
+    desc: 'Namozda o\'qish va tez yodlash uchun qulay bo\'lgan 30-poradagi eng qisqa suralar ketma-ketligi.',
+    // 103 (Asr) dan 114 (Nas) gacha avtomatik generatsiya
+    tracks: Array.from({length: 12}, (_, i) => ({ surahIdx: 102 + i, qoriIdx: 16 })) // Husary (Ta'lim uchun aniq maxraj)
+  },
+
+  // Yangi 4: Social (Ijtimoiy) - Trenddagilar
+  {
+    id: 'top10', title: 'Hafta Top 10', sub: 'Ijtimoiy', bgClass: 'bg-top10',
+    icon: `<svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><path d="M12 15l-2 5l9-5l-2-5l-5 5z"/><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    desc: 'Foydalanuvchilar orasida butun dunyo bo\'ylab shu hafta eng ko\'p tinglangan mashhur qiroatlar.',
+    tracks: [
+      { surahIdx: 35, qoriIdx: 1 }, // Yasin - Dosari
+      { surahIdx: 66, qoriIdx: 2 }, // Mulk - Luhaidan
+      { surahIdx: 54, qoriIdx: 0 }, // Rahman - Alafasy
+      { surahIdx: 17, qoriIdx: 3 }, // Kahf - Muaiqly
+      { surahIdx: 55, qoriIdx: 4 }, // Waqiah - Sudais
+      { surahIdx: 11, qoriIdx: 6 }  // Yusuf - Shaatree
+    ]
+  },
+
+  // Mavjudlari (Focus, Beautiful, Sleep, Maxsus)
   {
     id: 'focus', title: 'Diqqat va Ish', sub: '', bgClass: 'bg-focus',
     icon: `<svg width="200" height="200" viewBox="0 0 100 100"><circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>`,
-    desc: 'O\'qish yoki ishlash jarayonida xotirjamlik va diqqatni jamlash uchun sokin qiroatlar to\'plami. Qalbingizni xotirjam tuting.',
-    tracks: [
-      { surahIdx: 17, qoriIdx: 0 }, // Kahf - Alafasy
-      { surahIdx: 1,  qoriIdx: 3 }, // Baqarah - Muaiqly
-      { surahIdx: 35, qoriIdx: 1 }, // Yasin - Dosari
-      { surahIdx: 54, qoriIdx: 2 }, // Rahman - Luhaidan
-      { surahIdx: 55, qoriIdx: 6 }  // Waqiah - Shaatree
-    ]
+    desc: 'O\'qish yoki ishlash jarayonida xotirjamlik va diqqatni jamlash uchun sokin qiroatlar to\'plami.',
+    tracks: [ { surahIdx: 17, qoriIdx: 0 }, { surahIdx: 1, qoriIdx: 3 }, { surahIdx: 35, qoriIdx: 1 }, { surahIdx: 54, qoriIdx: 2 }, { surahIdx: 55, qoriIdx: 6 } ]
   },
   {
     id: 'beautiful', title: 'Eng Go\'zal Qiroatlar', sub: '', bgClass: 'bg-beautiful',
     icon: `<svg width="180" height="180" viewBox="0 0 100 100"><path d="M50 20 C60 20, 70 40, 50 50 C30 40, 40 20, 50 20 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M50 80 C60 80, 70 60, 50 50 C30 60, 40 80, 50 80 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M20 50 C20 40, 40 30, 50 50 C40 70, 20 60, 20 50 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><path d="M80 50 C80 40, 60 30, 50 50 C60 70, 80 60, 80 50 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>`,
     desc: 'Qalblarni larzaga keltiruvchi, eng go\'zal va ta\'sirli Qur\'on tilovatlari.',
-    tracks: [
-      { surahIdx: 18, qoriIdx: 2 }, // Maryam - Luhaidan
-      { surahIdx: 19, qoriIdx: 1 }, // Taha - Dosari
-      { surahIdx: 11, qoriIdx: 0 }, // Yusuf - Alafasy
-      { surahIdx: 66, qoriIdx: 3 }  // Mulk - Muaiqly
-    ]
+    tracks: [ { surahIdx: 18, qoriIdx: 2 }, { surahIdx: 19, qoriIdx: 1 }, { surahIdx: 11, qoriIdx: 0 }, { surahIdx: 66, qoriIdx: 3 } ]
   },
   {
     id: 'sleep', title: 'Uyqu Rejimi', sub: '', bgClass: 'bg-sleep',
     icon: `<svg width="120" height="120" viewBox="0 0 100 100"><path d="M20 30 L40 30 L20 50 L40 50" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M50 60 L70 60 L50 80 L70 80" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/><path d="M70 20 L85 20 L70 35 L85 35" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/></svg>`,
     desc: 'Tungi uyqudan oldin tinglash uchun sokin, mayin ovozdagi qiroatlar. Uyqu taymerini yoqishni unutmang.',
-    tracks: [
-      { surahIdx: 66, qoriIdx: 0 }, // Mulk
-      { surahIdx: 31, qoriIdx: 0 }, // Sajdah
-      { surahIdx: 111, qoriIdx: 0 }, // Ikhlas
-      { surahIdx: 112, qoriIdx: 0 }, // Falaq
-      { surahIdx: 113, qoriIdx: 0 }  // Nas
-    ]
+    tracks: [ { surahIdx: 66, qoriIdx: 0 }, { surahIdx: 31, qoriIdx: 0 }, { surahIdx: 111, qoriIdx: 0 }, { surahIdx: 112, qoriIdx: 0 }, { surahIdx: 113, qoriIdx: 0 } ]
   },
   {
-    id: 'luhaidan', title: 'Muhammad Al-Luhaidan', sub: 'Maxsus to\'plam', bgClass: 'bg-luhaidan',
-    qoriImg: 'luhaidan.jpg',
+    id: 'luhaidan', title: 'Muhammad Al-Luhaidan', sub: 'Maxsus to\'plam', bgClass: 'bg-luhaidan', qoriImg: 'luhaidan.jpg',
     icon: `<svg width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L40 20 L50 30 L80 30 L80 80 L20 80 Z" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/></svg>`,
     desc: 'Shayx Muhammad Al-Luhaidanning eng ta\'sirli qiroatlaridan tuzilgan maxsus to\'plam.',
-    tracks: [
-      { surahIdx: 0, qoriIdx: 2 }, { surahIdx: 18, qoriIdx: 2 }, { surahIdx: 54, qoriIdx: 2 }, { surahIdx: 74, qoriIdx: 2 }
-    ]
+    tracks: [ { surahIdx: 0, qoriIdx: 2 }, { surahIdx: 18, qoriIdx: 2 }, { surahIdx: 54, qoriIdx: 2 }, { surahIdx: 74, qoriIdx: 2 } ]
   },
   {
-    id: 'dosari', title: 'Yasser Al-Dosari', sub: 'Maxsus to\'plam', bgClass: 'bg-dosari',
-    qoriImg: 'dosari.jpg',
+    id: 'dosari', title: 'Yasser Al-Dosari', sub: 'Maxsus to\'plam', bgClass: 'bg-dosari', qoriImg: 'dosari.jpg',
     icon: `<svg width="200" height="200" viewBox="0 0 100 100"><path d="M20 20 L40 20 L50 30 L80 30 L80 80 L20 80 Z" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/></svg>`,
     desc: 'Shayx Yasser Al-Dosarining yurakni titratuvchi go\'zal qiroatlari to\'plami.',
-    tracks: [
-      { surahIdx: 0, qoriIdx: 1 }, { surahIdx: 35, qoriIdx: 1 }, { surahIdx: 55, qoriIdx: 1 }, { surahIdx: 66, qoriIdx: 1 }
-    ]
+    tracks: [ { surahIdx: 0, qoriIdx: 1 }, { surahIdx: 35, qoriIdx: 1 }, { surahIdx: 55, qoriIdx: 1 }, { surahIdx: 66, qoriIdx: 1 } ]
   }
 ];
 
@@ -5088,6 +5217,135 @@ function resetStatsApp() {
   }
 }
 
+// ═══════════════════════════════════════════
+//  VIDEO KESHI (IndexedDB) — to'liq lokal saqlash
+// ═══════════════════════════════════════════
+const VIDEO_DB_NAME = 'quranAppVideos';
+const VIDEO_STORE = 'videos';
+
+function openVideoDB() {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) { reject(new Error('IndexedDB yo\'q')); return; }
+    const req = indexedDB.open(VIDEO_DB_NAME, 1);
+    req.onupgradeneeded = () => { req.result.createObjectStore(VIDEO_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbGetVideo(key) {
+  try {
+    const db = await openVideoDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(VIDEO_STORE, 'readonly');
+      const req = tx.objectStore(VIDEO_STORE).get(key);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (e) { return null; }
+}
+async function idbSetVideo(key, blob) {
+  try {
+    const db = await openVideoDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(VIDEO_STORE, 'readwrite');
+      tx.objectStore(VIDEO_STORE).put(blob, key);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+    });
+  } catch (e) { return false; }
+}
+
+// Videoni keshdan olish, bo'lmasa asl manzilni qaytarish
+async function getVideoSrc(file) {
+  const blob = await idbGetVideo(file);
+  if (blob) return URL.createObjectURL(blob);
+  return file;
+}
+
+async function cacheVideos() {
+  const statusEl = document.getElementById('video-cache-status');
+  if (!window.indexedDB) {
+    showToast('Bu brauzer video keshni qo\'llamaydi');
+    return;
+  }
+  showToast('Videolar yuklanmoqda, kuting...');
+  let loaded = 0;
+  const total = VIDEOS.length;
+  if (statusEl) { statusEl.textContent = '0%'; statusEl.style.color = ''; }
+
+  for (const v of VIDEOS) {
+    try {
+      const existing = await idbGetVideo(v.file);
+      if (!existing) {
+        const resp = await fetch(v.file);
+        if (resp.ok) {
+          const blob = await resp.blob();
+          await idbSetVideo(v.file, blob);
+        }
+      }
+    } catch (e) {}
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    if (statusEl) statusEl.textContent = pct + '%';
+  }
+
+  if (statusEl) { statusEl.textContent = 'Yuklangan'; statusEl.style.color = '#34c759'; }
+  localStorage.setItem('videosCached', 'true');
+  showToast('✓ Barcha videolar qurilmaga to\'liq saqlandi');
+}
+
+// ═══════════════════════════════════════════
+//  QUR'ON MATNI KESHI (localStorage) — to'liq lokal saqlash
+// ═══════════════════════════════════════════
+function getQuranTextCacheKey(surahNum) {
+  return 'qtext_' + currentTranslation + '_' + surahNum;
+}
+
+async function fetchAndCacheSurahText(surahNum) {
+  const key = getQuranTextCacheKey(surahNum);
+  const cached = localStorage.getItem(key);
+  if (cached) {
+    try { return JSON.parse(cached); } catch (e) {}
+  }
+  const data = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,${currentTranslation}`)
+    .then(r => r.json());
+  if (data.code === 200 && Array.isArray(data.data) && data.data.length >= 2) {
+    let ar = data.data[0].ayahs;
+    let uz = data.data[1].ayahs;
+    if (surahNum !== 1 && surahNum !== 9 && ar[0]?.text?.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ')) {
+      ar[0].text = ar[0].text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
+    }
+    if (surahNum !== 1 && surahNum !== 9 && uz[0]?.text) {
+      uz[0].text = uz[0].text.replace(/^(Mehribon va rahmli Allohning nomi bilan\.?\s*)/i, '').trim();
+    }
+    const result = { ar, uz };
+    try { localStorage.setItem(key, JSON.stringify(result)); } catch (e) {
+      // Xotira to'lib qolsa, keshlashsiz davom etadi
+    }
+    return result;
+  }
+  return null;
+}
+
+async function cacheQuranTexts() {
+  const statusEl = document.getElementById('quran-cache-status');
+  showToast('Qur\'on matnlari yuklanmoqda, kuting...');
+  let loaded = 0;
+  const total = SURAHS.length;
+  if (statusEl) { statusEl.textContent = '0%'; statusEl.style.color = ''; }
+
+  for (const s of SURAHS) {
+    try { await fetchAndCacheSurahText(s.n); } catch (e) {}
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    if (statusEl) statusEl.textContent = pct + '%';
+  }
+
+  if (statusEl) { statusEl.textContent = 'Yuklangan'; statusEl.style.color = '#34c759'; }
+  localStorage.setItem('quranTextsCached_' + currentTranslation, 'true');
+  showToast('✓ Barcha suralar matni qurilmaga saqlandi');
+}
+
 // Medialarni qurilmaga oldindan saqlash (Kesh)
 async function cacheMediaImages() {
   const statusEl = document.getElementById('cache-status');
@@ -5142,6 +5400,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if(statusEl) {
       statusEl.textContent = 'Yuklangan';
       statusEl.style.color = '#34c759';
+    }
+  }
+  if(localStorage.getItem('videosCached') === 'true') {
+    const vStatusEl = document.getElementById('video-cache-status');
+    if(vStatusEl) {
+      vStatusEl.textContent = 'Yuklangan';
+      vStatusEl.style.color = '#34c759';
+    }
+  }
+  if(localStorage.getItem('quranTextsCached_' + currentTranslation) === 'true') {
+    const qStatusEl = document.getElementById('quran-cache-status');
+    if(qStatusEl) {
+      qStatusEl.textContent = 'Yuklangan';
+      qStatusEl.style.color = '#34c759';
     }
   }
 
