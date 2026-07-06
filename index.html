@@ -1549,12 +1549,15 @@
   .new-reciter-img img { width: 100%; height: 100%; object-fit: cover; }
 
   .player-back-row {
+    position: absolute; /* Tugmani ekranga qotiradi */
+    top: env(safe-area-inset-top, 20px); /* Telefonning tepa qismiga joylashtiradi */
+    left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
     padding-top: 15px;
     padding-bottom: 15px;
-    z-index: 50;
+    z-index: 999; /* Boshqa hamma narsadan ustun qilib, ishlashini ta'minlaydi */
   }
   .player-back-btn {
     background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer;
@@ -2678,7 +2681,7 @@
   </div>
   
   <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">
-    Masjidlar v2.1<br>
+    Masjidlar v1.0<br>
   </div>
 </div>
 
