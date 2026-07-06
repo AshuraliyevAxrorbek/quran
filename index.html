@@ -1549,19 +1549,25 @@
   .new-reciter-img img { width: 100%; height: 100%; object-fit: cover; }
 
   .player-back-row {
-    position: absolute; /* Tugmani ekranga qotiradi */
-    top: env(safe-area-inset-top, 20px); /* Telefonning tepa qismiga joylashtiradi */
+    position: absolute;
+    top: env(safe-area-inset-top, 15px); /* Telefon tepasidagi kemtik (notch) dan himoya */
     left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    z-index: 999; /* Boshqa hamma narsadan ustun qilib, ishlashini ta'minlaydi */
+    z-index: 9999;
+    pointer-events: none; /* Tugmadan boshqa ochiq joylar bosilmasligi uchun */
   }
   .player-back-btn {
-    background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer;
-    padding: 10px 40px; display: flex; align-items: center; justify-content: center;
+    pointer-events: auto; /* Tugmaning o'zi bemalol bosilishi uchun */
+    background: none; 
+    border: none; 
+    color: rgba(255,255,255,0.7); 
+    cursor: pointer;
+    padding: 15px 40px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     transition: color 0.2s, transform 0.2s;
   }
   .player-back-btn:hover { color: #fff; transform: scale(1.1); }
@@ -2745,14 +2751,26 @@
     <div id="lyrics-scroll"></div>
   </div>
 
-  <div id="player-card">
+  <!-- PLAYER -->
+<div id="player-screen" class="hidden">
 
-    <!-- Back to home -->
-    <div class="player-back-row">
-      <button class="player-back-btn" onclick="showScreen('home')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="28" height="28"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
+  <!-- Back to home (Ekranning mutlaq o'rtasida turishi uchun shu yerga ko'chirildi) -->
+  <div class="player-back-row">
+    <button class="player-back-btn" onclick="showScreen('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="28" height="28"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+  <div id="player-layout">
+
+    <!-- Synced lyrics (ayah) panel -->
+    <div id="lyrics-panel">
+      <div id="lyrics-scroll"></div>
     </div>
+
+    <div id="player-card">
+      <!-- Now Playing (Yopish tugmasi bu yerdan olib tashlandi) -->
+      <div class="np-row">
 
     <!-- Now Playing -->
     <div class="np-row">
