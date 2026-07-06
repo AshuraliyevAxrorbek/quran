@@ -1928,13 +1928,15 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 30px;
       width: 100%;
+      max-width: 100%; /* XATONI SHU QATOR TUZATADI: Ekranni to'liq ochadi */
       height: 100%;
-      padding: 10px 20px;
+      padding: 10px env(safe-area-inset-right, 40px) 10px env(safe-area-inset-left, 40px);
     }
     #lyrics-panel {
-      flex: 1 1 auto;
+      flex: 1; /* Matnga qolgan barcha bo'sh joyni beradi */
+      max-width: none;
       height: 85vh;
       display: block !important;
       -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 90%, transparent 100%);
@@ -1942,7 +1944,7 @@
     }
     #lyrics-panel:not(.visible) { visibility: hidden; }
     #player-card {
-      flex: 0 0 360px;
+      flex: 0 0 360px; /* Pleyerning o'lchamini qat'iy belgilaydi */
       max-width: 360px;
       align-self: center;
       padding: 10px 0 20px;
@@ -1951,11 +1953,11 @@
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 28px;
-      transform: scale(0.85); /* Yotiq ekranga bo'yiga sig'ishi uchun biroz kichraytiramiz */
+      transform: scale(0.85); /* Ekranga bo'yiga sig'ishi uchun biroz kichraytirilgan */
       transform-origin: center right;
     }
-    .lyric-ar { font-size: 24px; line-height: 1.8; }
-    .lyric-uz { font-size: 14px; line-height: 1.5; }
+    .lyric-ar { font-size: 26px; line-height: 1.8; }
+    .lyric-uz { font-size: 15px; line-height: 1.5; }
   }
 
   /* Desktop & TV: Ideal moslashuv */
@@ -2676,7 +2678,7 @@
   </div>
   
   <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">
-    Masjidlar v1.0<br>
+    Masjidlar v2.1<br>
   </div>
 </div>
 
