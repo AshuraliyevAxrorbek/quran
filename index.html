@@ -85,7 +85,7 @@
   /* Desktop layout */
   @media (min-width: 768px) {
     #player-screen {
-      justify-content: flex-end;
+      justify-content: center;
     }
     #player-card {
       max-width: 520px;
@@ -303,7 +303,6 @@
   .ctrl-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0 20px;
     margin-bottom: 4px;
   }
@@ -312,6 +311,11 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    flex: 1;
+  }
+
+  .ctrl-side:last-child {
+    justify-content: flex-end;
   }
 
   .speed-btn {
@@ -477,7 +481,6 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    margin: 14px 14px 28px;
     padding: 8px 6px;
     border-radius: 32px;
     position: relative;
@@ -1550,7 +1553,7 @@
 
   .player-back-row {
     position: absolute;
-    top: env(safe-area-inset-top, 15px); /* Telefon tepasidagi kemtik (notch) dan himoya */
+    top: calc(env(safe-area-inset-top, 15px) + 20px); /* Notch/Dynamic Island'dan qo'shimcha pastroq */
     left: 0;
     width: 100%;
     display: flex;
@@ -1992,16 +1995,19 @@
     }
     #lyrics-panel:not(.visible) { visibility: hidden; }
     #player-card {
-      flex: 0 0 460px;
-      max-width: 460px;
-      align-self: center; /* Pleyerni markazlashtirish */
-      background: rgba(15, 18, 25, 0.4); /* Oyna effekti (TV va Desktop uchun) */
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 36px;
-      padding: 10px 0 32px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        flex: 0 0 460px;
+        max-width: 460px;
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;   /* Vertikal o'rtaga */
+        align-items: stretch;
+        background: rgba(15, 18, 25, 0.4);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 36px;
+        padding: 15px;
     }
     .lyric-ar { font-size: 32px; line-height: 2.2; }
     .lyric-uz { font-size: 16px; line-height: 1.6; }
@@ -2742,19 +2748,8 @@
   </button>
 </div>
 
-<!-- PLAYER -->
-<div id="player-screen" class="hidden">
-  <div id="player-layout">
-
-  <!-- Synced lyrics (ayah) panel -->
-  <div id="lyrics-panel">
-    <div id="lyrics-scroll"></div>
-  </div>
-
-  <!-- PLAYER -->
 <div id="player-screen" class="hidden">
 
-  <!-- Back to home (Ekranning mutlaq o'rtasida turishi uchun shu yerga ko'chirildi) -->
   <div class="player-back-row">
     <button class="player-back-btn" onclick="showScreen('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="28" height="28"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2763,18 +2758,14 @@
 
   <div id="player-layout">
 
-    <!-- Synced lyrics (ayah) panel -->
     <div id="lyrics-panel">
       <div id="lyrics-scroll"></div>
     </div>
 
     <div id="player-card">
-      <!-- Now Playing (Yopish tugmasi bu yerdan olib tashlandi) -->
+      
       <div class="np-row">
-
-    <!-- Now Playing -->
-    <div class="np-row">
-      <div class="np-avatar" id="np-avatar">
+        <div class="np-avatar" id="np-avatar">
         <svg id="np-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" width="26" height="26">
           <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
           <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
