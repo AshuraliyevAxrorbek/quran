@@ -1,0 +1,16 @@
+{
+  "name": "Qur'anuz",
+  "short_name": "Qur'anuz",
+  "description": "Qur'on tilovati, o'qish va tinglash ilovasi",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0c0e",
+  "theme_color": "#0a0c0e",
+  "icons": [
+    { "src": "assets/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/logo.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/logo.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
