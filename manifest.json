@@ -1,8 +1,8 @@
 {
-  "name": "Qur'anuz",
-  "short_name": "Qur'anuz",
+  "name": "Qur'an",
+  "short_name": "Qur'an",
   "description": "Qur'on tilovati, o'qish va tinglash ilovasi",
-  "start_url": "index.html",
+  "start_url": "qurianify/index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
