@@ -5651,7 +5651,7 @@ async function cacheMediaImages() {
   // Rasmlarni brauzer xotirasiga (cache) olish
   for(const qori of QORIS) {
     const img = new Image();
-    img.src = `reciter/${qori.img}`;
+    img.src = `../reciter/${qori.img}`;
     
     img.onload = () => { checkDone(); };
     img.onerror = () => { checkDone(); }; // Xato bo'lsa ham qotib qolmasligi uchun
