@@ -1,8 +1,7 @@
 // sw.js — Qur'anuz ilovasi uchun offline kesh
 const CACHE_NAME = 'quranuz-cache-v1';
 const CORE_ASSETS = [
-  './',
-  './quranify.html',
+  './qurianify/index.html',
   './manifest.json',
   './assets/logo.png'
 ];
