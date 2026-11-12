@@ -2067,10 +2067,13 @@
   #mini-player { border-radius: 28px; }
 
   body.nav-collapsed #nav-bar {
-    height: 56px;
-    padding: 0;
-    background: transparent;
-    box-shadow: none;
+      height: 56px;
+      padding: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      pointer-events: none; /* nav-bar bo'sh joyi mini-playerni bosishga xalaqit bermasin */
   }
   body.nav-collapsed .nav-item {
     flex: 0 0 0;
@@ -2095,6 +2098,7 @@
   body.nav-collapsed .nav-item span { max-height: 0; opacity: 0; }
   body.nav-collapsed #mini-player {
     bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+    z-index: 95;
     left: 80px;
     right: 80px;
   }
@@ -2506,7 +2510,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     </button>
     <div class="qp-avatar-wrap">
-      <img id="qp-avatar" class="qp-avatar" src="" onerror="this.onerror=null;this.src='reciter/qori.png'">
+      <img id="qp-avatar" class="qp-avatar" src="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='reciter/qori.png'">
     </div>
     <div class="qp-name" id="qp-name">Ism</div>
     <div class="qp-origin" id="qp-origin">Mamlakat</div>
@@ -3258,7 +3262,8 @@ const QORIS = [
   { id: 'ar.faisalalhajry', name: 'Faisal Al-Hajry', origin: 'Ummon', img: 'faisal-alhajry.png', prefix: 'https://server16.mp3quran.net/f_hajry/Rewayat-Hafs-A-n-Assem/', bio: 'Ummonlik qori, sokin va vazmin tilovati bilan tanilgan.' },
   { id: 'ar.anasalemadi', name: 'Anas Al-Emadi', origin: 'Qatar', img: 'anas-alemadi.png', prefix: 'https://server16.mp3quran.net/a_alemadi/Rewayat-Hafs-A-n-Assem/', bio: 'Qatarlik qori, yoqimli va ravon tilovat uslubi bilan tanilgan.' },
 ];
-
+// Barcha qori rasmlarini WebP formatiga o'tkazish
+QORIS.forEach(q => { q.img = q.img.replace(/\.(jpe?g|png)$/i, '.webp'); });
 // Tarjima manbalari ro'yxati
 const TRANSLATIONS = [
   { id: 'uz.sodik', name: 'Sodiq', sub: 'Muhammad Sodiq Muhammad Yusuf' },
@@ -5328,7 +5333,7 @@ function buildPlaylistsScreen() {
   
   container.innerHTML = PLAYLIST_DATA.map(p => `
     <div class="pl-card ${p.bgClass}" onclick="openPlaylistDetail('${p.id}')">
-      ${p.qoriImg ? `<img src="reciter/${p.qoriImg}" class="pl-avatar" onerror="this.style.display='none'">` : ''}
+      ${p.qoriImg ? `<img src="reciter/${p.qoriImg.replace(/\.(jpe?g|png)$/i,'.webp')}" class="pl-avatar" onerror="this.style.display='none'">` : ''}
       <div class="pl-icon" style="${p.id === 'favs' || p.id === 'bookmarks' ? 'top: 20px;' : 'top: -20px; left: 20px;'}">${p.icon}</div>
       ${p.sub ? `<div class="pl-sub">${p.sub}</div>` : ''}
       <div class="pl-title">${p.title}</div>
