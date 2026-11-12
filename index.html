@@ -2619,13 +2619,55 @@ body.player-verses-on .bg-overlay {background:linear-gradient(180deg,rgba(0,0,0,
   .qp-sheet{border-radius:30px;max-height:min(86dvh,850px);}
   #player-screen .player-top-controls{top:26px;left:30px;right:30px;}
 }
+
 @media(max-height:500px) and (orientation:landscape){
- .qp-sheet{max-height:95dvh;}
- .qp-sheet-top{padding:8px 16px;}
- #player-screen .player-top-controls{top:10px;}
+  .qp-sheet{max-height:95dvh;}
+  .qp-sheet-top{padding:8px 16px;}
 }
 
+/* DESKTOP */
+@media (min-width:700px) {
+  #player-screen .player-top-controls {
+    top:26px !important;
+    left:30px !important;
+    right:auto !important;
+    width:max-content !important;
+    justify-content:flex-start !important;
+    gap:12px !important;
+  }
+}
+
+/* TELEFON — TELEGRAM TUGMALARIDAN PASTDA */
+@media (max-width:699px) {
+  #player-screen .player-top-controls {
+    top:clamp(
+      150px,
+      calc(env(safe-area-inset-top, 0px) +
+      var(--tg-content-safe-area-inset-top, 0px) + 60px),
+      170px
+    ) !important;
+    left:16px !important;
+    right:16px !important;
+    width:auto !important;
+    justify-content:space-between !important;
+    gap:12px !important;
+  }
+
+  #player-screen .player-back-row {
+    top:clamp(
+      153px,
+      calc(env(safe-area-inset-top, 0px) +
+      var(--tg-content-safe-area-inset-top, 0px) + 63px),
+      183px
+    ) !important;
+  }
+
+  .player-sound-pill {
+    max-width:60vw !important;
+  }
+}
 </style>
+
 </head>
 <body>
 
