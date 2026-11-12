@@ -3269,15 +3269,19 @@ QORIS.forEach(q => {
   IMG_ORIG[w] = q.img;
   q.img = w;
 });
-// webp yo'q bo'lsa, avval asl rasm (jpg/png), u ham bo'lmasa qori.png chiqadi
+// webp yo'q bo'lsa -> asl rasm (jpg/png) -> qori.png
 document.addEventListener('error', e => {
   const el = e.target;
   if (!el || el.tagName !== 'IMG') return;
   const file = decodeURIComponent(el.src.split('/').pop().split('?')[0]);
   if (IMG_ORIG[file] && !el.dataset.fb) {
     el.dataset.fb = '1';
-    e.stopPropagation();
     el.src = 'reciter/' + IMG_ORIG[file];
+    return;
+  }
+  if (!el.dataset.fb2 && !/qori\.png/.test(el.src)) {
+    el.dataset.fb2 = '1';
+    el.src = 'reciter/qori.png';
   }
 }, true);
 // Tarjima manbalari ro'yxati
@@ -3425,7 +3429,7 @@ function renderHistorySection() {
     return `
       <div class="reciter-card" onclick="playTrackFromPlaylist(${h.surahIdx}, ${h.qoriIdx})">
         <div class="reciter-img">
-          <img src="reciter/${q.img}" alt="${q.name}" onerror="this.onerror=null;this.src='reciter/qori.png'">
+          <img src="reciter/${q.img}" alt="${q.name}">
         </div>
         <div class="reciter-name">${s.n}. ${s.en}</div>
       </div>
