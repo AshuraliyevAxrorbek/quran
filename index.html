@@ -2625,7 +2625,42 @@ body.player-verses-on .bg-overlay {background:linear-gradient(180deg,rgba(0,0,0,
  #player-screen .player-top-controls{top:10px;}
 }
 
+
+/* Telegram uchun xavfsiz joylashuv */
+@media (max-width: 699px) {
+  #player-screen .player-top-controls {
+    top: max(
+      155px,
+      calc(
+        env(safe-area-inset-top, 0px) +
+        var(--tg-content-safe-area-inset-top, 0px) + 24px
+      )
+    ) !important;
+    left: 16px !important;
+    right: 16px !important;
+  }
+
+  #player-screen .player-back-row {
+    top: max(
+      158px,
+      calc(
+        env(safe-area-inset-top, 0px) +
+        var(--tg-content-safe-area-inset-top, 0px) + 27px
+      )
+    ) !important;
+  }
+
+  .player-sound-pill,
+  .player-top-gear {
+    background: rgba(255,255,255,0.075) !important;
+    border: 1px solid rgba(255,255,255,0.13) !important;
+    backdrop-filter: blur(22px) !important;
+    -webkit-backdrop-filter: blur(22px) !important;
+    box-shadow: none !important;
+  }
+}
 </style>
+
 </head>
 <body>
 
@@ -2639,7 +2674,12 @@ body.player-verses-on .bg-overlay {background:linear-gradient(180deg,rgba(0,0,0,
   Agar boshqa nom bermoqchi bo'lsangiz:
   <video src="YANGI_NOM.mp4" ...> qilib o'zgartiring
 -->
-<video id="bg-video" src="video/1.mp4" autoplay muted playsinline></video>
+
+<video id="bg-video" src="video/1.mp4"
+       autoplay muted playsinline loop
+       preload="auto" webkit-playsinline>
+</video>
+
 <div class="bg-overlay"></div>
 
 <!-- SLEEP BADGE -->
@@ -4170,11 +4210,23 @@ function init() {
   buildVideoGrid();
   // Saqlangan fon videosini tiklash (iOS qotib qolmasligi uchun to'g'rilandi)
   const currentVideo = VIDEOS[state.videoIdx] ? VIDEOS[state.videoIdx].file : VIDEOS[0].file;
-  getVideoSrc(currentVideo).then(src => {
-    const bgVid = document.getElementById('bg-video');
-    bgVid.src = src;
-    bgVid.load(); // iPhone uchun majburiy yuklash buyrug'i
-  });
+  
+const bgVid = document.getElementById('bg-video');
+bgVid.preload = 'auto';
+bgVid.loop = true;
+bgVid.muted = true;
+
+if (bgVid.getAttribute('src') !== currentVideo) {
+  bgVid.src = currentVideo;
+}
+
+if (!navigator.onLine &&
+    localStorage.getItem('videosCached') === 'true') {
+  getVideoSrc(currentVideo)
+    .then(src => { bgVid.src = src; })
+    .catch(() => {});
+}
+
   updateNowPlaying();
   applyVersePrefs();
   setupAudioEvents();
@@ -4354,19 +4406,50 @@ function buildVideoGrid() {
   `).join('');
 }
 
+
+let videoSwitchRequest = 0;
+
 async function selectVideo(id) {
+  const item = VIDEOS.find(v => v.id === id);
+  if (!item) return;
+
+  const requestId = ++videoSwitchRequest;
   state.videoIdx = id;
   buildVideoGrid();
-  const vid = document.getElementById('bg-video');
-  const src = await getVideoSrc(VIDEOS[id].file);
-  vid.src = src;
-  vid.load();
-  vid.play().catch(()=>{});
-  vid.style.opacity = '0.65';
-  showToast(VIDEOS[id].emoji + ' ' + VIDEOS[id].label + ' videosi');
   closePanel('video');
   localStorage.setItem('lastVideoIdx', id);
+
+  const video = document.getElementById('bg-video');
+  video.preload = 'auto';
+  video.muted = true;
+  video.playsInline = true;
+  video.loop = true;
+
+  let src = item.file;
+
+  if (localStorage.getItem('videosCached') === 'true') {
+    try {
+      src = await getVideoSrc(item.file);
+    } catch (_) {}
+  }
+
+  if (requestId !== videoSwitchRequest) return;
+
+  if (video.getAttribute('src') !== src) {
+    video.src = src;
+  }
+
+  video.style.opacity = '0.85';
+
+  video.play().catch(() => {
+    video.addEventListener('canplay', () => {
+      video.play().catch(() => {});
+    }, { once: true });
+  });
+
+  showToast(item.emoji + ' ' + item.label + ' videosi');
 }
+
 
 let surahAyahs = [];
 let uzbekAyahs = [];
@@ -4948,47 +5031,81 @@ function setBgVol(val) {
 // Har bir selectBgSound chaqiruvini o'zining "avlod raqami" bilan belgilaymiz,
 // shunda eski (kechikkan) yuklanish keyingi tanlovni bosib ketolmaydi.
 let bgSoundGen=0;
+
 function selectBgSound(idx) {
-  if(!Number.isInteger(idx)||idx<0||idx>=BG_SOUNDS.length)return;
-  bgSoundGen++;
-  const gen=bgSoundGen;
-  if(bgAudio) {
-    bgAudio.pause();bgAudio.removeAttribute('src');bgAudio.load();bgAudio=null;
+  if (!Number.isInteger(idx) ||
+      idx < 0 ||
+      idx >= BG_SOUNDS.length) return;
+
+  const gen = ++bgSoundGen;
+
+  if (bgAudio) {
+    bgAudio.pause();
+    bgAudio.removeAttribute('src');
+    bgAudio.load();
+    bgAudio = null;
   }
-  state.bgSoundIdx=idx;
-  const sound=BG_SOUNDS[idx];
-  buildSoundTabs(document.getElementById('ambient-search')?.value||'');
-  if(!sound.url){showToast('Fon tovushi o‘chirildi');return;}
-  const audio=new Audio();
-  audio.loop=true;
-  audio.preload='auto';
-  audio.volume=state.bgVol; // 0% bo'lsa haqiqatan 0%, 20% ga oshirilmaydi
-  audio.src=sound.url;
-  bgAudio=audio;
-  let usedFallback=false;
-  audio.addEventListener('error',()=>{
-    if(gen!==bgSoundGen)return;
-    if(sound.fallbackUrl&&!usedFallback){
-      usedFallback=true;
-      audio.src=sound.fallbackUrl;
+
+  state.bgSoundIdx = idx;
+  const sound = BG_SOUNDS[idx];
+
+  buildSoundTabs(
+    document.getElementById('ambient-search')?.value || ''
+  );
+
+  if (!sound.url) {
+    showToast('Fon tovushi o‘chirildi');
+    return;
+  }
+
+  const sources = [...new Set([
+    sound.fallbackUrl?.startsWith('data:')
+      ? sound.fallbackUrl : null,
+    sound.url,
+    sound.fallbackUrl
+  ].filter(Boolean))];
+
+  const audio = new Audio();
+  audio.loop = true;
+  audio.preload = 'auto';
+  audio.volume = state.bgVol;
+
+  bgAudio = audio;
+  let sourceIndex = 0;
+
+  audio.addEventListener('error', () => {
+    if (gen !== bgSoundGen) return;
+
+    sourceIndex++;
+
+    if (sourceIndex < sources.length) {
+      audio.src = sources[sourceIndex];
       audio.load();
-      audio.play().catch(()=>showToast('Tovushni ishga tushirish uchun qayta bosing'));
-      return;
+      audio.play().catch(() => {});
+    } else {
+      bgAudio = null;
+      state.bgSoundIdx = 0;
+      buildSoundTabs();
+      showToast('Fon tovushi ochilmadi');
     }
-    bgAudio=null;
-    state.bgSoundIdx=0;
-    buildSoundTabs(document.getElementById('ambient-search')?.value||'');
-    showToast('Tovush fayli topilmadi: '+sound.url);
   });
-  // Ijroni aynan foydalanuvchi bosgan paytda boshlash mobil brauzerlar uchun muhim.
-  audio.play().then(()=>{
-    if(gen!==bgSoundGen)audio.pause();
-  }).catch(err=>{
-    if(gen!==bgSoundGen)return;
-    if(err && err.name==='NotAllowedError') showToast('Tovushni boshlash uchun yana bir marta bosing');
-    else showToast('Tovushni yuklashda xatolik');
+
+  audio.addEventListener('ended', () => {
+    if (gen === bgSoundGen) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    }
+  });
+
+  audio.src = sources[0];
+
+  audio.play().catch(() => {
+    if (gen === bgSoundGen) {
+      showToast('Ovozni yoqish uchun yana bosing');
+    }
   });
 }
+
 
 // ═══════════════════════════════════════════
 //  SLEEP TIMER
