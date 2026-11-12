@@ -2343,6 +2343,142 @@
   .ins-full{grid-column:1/-1}
 }
 @media (min-width:1500px){ .ins-body{max-width:1400px} .ins-hero{padding-bottom:50px} }
+
+/* ============================================================
+   YANGI BOSHQARUV: BOSHDAGI PLEYLIST VA TAJVID KOLLEKSIYALARI
+   ============================================================ */
+.home-curated-section { margin-top: 30px; margin-bottom: 32px; min-width: 0; }
+.home-curated-header { gap: 12px; align-items: center; margin-bottom: 18px; }
+.home-curated-header .section-title { font-size: clamp(20px,2vw,25px); line-height:1.3; min-width:0; }
+.home-see-all { background:transparent; border:0; flex-shrink:0; padding:8px 0 8px 12px; font:600 14px 'Inter',sans-serif; color:#709cff; cursor:pointer; }
+.home-see-all:hover { color:#a9c0ff; }
+.home-playlist-list, .home-tajwid-list {
+  display:flex; gap:16px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch; overscroll-behavior-inline:contain;
+  scrollbar-width:none; padding:3px 4px 16px; margin:0 -4px;
+}
+.home-playlist-list::-webkit-scrollbar, .home-tajwid-list::-webkit-scrollbar {display:none;}
+.home-playlist-card {
+  width:clamp(170px,24vw,254px); flex:0 0 clamp(170px,24vw,254px); aspect-ratio:1;
+  scroll-snap-align:start; text-align:left; font-family:'Inter',sans-serif;
+  border:1px solid rgba(255,255,255,.11); border-radius:22px;
+  padding:17px; outline-offset:3px; color:#fff;
+}
+.home-playlist-card .home-playlist-art {
+  position:absolute; inset:0 0 36px; display:flex; align-items:center; justify-content:center;
+  z-index:1; pointer-events:none; opacity:.96;
+}
+.home-playlist-card .home-playlist-art svg {width:64%;height:64%;filter:drop-shadow(0 7px 15px rgba(0,0,0,.15));}
+.home-playlist-card.bg-fav .home-playlist-art svg {width:62%;height:62%;filter:drop-shadow(0 0 24px rgba(255,214,98,.34));}
+.home-playlist-card.bg-focus .home-playlist-art svg {width:86%;height:86%;}
+.home-playlist-card .home-playlist-label {
+  position:relative; z-index:3; font-size:clamp(16px,1.65vw,22px);font-weight:700;
+  line-height:1.16; letter-spacing:-.35px; overflow-wrap:anywhere;
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+.home-tajwid-list { gap:24px; padding-bottom:20px; }
+.home-tajwid-card {
+  display:flex;flex-direction:column;align-items:center;gap:8px;flex:0 0 142px;width:142px;
+  border:none;outline-offset:4px;color:#fff;background:transparent;cursor:pointer;
+  font-family:'Inter',sans-serif; scroll-snap-align:start; text-align:center;
+}
+.home-tajwid-photo { width:126px;height:126px;border-radius:50%;overflow:hidden;display:block;
+  background:linear-gradient(150deg,#283047,#15151c);border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 8px 20px rgba(0,0,0,.28); transition:transform .2s ease,border-color .2s ease; }
+.home-tajwid-card:hover .home-tajwid-photo {transform:scale(1.035);border-color:rgba(255,255,255,.35);}
+.home-tajwid-photo img {display:block;width:100%;height:100%;object-fit:cover;}
+.home-tajwid-name {font-size:13px;font-weight:600;line-height:1.35;min-height:36px;}
+.home-tajwid-sub {color:rgba(255,255,255,.4);font-size:11px;line-height:1.3;}
+@media (max-width:600px) {
+  .home-curated-section {margin-top:28px;margin-bottom:28px;}
+  .home-curated-header .section-title {font-size:18px;}
+  .home-playlist-list {gap:12px;}
+  .home-playlist-card {width:44vw;flex-basis:44vw;max-width:210px;min-width:146px;border-radius:20px;padding:14px;}
+  .home-playlist-card .home-playlist-label {font-size:17px;}
+  .home-tajwid-list {gap:14px;}
+  .home-tajwid-card {width:112px;flex-basis:112px;}
+  .home-tajwid-photo {width:104px;height:104px;}
+  .home-tajwid-name {font-size:12px;}
+  .home-tajwid-sub {font-size:10px;}
+}
+@media (min-width:1100px) {
+  .home-curated-section {margin-top:40px;margin-bottom:38px;}
+  .home-playlist-list {gap:18px;}
+  .home-playlist-card {flex-basis:245px;width:245px;}
+  .home-tajwid-list {gap:25px;}
+  .home-tajwid-card {flex-basis:160px;width:160px;}
+  .home-tajwid-photo {width:146px;height:146px;}
+  .home-tajwid-name {font-size:14px;}
+}
+
+/* ============================================================
+   BATAFSIL STATISTIKA: DESKTOP / NOUTBUK MOSLASHUVI
+   ============================================================ */
+#insights-screen {background: #030408;}
+.ins-grid > div {min-width:0;}
+@media (max-width:899px) {
+  .ins-body {padding-left:16px;padding-right:16px;}
+  .ins-hero {padding-top:calc(env(safe-area-inset-top,0px) + 65px);}
+  .ins-back {top:calc(env(safe-area-inset-top,0px) + 52px);}
+  .ins-top-img {width:clamp(74px,23vw,120px);height:clamp(74px,23vw,120px);}
+  .ins-big {font-size:clamp(70px,16vw,104px);}
+  .ins-big-sub {font-size:clamp(26px,7vw,40px);}
+  .ins-card {min-width:0;}
+  .ins-top-name {font-size:clamp(16px,4.7vw,22px);}
+  .ins-row {min-width:0;}
+}
+@media (min-width:900px) {
+  #insights-screen {padding-bottom:205px;}
+  .ins-hero {
+    padding:58px 28px 26px;
+    background:radial-gradient(ellipse 55% 110% at 50% -40%,rgba(20,51,166,.55),transparent 80%),
+               linear-gradient(180deg,rgba(8,16,54,.52),rgba(3,4,8,0));
+  }
+  .ins-back {top:38px;left:max(28px,calc(50% - 620px));width:42px;height:42px;}
+  .ins-title {font-size:18px;height:30px;}
+  .ins-chip {margin-top:12px;padding:5px 16px;font-size:13px;}
+  .ins-big {font-size:clamp(78px,7vw,112px);letter-spacing:-3px;margin-top:12px;}
+  .ins-big-sub {font-size:30px;margin-top:0;letter-spacing:-.6px;}
+  .ins-stats3 {max-width:820px;margin:22px auto 0;gap:14px;}
+  .ins-stat {padding:17px 12px;border-radius:17px;}
+  .ins-stat .l {font-size:12px;}
+  .ins-stat .v {font-size:18px;}
+  .ins-body {max-width:1280px;padding:14px 26px 40px;margin:0 auto;}
+  .ins-grid {display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px 24px;align-items:stretch;}
+  .ins-grid > div {display:flex;flex-direction:column;min-width:0;}
+  .ins-grid > div:nth-child(1) {grid-column:span 5;}
+  .ins-grid > div:nth-child(2) {grid-column:span 7;}
+  .ins-grid > div:nth-child(3) {grid-column:span 7;}
+  .ins-grid > div:nth-child(4) {grid-column:span 5;}
+  .ins-grid > .ins-full {grid-column:1 / -1;}
+  .ins-grid > div > .ins-card {flex:1; min-width:0;box-shadow:none; border:1px solid rgba(255,255,255,.075);background:#101114;border-radius:23px;}
+  .ins-h {font-size:20px;line-height:1.3;min-height:32px;margin-bottom:12px;}
+  .ins-h .edit {font-size:13px;white-space:nowrap;}
+  .ins-grid > div:nth-child(1) > .ins-card {min-height:335px;padding:27px;align-items:center;gap:12px;}
+  .ins-top-name {font-size:clamp(20px,2vw,27px);line-height:1.18;overflow-wrap:anywhere;}
+  .ins-top-sub {margin-bottom:18px;}
+  .ins-top-img {width:clamp(108px,11vw,148px);height:clamp(108px,11vw,148px);}
+  .ins-grid > div:nth-child(2) > .ins-card {min-height:335px;padding:16px 25px 20px;}
+  .ins-grid > div:nth-child(2) .arc-container {max-width:350px;margin-top:0;}
+  .ins-grid > div:nth-child(2) .arc-time {font-size:clamp(48px,5vw,62px);}
+  .ins-grid > div:nth-child(2) .ins-days {margin-top:6px;}
+  .ins-grid > div:nth-child(2) .ins-day {padding:4px 5px;}
+  .ins-grid > div:nth-child(2) .ins-cont {margin-top:8px;padding:13px;}
+  .ins-grid > div:nth-child(3) > .ins-card,
+  .ins-grid > div:nth-child(4) > .ins-card {min-height:250px;padding:24px;}
+  .ins-grid > div:nth-child(4) > .ins-card {justify-content:center;display:flex;flex-direction:column;}
+  .ins-grid > div:nth-child(4) .hours {height:35px;margin-top:28px;}
+  .ins-grid > .ins-full > .ins-card {padding:24px;}
+  .ins-row {gap:12px;}
+  .ins-best {margin-bottom:10px;}
+}
+@media (min-width:1500px) {
+  .ins-hero {padding-top:66px;padding-bottom:34px;}
+  .ins-body {max-width:1340px;}
+  .ins-grid {column-gap:28px;row-gap:26px;}
+  .ins-top-img {width:158px;height:158px;}
+}
+
 </style>
 </head>
 <body>
@@ -2572,7 +2708,24 @@
     </div>
     <div id="home-new-list"></div>
 
-    <div style="height:28px"></div>
+    <!-- BOSH SAHIFA: PLEYLISTLAR VA TAJVID QORILARI -->
+    <section class="home-curated-section" aria-label="Pleylistlar">
+      <div class="section-header home-curated-header">
+        <h2 class="section-title">Pleylistlar</h2>
+        <button type="button" class="home-see-all" onclick="showScreen('playlists')">Barchasi</button>
+      </div>
+      <div class="home-playlist-list" id="home-playlists-list"></div>
+    </section>
+
+    <section class="home-curated-section" aria-label="Tajvid uchun tavsiya etilgan qorilar">
+      <div class="section-header home-curated-header">
+        <h2 class="section-title">Tajvid uchun tavsiya etilgan qorilar</h2>
+        <button type="button" class="home-see-all" onclick="showScreen('reciters')">Barchasi</button>
+      </div>
+      <div class="home-tajwid-list" id="home-tajwid-list"></div>
+    </section>
+
+    <div style="height:22px"></div>
 
     <div class="notification-card" onclick="openMushaf()" style="margin-bottom: 32px;">
       <div class="notif-icon" style="background: #ffffff;">
@@ -5085,6 +5238,9 @@ function buildHomeScreen() {
     `).join('');
   }
 
+  // Mavjud pleylistlar va tajvid uchun tavsiya etilgan qorilar
+  renderHomeCollections();
+
   // Desktop uchun faqat Sevimlilarni ushlab surish (drag-to-scroll) funksiyasi
   const sliders = document.querySelectorAll('.reciters-scroll');
   sliders.forEach(slider => {
@@ -5109,6 +5265,54 @@ function buildHomeScreen() {
   });
 
   renderHistorySection();
+}
+
+// BOSH SAHIFA: MAVJUD PLEYLISTLAR + TAJVID QORILARI
+function renderHomeCollections() {
+  const playlistBox = document.getElementById('home-playlists-list');
+  const tajwidBox = document.getElementById('home-tajwid-list');
+
+  if (playlistBox) {
+    // Ko'rsatish tartibi; qolgan mavjud pleylistlar ham chiqadi.
+    const preferred = ['favs', 'focus', 'beautiful', 'peace', 'sleep', 'short'];
+    const sorted = [...PLAYLIST_DATA].sort((a, b) => {
+      const ai = preferred.indexOf(a.id), bi = preferred.indexOf(b.id);
+      return (ai === -1 ? 100 : ai) - (bi === -1 ? 100 : bi);
+    });
+    playlistBox.innerHTML = sorted.map(p => `
+      <button type="button" class="pl-card home-playlist-card ${p.bgClass}"
+              onclick="openPlaylistDetail('${p.id}')" aria-label="${p.title} pleylistini ochish">
+        <span class="home-playlist-art" aria-hidden="true">${p.icon}</span>
+        <span class="home-playlist-label">${p.title}</span>
+      </button>
+    `).join('');
+  }
+
+  if (tajwidBox) {
+    // Qorilar asl QORIS ro'yxatidan olinadi (qo'shimcha audio manba talab qilinmaydi).
+    const recommended = [
+      ['ar.husary', 'Mahmoud Khalil Al-Husary'],
+      ['ar.minshawi', 'Muhammad Siddiq Al-Minshawi'],
+      ['ar.abdulsamad', 'Abdul Basit Abdul Samad'],
+      ['ar.hudhaify', 'Ali Al-Hudhaify'],
+      ['ar.aymanswoaid', 'Ayman Suwaid'],
+      ['ar.ibrahimakhbar', 'Ibrahim Al-Akhdar']
+    ];
+    tajwidBox.innerHTML = recommended.map(([id, label]) => {
+      const idx = QORIS.findIndex(q => q.id === id);
+      if (idx < 0) return '';
+      const q = QORIS[idx];
+      return `<button type="button" class="home-tajwid-card"
+                      onclick="selectQoriFromHome(${idx})" aria-label="${label} tilovatini tinglash">
+        <span class="home-tajwid-photo">
+          <img src="reciter/${q.img}" alt="${label}" loading="lazy"
+               onerror="this.onerror=null;this.src='reciter/qori.png'">
+        </span>
+        <span class="home-tajwid-name">${label}</span>
+        <span class="home-tajwid-sub">Tajvid uchun tavsiya</span>
+      </button>`;
+    }).join('');
+  }
 }
 
 function updateMiniPlayer() {
@@ -5602,6 +5806,8 @@ function openPlaylistDetail(id) {
   document.getElementById('pld-icon-large').innerHTML = p.icon;
   document.getElementById('pld-title').textContent = p.title;
   document.getElementById('pld-desc').textContent = p.desc;
+  const playlistPlay = document.querySelector('#playlist-detail-screen .pld-btn-play');
+  if (playlistPlay) playlistPlay.style.display = p.isBookmarkList ? 'none' : '';
 
   if (p.isBookmarkList) {
     renderBookmarkTracks();
@@ -5659,7 +5865,7 @@ function renderPldTracks() {
   if (!currentActivePlaylist) return;
   document.querySelector('.pld-filters').style.display = 'flex';
   const p = currentActivePlaylist;
-  let tracks = p.id === 'favs' ? p.getTracks() : [...p.tracks];
+  let tracks = typeof p.getTracks === 'function' ? [...p.getTracks()] : [...(p.tracks || [])];
 
   if (pldFilterMode === 'surah') {
     tracks.sort((a, b) => SURAHS[a.surahIdx].en.localeCompare(SURAHS[b.surahIdx].en));
@@ -5730,7 +5936,7 @@ function playTrackFromPlaylist(surahIdx, qoriIdx) {
 
 function playCurrentPlaylist() {
   if(!currentActivePlaylist) return;
-  const tracks = currentActivePlaylist.id === 'favs' ? currentActivePlaylist.getTracks() : currentActivePlaylist.tracks;
+  const tracks = typeof currentActivePlaylist.getTracks === 'function' ? currentActivePlaylist.getTracks() : (currentActivePlaylist.tracks || []);
   if(tracks.length > 0) {
     playTrackFromPlaylist(tracks[0].surahIdx, tracks[0].qoriIdx);
   }
@@ -6370,7 +6576,7 @@ function renderInsights() {
         <div class="arc-container">
           <svg class="arc-svg" viewBox="0 0 100 58">
             <path class="arc-bg" d="M 10 54 A 40 40 0 0 1 90 54"/>
-            <path class="arc-progress" d="M 10 54 A 40 40 0 0 1 90 54" stroke-dasharray="125.6" stroke-dashoffset="${offset}"/>
+            <path class="arc-progress" d="M 10 54 A 40 40 0 0 1 90 54" stroke-dasharray="125.6" stroke-dashoffset="${offset}" style="${p <= 0 ? 'opacity:0' : ''}"/>
           </svg>
           <div class="arc-text">
             <div class="arc-title">Bugungi tinglash</div>
