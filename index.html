@@ -33,7 +33,7 @@
     width: 100%;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(180deg, #11053b 0%, #000000 25%, #000000 100%);
+    background: linear-gradient(180deg, #0b24b8 0%, #061570 16%, #020730 30%, #000000 46%, #000000 100%);
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
   }
@@ -2129,6 +2129,148 @@
 .sh-row { display: flex; align-items: center; gap: 12px; padding: 14px 0; font-size: 16px; color: rgba(255,255,255,0.45); cursor: pointer; }
 .sh-row b { color: #fff; font-weight: 500; }
 .sh-row svg { flex-shrink: 0; color: #fff; }
+
+/* ═══ RO'YXATLAR — YANGI KARTALAR ═══ */
+.pl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (min-width: 600px) { .pl-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; } }
+@media (min-width: 768px) { .pl-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; } }
+
+.pl-card {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 26px;
+  padding: 18px;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.09), 0 12px 30px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+}
+.pl-card:hover { transform: translateY(-3px); }
+.pl-card:active { transform: scale(0.96); }
+
+/* yuqoridan tushayotgan yorug'lik */
+.pl-card::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(155deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 42%);
+  pointer-events: none;
+}
+/* pastdan yozuv o'qilishi uchun qorong'i soya */
+.pl-card::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 58%);
+  pointer-events: none;
+}
+
+/* katta shaffof "varaq" belgisi */
+.pl-doc {
+  position: absolute; inset: 8px; z-index: 1;
+  opacity: 0.32; pointer-events: none;
+}
+.pl-doc svg { width: 100%; height: 100%; display: block; }
+
+.pl-avatar {
+  position: absolute; top: 16px; left: 16px; z-index: 3;
+  width: 48px; height: 48px; border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.35);
+  background: #222;
+}
+.pl-sub {
+  position: relative; z-index: 3;
+  font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 4px;
+}
+.pl-title {
+  position: relative; z-index: 3;
+  font-size: clamp(17px, 2.2vw, 22px);
+  font-weight: 700; line-height: 1.15;
+  color: #fff; letter-spacing: -0.3px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+/* Ranglar (har bir karta o'z yorug'ligi bilan) */
+.pl-card.bg-fav       { background: radial-gradient(110% 80% at 85% 0%, rgba(255,205,90,0.38), transparent 60%), linear-gradient(160deg,#2b2b30,#0c0c0e); }
+.pl-card.bg-luhaidan  { background: radial-gradient(100% 75% at 15% 0%, #86b55e, transparent 62%), linear-gradient(160deg,#30491f,#060b04); }
+.pl-card.bg-dosari    { background: radial-gradient(100% 80% at 78% 0%, #1db4ff, transparent 58%), linear-gradient(160deg,#08335f,#010611); }
+.pl-card.bg-focus     { background: radial-gradient(100% 75% at 18% 0%, #30b8ff, transparent 60%), linear-gradient(160deg,#0b3f93,#02081c); }
+.pl-card.bg-beautiful { background: radial-gradient(100% 80% at 82% 0%, #ff5f8d, transparent 60%), linear-gradient(160deg,#7b1241,#12030a); }
+.pl-card.bg-sleep     { background: radial-gradient(100% 75% at 80% 5%, #5d6dff, transparent 60%), linear-gradient(160deg,#17175e,#02020f); }
+.pl-card.bg-peace     { background: radial-gradient(100% 80% at 20% 0%, #3be6b0, transparent 60%), linear-gradient(160deg,#0b5a4a,#02100c); }
+.pl-card.bg-short     { background: radial-gradient(100% 80% at 80% 0%, #ff9a4d, transparent 60%), linear-gradient(160deg,#8a2c52,#14050c); }
+.pl-card.bg-top10     { background: radial-gradient(100% 80% at 22% 0%, #e28bff, transparent 60%), linear-gradient(160deg,#5b2a8c,#0b0414); }
+.pl-card.bg-recent    { background: radial-gradient(100% 80% at 80% 0%, #a58bff, transparent 60%), linear-gradient(160deg,#3b2f86,#07051a); }
+
+/* ═══ KATTA EKRAN (KOMPYUTER / TV) ═══ */
+@media (min-width: 1100px) {
+  /* Yuqoridagi ko'k nur keng ekranda ham chiroyli yoyilsin */
+  html, body {
+    background:
+      radial-gradient(ellipse 90% 50% at 50% 0%, #1233d6 0%, rgba(8,24,140,0.6) 45%, transparent 100%),
+      #000;
+  }
+
+  /* Barcha asosiy ekranlar kengroq */
+  .home-scroll,
+  #reciters-screen,
+  #top-reciters-screen,
+  #playlists-screen,
+  #search-screen,
+  #audio-download-screen { max-width: 1280px; }
+  #settings-screen { max-width: 860px; }
+  #playlist-detail-screen { max-width: 1280px; }
+  .pld-content { max-width: 1100px; }
+
+  /* Yangi qorilar: ustun-ustun emas, katakchalar */
+  #home-new-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 14px;
+  }
+
+  /* Qorilar va ro'yxatlar sahifasidagi to'r */
+  .top-grid { grid-template-columns: repeat(7, 1fr); gap: 28px; }
+  .pl-grid { grid-template-columns: repeat(5, 1fr); gap: 26px; }
+
+  /* Sevimlilar rasmlari kattaroq */
+  .reciter-card { width: 130px; }
+  .reciter-img { width: 130px; height: 130px; }
+  .reciter-name { font-size: 15px; }
+  .r-card { width: 130px; }
+  .r-img-wrap { width: 130px; height: 130px; }
+
+  /* Pastdagi menyu va mini pleyer ortiqcha cho'zilmasin */
+  #nav-bar { width: 50%; max-width: 720px; }
+  #mini-player { width: 50%; max-width: 720px; }
+
+  /* Mushaf (Qur'on o'qish) */
+  .mushaf-list-wrap { max-width: 900px; }
+  .mr-content { max-width: 860px; }
+  .mr-ayah-arabic { font-size: 34px; }
+}
+
+/* Juda katta televizorlar (4K / 1920px dan keng) */
+@media (min-width: 1800px) {
+  .home-scroll,
+  #reciters-screen,
+  #top-reciters-screen,
+  #playlists-screen,
+  #search-screen { max-width: 1500px; }
+  .home-title, .page-title { font-size: 54px; }
+  .featured-avatar { width: 160px; height: 160px; }
+  .featured-name { font-size: 38px; }
+  .section-title { font-size: 24px; }
+  .reciter-card, .r-card { width: 150px; }
+  .reciter-img, .r-img-wrap { width: 150px; height: 150px; }
+  .top-grid { grid-template-columns: repeat(8, 1fr); }
+  .pl-grid { grid-template-columns: repeat(6, 1fr); }
+}
 </style>
 </style>
 </head>
@@ -5349,12 +5491,14 @@ const PLAYLIST_DATA = [
 
 function buildPlaylistsScreen() {
   const container = document.getElementById('playlists-grid');
-  if(!container) return;
-  
+  if (!container) return;
+
+  const docIcon = `<svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" preserveAspectRatio="none"><path d="M14 4 H60 L90 34 V96 H14 Z"/><path d="M60 4 V34 H90"/></svg>`;
+
   container.innerHTML = PLAYLIST_DATA.map(p => `
     <div class="pl-card ${p.bgClass}" onclick="openPlaylistDetail('${p.id}')">
-      ${p.qoriImg ? `<img src="reciter/${p.qoriImg.replace(/\.(jpe?g|png)$/i,'.webp')}" class="pl-avatar" onerror="this.style.display='none'">` : ''}
-      <div class="pl-icon" style="${p.id === 'favs' || p.id === 'bookmarks' ? 'top: 20px;' : 'top: -20px; left: 20px;'}">${p.icon}</div>
+      <div class="pl-doc">${docIcon}</div>
+      ${p.qoriImg ? `<img src="reciter/${p.qoriImg.replace(/\.(jpe?g|png)$/i, '.webp')}" class="pl-avatar" alt="">` : ''}
       ${p.sub ? `<div class="pl-sub">${p.sub}</div>` : ''}
       <div class="pl-title">${p.title}</div>
     </div>
