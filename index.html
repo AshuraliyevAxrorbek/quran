@@ -2625,93 +2625,7 @@ body.player-verses-on .bg-overlay {background:linear-gradient(180deg,rgba(0,0,0,
  #player-screen .player-top-controls{top:10px;}
 }
 
-
-/* Telegram uchun xavfsiz joylashuv */
-@media (max-width: 699px) {
-  #player-screen .player-top-controls {
-    top: max(
-      155px,
-      calc(
-        env(safe-area-inset-top, 0px) +
-        var(--tg-content-safe-area-inset-top, 0px) + 24px
-      )
-    ) !important;
-    left: 16px !important;
-    right: 16px !important;
-  }
-
-  #player-screen .player-back-row {
-    top: max(
-      158px,
-      calc(
-        env(safe-area-inset-top, 0px) +
-        var(--tg-content-safe-area-inset-top, 0px) + 27px
-      )
-    ) !important;
-  }
-
-  .player-sound-pill,
-  .player-top-gear {
-    background: rgba(255,255,255,0.075) !important;
-    border: 1px solid rgba(255,255,255,0.13) !important;
-    backdrop-filter: blur(22px) !important;
-    -webkit-backdrop-filter: blur(22px) !important;
-    box-shadow: none !important;
-  }
-}
-
-/* DESKTOP — ikkala tugma chapda, yonma-yon */
-@media (min-width: 700px) {
-  #player-screen .player-top-controls {
-    top: 26px !important;
-    left: 30px !important;
-    right: auto !important;
-    width: fit-content !important;
-    justify-content: flex-start !important;
-    gap: 12px !important;
-  }
-}
-
-/* TELEFON — Telegram tugmalaridan pastroqda */
-@media (max-width: 699px) {
-  #player-screen .player-top-controls {
-    top: clamp(
-      116px,
-      calc(env(safe-area-inset-top, 0px) +
-           var(--tg-content-safe-area-inset-top, 0px) + 20px),
-      140px
-    ) !important;
-    left: 16px !important;
-    right: 16px !important;
-    width: auto !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-  }
-
-  /* O'rtadagi pastga qaragan tugma */
-  #player-screen .player-back-row {
-    top: clamp(
-      119px,
-      calc(env(safe-area-inset-top, 0px) +
-           var(--tg-content-safe-area-inset-top, 0px) + 23px),
-      143px
-    ) !important;
-  }
-}
-
-/* Ikkala tugmaning shaffof dizayni */
-#player-screen .player-sound-pill,
-#player-screen .player-top-gear {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.18) !important;
-  backdrop-filter: blur(24px) saturate(1.3) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(1.3) !important;
-  box-shadow: none !important;
-}
-
 </style>
-
-
 </head>
 <body>
 
@@ -2725,12 +2639,7 @@ body.player-verses-on .bg-overlay {background:linear-gradient(180deg,rgba(0,0,0,
   Agar boshqa nom bermoqchi bo'lsangiz:
   <video src="YANGI_NOM.mp4" ...> qilib o'zgartiring
 -->
-
-<video id="bg-video" src="video/1.mp4"
-       autoplay muted playsinline loop
-       preload="auto" webkit-playsinline>
-</video>
-
+<video id="bg-video" src="video/1.mp4" autoplay muted playsinline></video>
 <div class="bg-overlay"></div>
 
 <!-- SLEEP BADGE -->
@@ -3994,19 +3903,19 @@ function getSurahAudioUrl(qoriId, surahNum) {
 // Background sounds
 const BG_SOUNDS = [
   {id:'none',label:'Ovozsiz',emoji:'⊖',url:null},
-  {id:'rain',label:'Yomg‘ir',emoji:'🌧️',url:'sounds/rain.mp3',fallbackUrl:'ambience/rain.mp3'},
-  {id:'birds',label:'Qushlar',emoji:'🐦',url:'sounds/nature.mp3',fallbackUrl:'ambience/birds.mp3'},
-  {id:'fire',label:'Olov',emoji:'🔥',url:'sounds/fire.mp3',fallbackUrl:'ambience/fire.mp3'},
-  {id:'ocean',label:'To‘lqin',emoji:'🌊',url:'sounds/ocean.mp3',fallbackUrl:'ambience/ocean.mp3'},
-  {id:'wind',label:'Shamol',emoji:'🌬️',url:'ambience/wind.mp3'},
-  {id:'cat',label:'Mushuk',emoji:'🐈',url:'ambience/cat.mp3'},
-  {id:'owl',label:'Boyo‘g‘li',emoji:'🦉',url:'ambience/owl.mp3'},
-  {id:'river',label:'Daryo',emoji:'💧',url:'ambience/river.mp3'},
-  {id:'whale',label:'Kit',emoji:'🐋',url:'ambience/whale.mp3'},
-  {id:'crickets',label:'Chigirtkalar',emoji:'🦗',url:'ambience/crickets.mp3'},
-  {id:'storm',label:'Momaqaldiroqli yomg‘ir',emoji:'⛈️',url:'ambience/storm.mp3'},
-  {id:'thunder',label:'Momaqaldiroq',emoji:'⚡',url:'ambience/thunder.mp3'},
-  {id:'train',label:'Poyezd',emoji:'🚂',url:'ambience/train.mp3'},
+  {id:"rain",label:"Yomg‘ir",emoji:"🌧️",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Rain_(1).ogg/Rain_(1).ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/0/0e/Rain_(1).ogg"},
+  {id:"birds",label:"Qushlar",emoji:"🐦",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2f/Birds_chirping_in_a_garden.ogg/Birds_chirping_in_a_garden.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/2/2f/Birds_chirping_in_a_garden.ogg"},
+  {id:"fire",label:"Olov",emoji:"🔥",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/d/d8/Dry_grass_burning_in_open_fireplace.ogg/Dry_grass_burning_in_open_fireplace.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/d/d8/Dry_grass_burning_in_open_fireplace.ogg"},
+  {id:"ocean",label:"To‘lqin",emoji:"🌊",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/7/73/On_a_pebble_beach.ogg/On_a_pebble_beach.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/7/73/On_a_pebble_beach.ogg"},
+  {id:"wind",label:"Shamol",emoji:"🌬️",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2d/Howling_wind.ogg/Howling_wind.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/2/2d/Howling_wind.ogg"},
+  {id:"cat",label:"Mushuk",emoji:"🐈",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/9/9c/Audio_file_of_cat_meowing.ogg/Audio_file_of_cat_meowing.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/9/9c/Audio_file_of_cat_meowing.ogg"},
+  {id:"owl",label:"Boyo‘g‘li",emoji:"🦉",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/8/86/Otus_sunia.ogg/Otus_sunia.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/8/86/Otus_sunia.ogg"},
+  {id:"river",label:"Daryo",emoji:"💧",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/3/32/Hemlock_stream.ogg/Hemlock_stream.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/3/32/Hemlock_stream.ogg"},
+  {id:"whale",label:"Kit",emoji:"🐋",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/9/9f/Beluga_vocalizations.ogg/Beluga_vocalizations.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/9/9f/Beluga_vocalizations.ogg"},
+  {id:"crickets",label:"Chigirtkalar",emoji:"🦗",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/f/fe/Nature_sounds_ambience_in_a_Dordogne_pond.ogg/Nature_sounds_ambience_in_a_Dordogne_pond.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/f/fe/Nature_sounds_ambience_in_a_Dordogne_pond.ogg"},
+  {id:"storm",label:"Momaqaldiroqli yomg‘ir",emoji:"⛈️",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e7/Thunder_and_rain_on_a_v.ogg/Thunder_and_rain_on_a_v.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/e/e7/Thunder_and_rain_on_a_v.ogg"},
+  {id:"thunder",label:"Momaqaldiroq",emoji:"⚡",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/4/42/Rain_and_thunder.ogg/Rain_and_thunder.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/4/42/Rain_and_thunder.ogg"},
+  {id:"train",label:"Poyezd",emoji:"🚂",url:"https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a2/Complete_train_ride_4_minutes.ogg/Complete_train_ride_4_minutes.ogg.mp3",fallbackUrl:"https://upload.wikimedia.org/wikipedia/commons/a/a2/Complete_train_ride_4_minutes.ogg"},
 ];
 
 const VIDEOS = [
@@ -4261,23 +4170,11 @@ function init() {
   buildVideoGrid();
   // Saqlangan fon videosini tiklash (iOS qotib qolmasligi uchun to'g'rilandi)
   const currentVideo = VIDEOS[state.videoIdx] ? VIDEOS[state.videoIdx].file : VIDEOS[0].file;
-  
-const bgVid = document.getElementById('bg-video');
-bgVid.preload = 'auto';
-bgVid.loop = true;
-bgVid.muted = true;
-
-if (bgVid.getAttribute('src') !== currentVideo) {
-  bgVid.src = currentVideo;
-}
-
-if (!navigator.onLine &&
-    localStorage.getItem('videosCached') === 'true') {
-  getVideoSrc(currentVideo)
-    .then(src => { bgVid.src = src; })
-    .catch(() => {});
-}
-
+  getVideoSrc(currentVideo).then(src => {
+    const bgVid = document.getElementById('bg-video');
+    bgVid.src = src;
+    bgVid.load(); // iPhone uchun majburiy yuklash buyrug'i
+  });
   updateNowPlaying();
   applyVersePrefs();
   setupAudioEvents();
@@ -4457,50 +4354,19 @@ function buildVideoGrid() {
   `).join('');
 }
 
-
-let videoSwitchRequest = 0;
-
 async function selectVideo(id) {
-  const item = VIDEOS.find(v => v.id === id);
-  if (!item) return;
-
-  const requestId = ++videoSwitchRequest;
   state.videoIdx = id;
   buildVideoGrid();
+  const vid = document.getElementById('bg-video');
+  const src = await getVideoSrc(VIDEOS[id].file);
+  vid.src = src;
+  vid.load();
+  vid.play().catch(()=>{});
+  vid.style.opacity = '0.65';
+  showToast(VIDEOS[id].emoji + ' ' + VIDEOS[id].label + ' videosi');
   closePanel('video');
   localStorage.setItem('lastVideoIdx', id);
-
-  const video = document.getElementById('bg-video');
-  video.preload = 'auto';
-  video.muted = true;
-  video.playsInline = true;
-  video.loop = true;
-
-  let src = item.file;
-
-  if (localStorage.getItem('videosCached') === 'true') {
-    try {
-      src = await getVideoSrc(item.file);
-    } catch (_) {}
-  }
-
-  if (requestId !== videoSwitchRequest) return;
-
-  if (video.getAttribute('src') !== src) {
-    video.src = src;
-  }
-
-  video.style.opacity = '0.85';
-
-  video.play().catch(() => {
-    video.addEventListener('canplay', () => {
-      video.play().catch(() => {});
-    }, { once: true });
-  });
-
-  showToast(item.emoji + ' ' + item.label + ' videosi');
 }
-
 
 let surahAyahs = [];
 let uzbekAyahs = [];
@@ -5082,81 +4948,47 @@ function setBgVol(val) {
 // Har bir selectBgSound chaqiruvini o'zining "avlod raqami" bilan belgilaymiz,
 // shunda eski (kechikkan) yuklanish keyingi tanlovni bosib ketolmaydi.
 let bgSoundGen=0;
-
 function selectBgSound(idx) {
-  if (!Number.isInteger(idx) ||
-      idx < 0 ||
-      idx >= BG_SOUNDS.length) return;
-
-  const gen = ++bgSoundGen;
-
-  if (bgAudio) {
-    bgAudio.pause();
-    bgAudio.removeAttribute('src');
-    bgAudio.load();
-    bgAudio = null;
+  if(!Number.isInteger(idx)||idx<0||idx>=BG_SOUNDS.length)return;
+  bgSoundGen++;
+  const gen=bgSoundGen;
+  if(bgAudio) {
+    bgAudio.pause();bgAudio.removeAttribute('src');bgAudio.load();bgAudio=null;
   }
-
-  state.bgSoundIdx = idx;
-  const sound = BG_SOUNDS[idx];
-
-  buildSoundTabs(
-    document.getElementById('ambient-search')?.value || ''
-  );
-
-  if (!sound.url) {
-    showToast('Fon tovushi o‘chirildi');
-    return;
-  }
-
-  const sources = [...new Set([
-    sound.fallbackUrl?.startsWith('data:')
-      ? sound.fallbackUrl : null,
-    sound.url,
-    sound.fallbackUrl
-  ].filter(Boolean))];
-
-  const audio = new Audio();
-  audio.loop = true;
-  audio.preload = 'auto';
-  audio.volume = state.bgVol;
-
-  bgAudio = audio;
-  let sourceIndex = 0;
-
-  audio.addEventListener('error', () => {
-    if (gen !== bgSoundGen) return;
-
-    sourceIndex++;
-
-    if (sourceIndex < sources.length) {
-      audio.src = sources[sourceIndex];
+  state.bgSoundIdx=idx;
+  const sound=BG_SOUNDS[idx];
+  buildSoundTabs(document.getElementById('ambient-search')?.value||'');
+  if(!sound.url){showToast('Fon tovushi o‘chirildi');return;}
+  const audio=new Audio();
+  audio.loop=true;
+  audio.preload='auto';
+  audio.volume=state.bgVol; // 0% bo'lsa haqiqatan 0%, 20% ga oshirilmaydi
+  audio.src=sound.url;
+  bgAudio=audio;
+  let usedFallback=false;
+  audio.addEventListener('error',()=>{
+    if(gen!==bgSoundGen)return;
+    if(sound.fallbackUrl&&!usedFallback){
+      usedFallback=true;
+      audio.src=sound.fallbackUrl;
       audio.load();
-      audio.play().catch(() => {});
-    } else {
-      bgAudio = null;
-      state.bgSoundIdx = 0;
-      buildSoundTabs();
-      showToast('Fon tovushi ochilmadi');
+      audio.play().catch(()=>showToast('Tovushni ishga tushirish uchun qayta bosing'));
+      return;
     }
+    bgAudio=null;
+    state.bgSoundIdx=0;
+    buildSoundTabs(document.getElementById('ambient-search')?.value||'');
+    showToast('Tovush fayli topilmadi: '+sound.url);
   });
-
-  audio.addEventListener('ended', () => {
-    if (gen === bgSoundGen) {
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
-    }
-  });
-
-  audio.src = sources[0];
-
-  audio.play().catch(() => {
-    if (gen === bgSoundGen) {
-      showToast('Ovozni yoqish uchun yana bosing');
-    }
+  // Ijroni aynan foydalanuvchi bosgan paytda boshlash mobil brauzerlar uchun muhim.
+  audio.play().then(()=>{
+    if(gen!==bgSoundGen)audio.pause();
+  }).catch(err=>{
+    if(gen!==bgSoundGen)return;
+    if(err && err.name==='NotAllowedError') showToast('Tovushni boshlash uchun yana bir marta bosing');
+    else showToast('Tovushni yuklashda xatolik');
   });
 }
-
 
 // ═══════════════════════════════════════════
 //  SLEEP TIMER
