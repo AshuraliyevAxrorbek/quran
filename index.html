@@ -5018,6 +5018,7 @@ function showScreen(screen) {
     // Ma'lumotlarni qayta yuklash
     if (screen === 'home') buildHomeScreen();
     if (screen === 'playlists' || screen === 'playlist-detail') buildPlaylistsScreen();
+    if (screen === 'insights') renderInsights();
   }
 
   currentScreen = screen;
