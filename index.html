@@ -3263,7 +3263,23 @@ const QORIS = [
   { id: 'ar.anasalemadi', name: 'Anas Al-Emadi', origin: 'Qatar', img: 'anas-alemadi.png', prefix: 'https://server16.mp3quran.net/a_alemadi/Rewayat-Hafs-A-n-Assem/', bio: 'Qatarlik qori, yoqimli va ravon tilovat uslubi bilan tanilgan.' },
 ];
 // Barcha qori rasmlarini WebP formatiga o'tkazish
-QORIS.forEach(q => { q.img = q.img.replace(/\.(jpe?g|png)$/i, '.webp'); });
+const IMG_ORIG = {};
+QORIS.forEach(q => {
+  const w = q.img.replace(/\.(jpe?g|png)$/i, '.webp');
+  IMG_ORIG[w] = q.img;
+  q.img = w;
+});
+// webp yo'q bo'lsa, avval asl rasm (jpg/png), u ham bo'lmasa qori.png chiqadi
+document.addEventListener('error', e => {
+  const el = e.target;
+  if (!el || el.tagName !== 'IMG') return;
+  const file = decodeURIComponent(el.src.split('/').pop().split('?')[0]);
+  if (IMG_ORIG[file] && !el.dataset.fb) {
+    el.dataset.fb = '1';
+    e.stopPropagation();
+    el.src = 'reciter/' + IMG_ORIG[file];
+  }
+}, true);
 // Tarjima manbalari ro'yxati
 const TRANSLATIONS = [
   { id: 'uz.sodik', name: 'Sodiq', sub: 'Muhammad Sodiq Muhammad Yusuf' },
