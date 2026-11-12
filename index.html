@@ -2271,7 +2271,78 @@
   .top-grid { grid-template-columns: repeat(8, 1fr); }
   .pl-grid { grid-template-columns: repeat(6, 1fr); }
 }
-</style>
+/* ═══ INSIGHTS (BATAFSIL STATISTIKA) SAHIFASI ═══ */
+#insights-screen{position:fixed;inset:0;z-index:10;overflow-y:auto;scrollbar-width:none;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 200px);}
+#insights-screen::-webkit-scrollbar{display:none}
+#insights-screen.hidden{opacity:0;pointer-events:none}
+
+.ins-hero{position:relative;padding:100px 16px 30px;text-align:center;
+  background:radial-gradient(ellipse 70% 55% at 0% 80%,rgba(25,70,255,.9),transparent 70%),
+             radial-gradient(ellipse 50% 40% at 100% 90%,rgba(10,40,200,.5),transparent 70%),#000;}
+.ins-back{position:absolute;top:100px;left:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);
+  border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px)}
+.ins-title{font-size:20px;font-weight:600;height:44px;display:flex;align-items:center;justify-content:center}
+.ins-chip{display:inline-block;margin-top:14px;padding:8px 20px;border-radius:20px;background:rgba(255,255,255,.1);font-size:15px;font-weight:500}
+.ins-big{font-size:110px;font-weight:800;line-height:1;margin-top:26px;letter-spacing:-4px;font-variant-numeric:tabular-nums}
+.ins-big-sub{font-size:46px;font-weight:800;margin-top:6px;letter-spacing:-1px}
+.ins-stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:720px;margin:34px auto 0}
+.ins-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:16px 6px;backdrop-filter:blur(14px)}
+.ins-stat .l{font-size:12px;color:rgba(255,255,255,.55);display:flex;gap:6px;align-items:center;justify-content:center;margin-bottom:6px}
+.ins-stat .v{font-size:16px;font-weight:700}
+
+.ins-body{padding:8px 16px 0;max-width:620px;margin:0 auto}
+.ins-grid{display:grid;gap:30px;grid-template-columns:1fr}
+.ins-h{font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ins-h .edit{margin-left:auto;font-size:16px;font-weight:500;color:#5c8dff;cursor:pointer}
+.ins-card{background:#111113;border-radius:26px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.ins-card .arc-container{max-width:460px}
+
+.ins-top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.ins-top-name{font-size:22px;font-weight:800;letter-spacing:-.4px;margin-bottom:8px}
+.ins-top-sub{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:18px}
+.ins-top-btn{background:#fff;color:#000;border:none;border-radius:30px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;font-family:'Inter',sans-serif}
+.ins-top-img{width:130px;height:130px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#2a2a2c}
+
+.ins-days{display:flex;justify-content:space-between;margin-top:14px}
+.ins-day{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 6px;border-radius:16px;font-size:13px;color:rgba(255,255,255,.45)}
+.ins-day.today{background:rgba(255,255,255,.07);color:#fff}
+.ins-dot{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
+.ins-dot.done{background:#fff;border-color:#fff;color:#000}
+.ins-dot.ring{border-color:#fff;border-top-color:transparent}
+.ins-cont{margin-top:14px;width:100%;border:none;border-radius:30px;background:rgba(255,255,255,.14);color:#fff;font-weight:600;font-size:16px;padding:17px;cursor:pointer;font-family:'Inter',sans-serif}
+
+.ins-best{background:rgba(255,255,255,.05);border-radius:20px;padding:18px 16px;text-align:center;margin-bottom:6px}
+.ins-best .n{font-size:20px;font-weight:700;margin-top:10px}
+.ins-best .s{font-size:13px;color:rgba(255,255,255,.45);margin-top:3px}
+.ins-row{display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid rgba(255,255,255,.06);font-size:16px;font-weight:500}
+.ins-row:first-of-type{border-top:none}
+.ins-row .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ins-bar{width:90px;height:5px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}
+.ins-bar i{display:block;height:100%;background:#fff;border-radius:9px}
+.ins-row .pc{width:42px;text-align:right;font-size:14px;color:rgba(255,255,255,.5)}
+.ins-row .tm{width:36px;text-align:right;font-size:14px;color:rgba(255,255,255,.5)}
+
+.hm{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,auto);gap:4px}
+.hm i{aspect-ratio:1;border-radius:3px;background:rgba(255,255,255,.07)}
+.hm i.l1{background:rgba(255,255,255,.28)}
+.hm i.l2{background:rgba(255,255,255,.55)}
+.hm i.l3{background:#fff}
+.hm i.fut{background:transparent}
+.ins-foot{font-size:13px;color:rgba(255,255,255,.45);margin-top:14px}
+
+.hours{display:grid;grid-template-columns:repeat(24,1fr);gap:4px;height:30px;margin:16px 0 8px}
+.hours i{border-radius:5px;background:rgba(255,255,255,.07)}
+.hours i.max{background:#fff}
+.hours-lbl{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.5)}
+
+/* Noutbuk / katta ekran */
+@media (min-width:900px){
+  .ins-big{font-size:150px}
+  .ins-body{max-width:1100px}
+  .ins-grid{grid-template-columns:1fr 1fr;gap:34px}
+  .ins-full{grid-column:1/-1}
+}
+@media (min-width:1500px){ .ins-body{max-width:1400px} .ins-hero{padding-bottom:50px} }
 </style>
 </head>
 <body>
@@ -2518,7 +2589,7 @@
     <div class="insights-card">
       <div class="insight-header">
         <h3>Statistika</h3>
-        <span onclick="showPopup('stats-popup', event)">Batafsil</span>
+        <span onclick="showScreen('insights')">Batafsil</span>
       </div>
 
       <div class="stats-row">
@@ -2970,6 +3041,11 @@
   <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">
     Masjidlar v1.0<br>
   </div>
+</div>
+
+<!-- INSIGHTS SCREEN -->
+<div id="insights-screen" class="hidden">
+  <div id="insights-content"></div>
 </div>
 
 <!-- MINI PLAYER -->
@@ -3655,6 +3731,7 @@ setInterval(() => {
   if (state.isPlaying) {
     userStats.today++;
     userStats.week++;
+    recordListen();
     
     // Maqsadga yetganda avtomatik oshirish (5 -> 15 -> 30...)
     while (userStats.today >= userStats.goal) {
@@ -3696,9 +3773,9 @@ function updateStatsUI() {
   if(goal1) goal1.textContent = goalMins + " daqiqalik maqsaddan";
   if(goal2) goal2.textContent = goalMins + " daqiqalik maqsaddan";
 
-  document.getElementById('stat-streak').textContent = userStats.streak + ' kun';
-  document.getElementById('stat-week').textContent = Math.floor(userStats.week / 60) + ' daq';
-  document.getElementById('stat-record').textContent = userStats.record + ' kun';
+  document.getElementById('stat-streak').textContent = insStreak() + ' kun';
+  document.getElementById('stat-week').textContent = Math.floor(insWeekSec() / 60) + ' daq';
+  document.getElementById('stat-record').textContent = insRecord() + ' kun';
 
   const remain = userStats.goal - userStats.today;
   const remainMins = Math.ceil(remain / 60);
@@ -4906,6 +4983,7 @@ function showScreen(screen) {
     document.getElementById('settings-screen'),
     document.getElementById('audio-download-screen'),
     document.getElementById('search-screen'),
+    document.getElementById('insights-screen'),
     document.getElementById('player-screen')
   ];
   
@@ -4953,6 +5031,7 @@ function showScreen(screen) {
   if (screen === 'playlists' || screen === 'playlist-detail') navId = 'nav-playlists';
   if (screen === 'settings') navId = 'nav-settings';
   if (screen === 'search') navId = 'nav-search';
+  if (screen === 'insights') navId = 'nav-home';
   
   const activeNav = document.getElementById(navId);
   if (activeNav) activeNav.classList.add('active');
@@ -5316,6 +5395,7 @@ function saveGoalPicker() {
   userStats.goal = mins * 60;
   saveStats();
   updateStatsUI();
+  renderInsights();
   showToast('✓ Maqsad: ' + mins + ' daq/kun');
   closeGoalPicker();
 }
@@ -5693,6 +5773,7 @@ function resetStatsApp() {
     };
     saveStats();
     updateStatsUI();
+    insights = {days:{}}; localStorage.setItem('quranInsights', JSON.stringify(insights));
     showToast("✓ Statistika tozalandi");
   }
 }
@@ -6093,6 +6174,245 @@ function runSearch(v) {
     html += '</div>';
   }
   box.innerHTML = html;
+}
+
+
+// ═══════════════════════════════════════════
+//  INSIGHTS — TARIX + HISOBLASH + CHIZISH
+// ═══════════════════════════════════════════
+let insights = JSON.parse(localStorage.getItem('quranInsights') || '{"days":{}}');
+let insTick = 0, insLast = 0, insSession = 0;
+
+function dayKey(d = new Date()) {
+  const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return z.toISOString().slice(0, 10);
+}
+
+function recordListen() {
+  const now = Date.now();
+  insSession = (now - insLast > 2500) ? 1 : insSession + 1; // to'xtab qolsa yangi sessiya
+  insLast = now;
+
+  const k = dayKey();
+  const d = insights.days[k] || (insights.days[k] = { sec: 0, goal: userStats.goal, surahs: {}, qoris: {}, hours: {}, longest: 0 });
+  d.sec++;
+  d.surahs[state.surahIdx] = (d.surahs[state.surahIdx] || 0) + 1;
+  d.qoris[state.qoriIdx]   = (d.qoris[state.qoriIdx]   || 0) + 1;
+  const h = new Date().getHours();
+  d.hours[h] = (d.hours[h] || 0) + 1;
+  if (insSession > d.longest) d.longest = insSession;
+
+  insTick++;
+  if (insTick % 5 === 0) localStorage.setItem('quranInsights', JSON.stringify(insights));
+  if (insTick % 10 === 0 && currentScreen === 'insights') renderInsights();
+}
+
+const insDone = k => { const x = insights.days[k]; return !!x && x.sec >= (x.goal || 300); };
+
+function insStreak() {
+  let s = 0; const d = new Date();
+  if (!insDone(dayKey(d))) d.setDate(d.getDate() - 1);
+  while (insDone(dayKey(d))) { s++; d.setDate(d.getDate() - 1); }
+  return s;
+}
+function insRecord() {
+  const keys = Object.keys(insights.days).sort();
+  let best = 0, run = 0, prev = null;
+  keys.forEach(k => {
+    if (!insDone(k)) { run = 0; prev = null; return; }
+    if (prev) {
+      const diff = (new Date(k) - new Date(prev)) / 86400000;
+      run = diff === 1 ? run + 1 : 1;
+    } else run = 1;
+    prev = k; best = Math.max(best, run);
+  });
+  return best;
+}
+function mondayOf(d = new Date()) {
+  const m = new Date(d); m.setHours(0,0,0,0);
+  m.setDate(m.getDate() - ((m.getDay() + 6) % 7));
+  return m;
+}
+function insWeekSec() {
+  const m = mondayOf(); let s = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(m); d.setDate(m.getDate() + i);
+    s += (insights.days[dayKey(d)]?.sec) || 0;
+  }
+  return s;
+}
+const fmtShort = s => s < 60 ? s + 's' : Math.floor(s / 60) + 'm';
+
+function sumField(field) {
+  const out = {};
+  Object.values(insights.days).forEach(d => {
+    Object.entries(d[field] || {}).forEach(([k, v]) => out[k] = (out[k] || 0) + v);
+  });
+  return out;
+}
+
+function renderInsights() {
+  const el = document.getElementById('insights-content');
+  if (!el) return;
+
+  const today = insights.days[dayKey()] || { sec: 0, longest: 0 };
+  const mins = Math.floor(today.sec / 60);
+  const bigNum = mins > 0 ? mins : today.sec;
+  const bigUnit = mins > 0 ? 'daqiqa' : 'soniya';
+
+  // Top qori
+  const qSum = sumField('qoris');
+  const qTop = Object.entries(qSum).sort((a, b) => b[1] - a[1])[0];
+  const topIdx = qTop ? Number(qTop[0]) : state.qoriIdx;
+  const topQ = QORIS[topIdx];
+  const topSec = qTop ? qTop[1] : 0;
+  const sSum = sumField('surahs');
+  const topSurahCount = Object.keys(sSum).length;
+
+  // Kunlik maqsad yoyi
+  const p = Math.min(userStats.today / userStats.goal, 1);
+  const offset = 125.6 * (1 - p);
+  const tm = Math.floor(userStats.today / 60) + ':' + String(userStats.today % 60).padStart(2, '0');
+
+  // Hafta kunlari
+  const names = ['Dush', 'Sesh', 'Chor', 'Pay', 'Juma', 'Shan', 'Yak'];
+  const mon = mondayOf(); const todayIdx = (new Date().getDay() + 6) % 7;
+  const check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const daysHtml = names.map((n, i) => {
+    const d = new Date(mon); d.setDate(mon.getDate() + i);
+    const done = insDone(dayKey(d));
+    const cls = done ? 'done' : (i === todayIdx ? 'ring' : '');
+    return `<div class="ins-day ${i === todayIdx ? 'today' : ''}"><div class="ins-dot ${cls}">${done ? check : ''}</div>${n}</div>`;
+  }).join('');
+
+  // Suralar
+  const sSorted = Object.entries(sSum).sort((a, b) => b[1] - a[1]);
+  const sTotal = sSorted.reduce((a, b) => a + b[1], 0) || 1;
+  const top3 = sSorted.slice(0, 3);
+  const restSec = sSorted.slice(3).reduce((a, b) => a + b[1], 0);
+  const rows = top3.map(([i, v]) => [SURAHS[i].en, v]);
+  rows.push(['Boshqa', restSec]);
+  const topS = top3[0] ? SURAHS[top3[0][0]] : null;
+  const surahRows = rows.map(([n, v]) => {
+    const pc = Math.round(v / sTotal * 100);
+    return `<div class="ins-row"><div class="nm">${n}</div><div class="ins-bar"><i style="width:${pc}%"></i></div><div class="pc">${pc}%</div><div class="tm">${fmtShort(v)}</div></div>`;
+  }).join('');
+
+  // Yil xaritasi
+  const weeks = window.innerWidth < 768 ? 22 : (window.innerWidth < 1100 ? 36 : 52);
+  const start = mondayOf(); start.setDate(start.getDate() - (weeks - 1) * 7);
+  const now = new Date(); now.setHours(23, 59, 59, 999);
+  let cells = '', listened = 0;
+  for (let i = 0; i < weeks * 7; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i);
+    if (d > now) { cells += '<i class="fut"></i>'; continue; }
+    const x = insights.days[dayKey(d)];
+    let l = '';
+    if (x && x.sec > 0) {
+      listened++;
+      const g = x.goal || 300;
+      l = x.sec >= g ? 'l3' : x.sec >= g / 2 ? 'l2' : 'l1';
+    }
+    cells += `<i class="${l}"></i>`;
+  }
+  const keys = Object.keys(insights.days).sort();
+  const totalDays = keys.length
+    ? Math.max(1, Math.round((new Date() - new Date(keys[0])) / 86400000) + 1) : 1;
+  const pctYear = Math.round(Object.keys(insights.days).length / totalDays * 100);
+
+  // Eng yaxshi vaqt
+  const hSum = sumField('hours');
+  const hMax = Math.max(0, ...Object.values(hSum));
+  const bestH = hMax ? Number(Object.entries(hSum).sort((a, b) => b[1] - a[1])[0][0]) : null;
+  const hourBars = Array.from({ length: 24 }, (_, h) => {
+    const v = hSum[h] || 0;
+    const style = v && h !== bestH ? `style="background:rgba(255,255,255,${0.15 + 0.4 * v / hMax})"` : '';
+    return `<i class="${h === bestH ? 'max' : ''}" ${style}></i>`;
+  }).join('');
+  const period = bestH === null ? '—' : bestH < 5 ? 'Odatda kechasi' : bestH < 12 ? 'Odatda ertalab' : bestH < 17 ? 'Odatda kunduzi' : bestH < 21 ? 'Odatda kechqurun' : 'Odatda kechasi';
+
+  el.innerHTML = `
+  <div class="ins-hero">
+    <button class="ins-back" onclick="showScreen('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    </button>
+    <div class="ins-title">Statistika</div>
+    <div class="ins-chip">Bugun</div>
+    <div class="ins-big">${bigNum}</div>
+    <div class="ins-big-sub">${bigUnit}</div>
+    <div class="ins-stats3">
+      <div class="ins-stat"><div class="l"><svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2c-3.5 5.5-5 10-5 12a5 5 0 0 0 10 0c0-2-1.5-6.5-5-12z"/></svg>Joriy seriya</div><div class="v">${insStreak()} kun</div></div>
+      <div class="ins-stat"><div class="l">🏅 Rekord seriya</div><div class="v">${insRecord()} kun</div></div>
+      <div class="ins-stat"><div class="l">🎧 Eng uzun sessiya</div><div class="v">${Math.max(1, Math.round((today.longest || 0) / 60))} daq</div></div>
+    </div>
+  </div>
+
+  <div class="ins-body"><div class="ins-grid">
+
+    <div>
+      <div class="ins-h">🏆 Top qori</div>
+      <div class="ins-card ins-top">
+        <div>
+          <div class="ins-top-name">${topQ.name}</div>
+          <div class="ins-top-sub">${Math.round(topSec / 60)} daq · ${topSurahCount} sura</div>
+          <button class="ins-top-btn" onclick="state.qoriIdx=${topIdx};updateNowPlaying();continuePlaying()">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><polygon points="5 3 19 12 5 21 5 3"/></svg>Davom etish
+          </button>
+        </div>
+        <img class="ins-top-img" src="reciter/${topQ.img}" onerror="this.onerror=null;this.src='reciter/qori.png'">
+      </div>
+    </div>
+
+    <div>
+      <div class="ins-h">🕒 Kunlik maqsad <span class="edit" onclick="openGoalPicker()">O'zgartirish</span></div>
+      <div class="ins-card">
+        <div class="arc-container">
+          <svg class="arc-svg" viewBox="0 0 100 58">
+            <path class="arc-bg" d="M 10 54 A 40 40 0 0 1 90 54"/>
+            <path class="arc-progress" d="M 10 54 A 40 40 0 0 1 90 54" stroke-dasharray="125.6" stroke-dashoffset="${offset}"/>
+          </svg>
+          <div class="arc-text">
+            <div class="arc-title">Bugungi tinglash</div>
+            <div class="arc-time">${tm}</div>
+            <div class="arc-goal">${Math.floor(userStats.goal / 60)} daqiqalik maqsaddan</div>
+          </div>
+        </div>
+        <div class="ins-days">${daysHtml}</div>
+        <button class="ins-cont" onclick="continuePlaying()">▸ Tinglashda davom etish</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="ins-h">📖 Suralar</div>
+      <div class="ins-card">
+        <div class="ins-best">
+          <div style="font-size:26px">🏆</div>
+          <div class="n">${topS ? topS.en + ' (' + topS.ar + ')' : 'Hozircha ma\'lumot yo\'q'}</div>
+          <div class="s">${topS ? 'Eng ko\'p tinglangan · ' + fmtShort(top3[0][1]) : ''}</div>
+        </div>
+        ${surahRows}
+      </div>
+    </div>
+
+    <div>
+      <div class="ins-h">🕐 Eng yaxshi tinglash vaqti</div>
+      <div class="ins-card">
+        <div style="font-size:30px;font-weight:800">${bestH === null ? '—' : String(bestH).padStart(2, '0') + ':00'}</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.45)">${period}</div>
+        <div class="hours">${hourBars}</div>
+        <div class="hours-lbl"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+      </div>
+    </div>
+
+    <div class="ins-full">
+      <div class="ins-h">📅 Yil ko'rinishi</div>
+      <div class="ins-card">
+        <div class="hm" style="grid-template-columns:repeat(${weeks},1fr)">${cells}</div>
+        <div class="ins-foot">Tinglangan ${listened}/${totalDays} kun — ${pctYear}%</div>
+      </div>
+    </div>
+
+  </div></div>`;
 }
 
 // Barcha ma'lumotlar yaratilgandan so'ng tizimni ishga tushirish
