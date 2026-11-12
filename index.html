@@ -2022,6 +2022,111 @@
   }
   #audio-download-screen::-webkit-scrollbar { display: none; }
   #audio-download-screen.hidden { opacity: 0; pointer-events: none; }
+
+ /* ═══ LIQUID GLASS NAV + YIGILISH ANIMATSIYASI ═══ */
+#nav-bar, #mini-player {
+  background: rgba(40,42,52,0.38);
+  backdrop-filter: blur(28px) saturate(1.9) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.9) brightness(1.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(0,0,0,0.2);
+}
+#nav-bar {
+  gap: 0;
+  padding: 8px 12px;
+  border-radius: 32px;
+  transition: padding .5s cubic-bezier(.32,.72,0,1), background .5s cubic-bezier(.32,.72,0,1),
+              border-color .5s cubic-bezier(.32,.72,0,1), box-shadow .5s cubic-bezier(.32,.72,0,1),
+              backdrop-filter .5s cubic-bezier(.32,.72,0,1), -webkit-backdrop-filter .5s cubic-bezier(.32,.72,0,1);
+}
+.nav-item {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 200px;
+  height: 56px;
+  padding: 0 4px;
+  overflow: hidden;
+  background: transparent;
+  border: 1px solid transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: flex .5s cubic-bezier(.32,.72,0,1), max-width .5s cubic-bezier(.32,.72,0,1),
+              opacity .35s ease, padding .5s cubic-bezier(.32,.72,0,1),
+              background .5s cubic-bezier(.32,.72,0,1), border-color .5s cubic-bezier(.32,.72,0,1),
+              box-shadow .5s cubic-bezier(.32,.72,0,1), backdrop-filter .5s cubic-bezier(.32,.72,0,1),
+              -webkit-backdrop-filter .5s cubic-bezier(.32,.72,0,1), gap .5s ease, transform .12s;
+}
+.nav-item.active { background: rgba(255,255,255,0.15); }
+.nav-item span {
+  max-height: 14px;
+  transition: max-height .4s ease, opacity .3s ease;
+}
+#mini-player {
+  height: 60px;
+  padding: 0 8px 0 12px;
+  transition: bottom .5s cubic-bezier(.32,.72,0,1), left .5s cubic-bezier(.32,.72,0,1),
+              right .5s cubic-bezier(.32,.72,0,1), height .5s cubic-bezier(.32,.72,0,1),
+              border-radius .5s cubic-bezier(.32,.72,0,1), padding .5s cubic-bezier(.32,.72,0,1),
+              transform .18s;
+}
+
+@media (min-width: 768px) {
+  .nav-item { max-width: 150px; }
+}
+
+/* Faqat telefonda: pastga tushganda yig'iladi */
+@media (max-width: 767px) {
+  body.nav-collapsed #nav-bar {
+    padding: 0;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  body.nav-collapsed .nav-item {
+    flex: 0 0 0;
+    max-width: 0;
+    opacity: 0;
+    padding: 0;
+    border-width: 0;
+    pointer-events: none;
+  }
+  body.nav-collapsed #nav-home,
+  body.nav-collapsed #nav-search {
+    flex: 0 0 56px;
+    max-width: 56px;
+    opacity: 1;
+    pointer-events: auto;
+    border-width: 1px;
+    border-radius: 50%;
+    background: rgba(40,42,52,0.38);
+    border-color: rgba(255,255,255,0.16);
+    backdrop-filter: blur(28px) saturate(1.9) brightness(1.08);
+    -webkit-backdrop-filter: blur(28px) saturate(1.9) brightness(1.08);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(0,0,0,0.2);
+  }
+  body.nav-collapsed .nav-item span { max-height: 0; opacity: 0; }
+  body.nav-collapsed #mini-player {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+    left: 82px;
+    right: 82px;
+    height: 56px;
+    border-radius: 28px;
+    padding: 0 8px 0 10px;
+  }
+}
+
+/* ═══ QIDIRUV EKRANI ═══ */
+#search-screen {
+  position: fixed; inset: 0; z-index: 10;
+  overflow-y: auto; scrollbar-width: none;
+  padding: 100px 16px calc(env(safe-area-inset-bottom, 0px) + 200px);
+  max-width: 620px; margin: 0 auto;
+}
+#search-screen::-webkit-scrollbar { display: none; }
+#search-screen.hidden { opacity: 0; pointer-events: none; }
+</style>
 </style>
 </head>
 <body>
@@ -2452,6 +2557,15 @@
 </div>
 
 
+<div id="search-screen" class="hidden">
+  <div class="page-title">Qidiruv</div>
+  <div class="search-container">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search-input" placeholder="Qori yoki sura qidiring..." oninput="runSearch(this.value)">
+  </div>
+  <div id="search-results"></div>
+</div>
+
 <div id="playlists-screen" class="hidden">
   <div class="page-title">Ro'yxatlar</div>
   <div class="pl-grid" id="playlists-grid"></div>
@@ -2746,6 +2860,10 @@
   <button class="nav-item" id="nav-settings" onclick="showScreen('settings')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     <span>Sozlamalar</span>
+      </button>
+      <button class="nav-item" id="nav-search" onclick="openSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Qidiruv</span>
   </button>
 </div>
 
@@ -4606,6 +4724,7 @@ function showScreen(screen) {
     document.getElementById('playlist-detail-screen'),
     document.getElementById('settings-screen'),
     document.getElementById('audio-download-screen'),
+    document.getElementById('search-screen'),
     document.getElementById('player-screen')
   ];
   
@@ -4643,6 +4762,7 @@ function showScreen(screen) {
   }
 
   currentScreen = screen;
+  setNavCollapsed(false);
   
   // 3. Pastki Menyudagi faol tugmani belgilash
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -4651,6 +4771,7 @@ function showScreen(screen) {
   if (screen === 'reciters' || screen === 'top-reciters') navId = 'nav-reciters';
   if (screen === 'playlists' || screen === 'playlist-detail') navId = 'nav-playlists';
   if (screen === 'settings') navId = 'nav-settings';
+  if (screen === 'search') navId = 'nav-search';
   
   const activeNav = document.getElementById(navId);
   if (activeNav) activeNav.classList.add('active');
@@ -5679,6 +5800,94 @@ document.addEventListener("DOMContentLoaded", () => {
     el.classList.toggle('active', el.dataset.q === state.audioQuality);
   });
 });
+
+// ═══════════════════════════════════════════
+//  NAV YIGILISH (faqat telefon) + QIDIRUV
+// ═══════════════════════════════════════════
+let navCollapsed = false;
+const navLastScroll = new WeakMap();
+
+function setNavCollapsed(v) {
+  if (navCollapsed === v) return;
+  navCollapsed = v;
+  document.body.classList.toggle('nav-collapsed', v);
+}
+
+document.addEventListener('scroll', function (e) {
+  if (!window.matchMedia('(max-width: 767px)').matches) { setNavCollapsed(false); return; }
+  const el = e.target;
+  if (!el || !el.id || !/-screen$/.test(el.id)) return;
+
+  const top = el.scrollTop;
+  const last = navLastScroll.get(el) || 0;
+  const d = top - last;
+
+  if (top < 30) {
+    setNavCollapsed(false);
+    navLastScroll.set(el, top);
+  } else if (Math.abs(d) > 6) {
+    setNavCollapsed(d > 0);
+    navLastScroll.set(el, top);
+  }
+}, true);
+
+function openSearch() {
+  showScreen('search');
+  setTimeout(() => {
+    const inp = document.getElementById('search-input');
+    if (inp) inp.focus();
+  }, 60);
+}
+
+function runSearch(v) {
+  const raw = v.trim();
+  const q = raw.toLowerCase();
+  const box = document.getElementById('search-results');
+  if (!q) { box.innerHTML = ''; return; }
+
+  const qs = QORIS.map((x, i) => ({ ...x, idx: i }))
+    .filter(x => x.name.toLowerCase().includes(q) || x.origin.toLowerCase().includes(q))
+    .slice(0, 20);
+  const ss = SURAHS
+    .filter(s => s.en.toLowerCase().includes(q) || s.tr.toLowerCase().includes(q) || s.ar.includes(raw) || String(s.n) === q)
+    .slice(0, 30);
+
+  if (!qs.length && !ss.length) {
+    box.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.4);padding:30px 0;">Topilmadi</div>';
+    return;
+  }
+
+  let html = '';
+  if (qs.length) {
+    html += '<div class="qp-section-title">Qorilar</div><div class="settings-group">';
+    html += qs.map(x => `
+      <div class="settings-item" onclick="selectQoriFromHome(${x.idx})">
+        <div class="st-left">
+          <div class="st-icon" style="background:url('reciter/${x.img}') center/cover;border-radius:50%;"></div>
+          <div>
+            <div class="st-title">${x.name}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);">${x.origin}</div>
+          </div>
+        </div>
+      </div>`).join('');
+    html += '</div>';
+  }
+  if (ss.length) {
+    html += '<div class="qp-section-title">Suralar</div><div class="settings-group">';
+    html += ss.map(s => `
+      <div class="settings-item" onclick="playTrackFromPlaylist(${s.n - 1}, state.qoriIdx)">
+        <div class="st-left">
+          <div class="st-icon" style="background:rgba(255,255,255,0.08);font-size:13px;font-weight:700;">${s.n}</div>
+          <div>
+            <div class="st-title">${s.en} <span style="font-family:'Amiri',serif;color:rgba(255,255,255,0.5);">${s.ar}</span></div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);">${s.tr} • ${s.ayahs} oyat</div>
+          </div>
+        </div>
+      </div>`).join('');
+    html += '</div>';
+  }
+  box.innerHTML = html;
+}
 
 // Barcha ma'lumotlar yaratilgandan so'ng tizimni ishga tushirish
 init();
