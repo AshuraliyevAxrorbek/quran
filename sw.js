@@ -1,5 +1,5 @@
 // sw.js — Qur'anuz ilovasi uchun offline kesh
-const CACHE_NAME = 'quranuz-cache-v5';
+const CACHE_NAME = 'quranuz-cache-v6';
 const AUDIO_CACHE = 'quran-audio-cache'; // ilova yuklab olgan oflayn audiolar — o'chirilmaydi
 
 const CORE_ASSETS = [
